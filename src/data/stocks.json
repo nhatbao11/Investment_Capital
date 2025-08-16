@@ -1,0 +1,117 @@
+[
+  {
+    "ticker": "VIC",
+    "name": "Tập đoàn Vingroup",
+    "sector": "Real Estate",
+    "pe": 12.5,
+    "eps": 5000,
+    "roe": 18.2,
+    "be": 2.1,
+    "peAvg": 14.5,
+    "marketCap": 50000,
+    "description": "Vingroup là một trong những tập đoàn kinh tế tư nhân đa ngành hàng đầu Việt Nam. Tập trung vào ba lĩnh vực cốt lõi: Công nghệ, Công nghiệp và Thương mại Dịch vụ. VIC có ảnh hưởng lớn đến thị trường chứng khoán Việt Nam.",
+    "recommendation": "Hold",
+    "signals": [
+      "MACD cắt lên (tín hiệu mua)",
+      "Giá chạm đường SMA-50",
+      "Khối lượng giao dịch giảm"
+    ],
+    "targetPrice": 135000,
+    "currentPrice": 128500,
+    "discount": -4.1,
+    "fundamentalAnalysis": "Hiệu quả ROE của VIC trong những năm gần đây có dấu hiệu biến động do các khoản đầu tư lớn vào các dự án mới như VinFast. Tuy nhiên, doanh thu vẫn duy trì tốc độ tăng trưởng ổn định. Điều này cho thấy tiềm năng dài hạn của tập đoàn.",
+    "technicalAnalysis": "Giá cổ phiếu VIC đang giao dịch trong một kênh xu hướng đi ngang. Vùng giá 115.000 là mức hỗ trợ cứng, trong khi 130.000 là mức kháng cự mạnh. Một sự bứt phá khỏi một trong hai vùng này có thể báo hiệu một xu hướng mới."
+  },
+  {
+    "ticker": "PNJ",
+    "name": "PNJ",
+    "sector": "Retail",
+    "pe": 16.3,
+    "eps": 4500,
+    "roe": 22.1,
+    "be": 3.5,
+    "peAvg": 18.0,
+    "marketCap": 15000,
+    "description": "PNJ là một công ty hàng đầu trong ngành trang sức bán lẻ tại Việt Nam. Với mạng lưới cửa hàng rộng khắp và thương hiệu mạnh, PNJ duy trì tốc độ tăng trưởng ổn định.",
+    "recommendation": "Buy",
+    "signals": [
+      "RSI đang tăng",
+      "Giá vượt qua đường MA-20",
+      "Khối lượng giao dịch tăng"
+    ],
+    "targetPrice": 115000,
+    "currentPrice": 102000,
+    "discount": 12.7,
+    "fundamentalAnalysis": "PNJ có hiệu quả ROE và tăng trưởng doanh thu ấn tượng, thể hiện khả năng quản trị tốt và thị phần lớn. Doanh nghiệp đang mở rộng chuỗi cửa hàng và đa dạng hóa sản phẩm.",
+    "technicalAnalysis": "Cổ phiếu PNJ đang trong xu hướng tăng ngắn hạn, được hỗ trợ bởi khối lượng giao dịch lớn. Mức kháng cự tiếp theo là 110.000, vượt qua mức này sẽ mở ra tiềm năng tăng trưởng lớn."
+  },
+  {
+    "ticker": "FPT",
+    "name": "FPT",
+    "sector": "IT",
+    "pe": 14.8,
+    "eps": 6000,
+    "roe": 15.0,
+    "be": 2.8,
+    "peAvg": 15.5,
+    "marketCap": 25000,
+    "description": "FPT là tập đoàn công nghệ hàng đầu, chuyên cung cấp các dịch vụ CNTT và viễn thông. FPT có lợi thế cạnh tranh về công nghệ, nhân lực và thị trường quốc tế.",
+    "recommendation": "Buy",
+    "signals": [
+      "MACD cắt xuống (tín hiệu bán)",
+      "Giá giảm dưới đường MA-20",
+      "Khối lượng giao dịch giảm"
+    ],
+    "targetPrice": 120000,
+    "currentPrice": 112000,
+    "discount": 7.1,
+    "fundamentalAnalysis": "FPT duy trì tốc độ tăng trưởng doanh thu và lợi nhuận ổn định. Các mảng kinh doanh cốt lõi như dịch vụ phần mềm và viễn thông tiếp tục là động lực chính. Tiềm năng tăng trưởng từ thị trường nước ngoài là rất lớn.",
+    "technicalAnalysis": "Giá cổ phiếu FPT đang có dấu hiệu điều chỉnh ngắn hạn sau khi tăng mạnh. Vùng hỗ trợ 108.000-110.000 là điểm cần quan sát. Nếu giữ vững vùng này, xu hướng tăng dài hạn vẫn được duy trì."
+  },
+  {
+    "ticker": "HPG",
+    "name": "HPG",
+    "sector": "Manufacturing",
+    "pe": 8.2,
+    "eps": 2500,
+    "roe": 12.0,
+    "be": 1.5,
+    "peAvg": 10.0,
+    "marketCap": 30000,
+    "description": "HPG (Tập đoàn Hòa Phát) là doanh nghiệp sản xuất thép hàng đầu Việt Nam. Công ty có lợi thế quy mô, chuỗi giá trị khép kín và thị phần lớn.",
+    "recommendation": "Hold",
+    "signals": [
+      "MACD đang ở vùng âm",
+      "Giá đang tích lũy trong biên độ hẹp",
+      "Khối lượng giao dịch thấp"
+    ],
+    "targetPrice": 38000,
+    "currentPrice": 36000,
+    "discount": 5.6,
+    "fundamentalAnalysis": "Lợi nhuận của HPG phụ thuộc nhiều vào giá thép thế giới và nhu cầu xây dựng trong nước. Doanh thu vẫn ổn định nhờ sản lượng lớn, nhưng biên lợi nhuận có thể bị ảnh hưởng bởi chi phí nguyên vật liệu.",
+    "technicalAnalysis": "Cổ phiếu HPG đang trong giai đoạn tích lũy. Vùng giá 35.000-37.000 là vùng đi ngang. Cần chờ đợi một tín hiệu bứt phá rõ ràng để xác định xu hướng tiếp theo."
+  },
+  {
+    "ticker": "SSI",
+    "name": "SSI Securities",
+    "sector": "Finance",
+    "pe": 20.5,
+    "eps": 3000,
+    "roe": 8.5,
+    "be": 1.2,
+    "peAvg": 18.5,
+    "marketCap": 8000,
+    "description": "SSI là một trong những công ty chứng khoán lớn nhất Việt Nam. SSI cung cấp đa dạng các dịch vụ tài chính, bao gồm môi giới, đầu tư và tư vấn tài chính.",
+    "recommendation": "Buy",
+    "signals": [
+      "RSI đang ở vùng quá mua",
+      "Giá tăng mạnh",
+      "Khối lượng giao dịch cao bất thường"
+    ],
+    "targetPrice": 35000,
+    "currentPrice": 30000,
+    "discount": 16.7,
+    "fundamentalAnalysis": "Doanh thu và lợi nhuận của SSI phụ thuộc nhiều vào diễn biến thị trường chứng khoán. Công ty có vị thế vững chắc và tiềm năng tăng trưởng tốt khi thị trường phục hồi.",
+    "technicalAnalysis": "Cổ phiếu SSI đang trong xu hướng tăng rất mạnh. Tuy nhiên, RSI đang ở vùng quá mua, cho thấy khả năng điều chỉnh ngắn hạn. Cần thận trọng khi mua mới ở vùng giá này."
+  }
+]
