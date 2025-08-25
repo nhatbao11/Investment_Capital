@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import TeamCard from "../components/ui/TeamCard";
 import MemberModal, { type Member } from "../components/ui/DetailTeamCard";
@@ -139,9 +140,12 @@ const About: React.FC = () => {
           <p className="mb-8 text-blue-800 text-base md:text-lg">
             Liên hệ với chúng tôi để bắt đầu hành trình hợp tác và phát triển.
           </p>
-          <button className="px-8 py-3 bg-blue-900 text-white rounded-full shadow-lg hover:bg-blue-800 transition-all duration-300">
+          <Link
+            to="/contact#contact-form"
+            className="px-8 py-3 bg-blue-900 text-white rounded-full shadow-lg hover:bg-blue-800 transition-all duration-300"
+          >
             Liên hệ ngay
-          </button>
+          </Link>
         </motion.div>
       </section>
 

@@ -1,0 +1,1012 @@
+{
+  "chapters": [
+    {
+      "chapter": "1",
+      "title": "Kiến thức đầu tư",
+      "sections": [
+        {
+          "section": "1.1",
+          "title": "Lý thuyết nền tảng trong đầu tư tài chính",
+          "subsections": [
+            {
+              "subsection": "1.1.1",
+              "title": "Lý thuyết Dow – Nền móng của phân tích kỹ thuật",
+              "content": {
+                "introduction": "Lý thuyết Dow (Dow Theory) được coi là nền tảng của toàn bộ trường phái phân tích kỹ thuật (Technical Analysis), ra đời từ cuối thế kỷ XIX nhờ công trình của Charles H. Dow – người đồng sáng lập tờ The Wall Street Journal và chỉ số Dow Jones Industrial Average (DJIA).",
+                "main_content": [
+                  {
+                    "title": "Nội dung chính",
+                    "description": "Lý thuyết Dow được tóm gọn trong 6 nguyên lý cốt lõi:",
+                    "principles": [
+                      "Thị trường phản ánh tất cả: Giá chứng khoán đã phản ánh toàn bộ thông tin – từ kỳ vọng tương lai, tin tức, chính trị, cho đến tâm lý nhà đầu tư.",
+                      "Thị trường có ba xu hướng: Xu hướng chính (1-10 năm), xu hướng phụ (3 tuần đến vài tháng), xu hướng nhỏ (nhiễu hằng ngày).",
+                      "Xu hướng chính có ba giai đoạn: Tích lũy, bùng nổ, phân phối.",
+                      "Các chỉ số phải xác nhận lẫn nhau: Ví dụ, DJIA và DJTA phải cùng tăng để xác nhận xu hướng tăng.",
+                      "Khối lượng giao dịch xác nhận xu hướng: Tăng khi giá tăng, giảm khi giá giảm.",
+                      "Xu hướng tiếp diễn cho đến khi có tín hiệu đảo chiều rõ ràng: Không đoán đỉnh/đáy, chờ xác nhận."
+                    ]
+                  },
+                  {
+                    "title": "Ứng dụng thực tế",
+                    "examples": [
+                      "Chu kỳ VN-Index 2006–2007: Tích lũy (2004–2005, dưới 400 điểm), bùng nổ (2006–2007, vượt 1.100 điểm), phân phối (cuối 2007, sập xuống 300 điểm năm 2008).",
+                      "COVID-19 2020: VN-Index rơi về 660 điểm, xu hướng tăng xác lập tháng 4/2020 với khối lượng bùng nổ, đạt 1.500 điểm cuối 2021."
+                    ]
+                  },
+                  {
+                    "title": "Ý nghĩa",
+                    "description": "Đi theo xu hướng là chiến lược an toàn, tránh mua bán theo cảm tính hoặc tin đồn."
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "1.1.2",
+              "title": "Sóng Elliott – Hành vi chu kỳ thị trường",
+              "content": {
+                "introduction": "Lý thuyết Sóng Elliott do Ralph Nelson Elliott phát triển vào thập niên 1930, dựa trên quan sát giá chứng khoán vận động theo mô hình sóng lặp lại, phản ánh tâm lý đám đông.",
+                "main_content": [
+                  {
+                    "title": "Cấu trúc sóng",
+                    "description": [
+                      "Chu kỳ cơ bản: 5 sóng tăng (Impulse Waves) + 3 sóng điều chỉnh (Corrective Waves).",
+                      "Sóng tuân theo tỷ lệ Fibonacci (38,2%, 50%, 61,8%) để dự đoán điểm vào/ra."
+                    ]
+                  },
+                  {
+                    "title": "Tâm lý trong sóng",
+                    "description": [
+                      "Sóng 1: Nhà đầu tư thông minh mua vào.",
+                      "Sóng 2: Giá điều chỉnh, gây lo sợ.",
+                      "Sóng 3: Đại chúng tham gia, giá tăng mạnh nhất.",
+                      "Sóng 4: Điều chỉnh, nghỉ ngơi.",
+                      "Sóng 5: Hưng phấn cực độ, F0 tham gia → bong bóng.",
+                      "Sóng A–B–C: Điều chỉnh, sụp đổ niềm tin."
+                    ]
+                  },
+                  {
+                    "title": "Ứng dụng tại Việt Nam",
+                    "examples": [
+                      "2006–2008: Sóng 3 (2006–2007, VN-Index từ 300 → 1.170 điểm), Sóng 5 (cuối 2007, F0 ồ ạt tham gia), Sóng A–B–C (2008, rơi về 300 điểm).",
+                      "2020–2022: Mô hình tương tự lặp lại."
+                    ]
+                  },
+                  {
+                    "title": "Ý nghĩa",
+                    "description": "Chu kỳ hưng phấn – sụp đổ là quy luật tự nhiên, không nên ảo tưởng 'lần này khác'."
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "1.1.3",
+              "title": "Lý thuyết Thị trường Hiệu quả (EMH)",
+              "content": {
+                "introduction": "Được phát triển bởi Eugene Fama (1970), EMH cho rằng giá chứng khoán phản ánh tất cả thông tin, nên không ai có thể đánh bại thị trường dài hạn.",
+                "main_content": [
+                  {
+                    "title": "Ba dạng EMH",
+                    "description": [
+                      "Yếu: Giá phản ánh thông tin quá khứ → phân tích kỹ thuật vô ích.",
+                      "Bán mạnh: Giá phản ánh thông tin công khai → phân tích cơ bản vô ích.",
+                      "Mạnh: Giá phản ánh cả thông tin nội bộ → không ai có lợi thế."
+                    ]
+                  },
+                  {
+                    "title": "Thực tế tại Việt Nam",
+                    "examples": [
+                      "Thị trường Việt Nam thiếu minh bạch, thông tin bất cân xứng, nên EMH chỉ đúng một phần.",
+                      "Tin đồn trên mạng xã hội khiến cổ phiếu biến động 20–30% trong vài ngày.",
+                      "Dài hạn, doanh nghiệp tốt (VNM, FPT, MWG) quay về giá trị thực, minh chứng cho mean reversion."
+                    ]
+                  },
+                  {
+                    "title": "Ý nghĩa",
+                    "description": "Không có 'bí kíp chắc thắng'. Đầu tư dài hạn cần kỷ luật, không dựa vào tin đồn."
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "1.1.4",
+              "title": "Lý thuyết Kỳ vọng hợp lý",
+              "content": {
+                "introduction": "Phát triển bởi John F. Muth (1961) và Robert Lucas (1970s), cho rằng nhà đầu tư hình thành kỳ vọng hợp lý dựa trên mọi thông tin sẵn có.",
+                "main_content": [
+                  {
+                    "title": "Ứng dụng tại Việt Nam",
+                    "examples": [
+                      "2022: Siết tín dụng bất động sản khiến cổ phiếu NVL, PDR giảm mạnh trước khi chính sách có hiệu lực.",
+                      "Nhà đầu tư ngày càng thông minh, kỳ vọng chính sách phản ánh trước vào giá."
+                    ]
+                  },
+                  {
+                    "title": "Ý nghĩa",
+                    "description": "Thị trường không ngây thơ, chính sách vĩ mô thường được dự đoán trước."
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "1.1.5",
+              "title": "Hiệu ứng Cánh bướm",
+              "content": {
+                "introduction": "Dựa trên Lý thuyết Hỗn loạn, một thay đổi nhỏ có thể dẫn đến biến động lớn.",
+                "main_content": [
+                  {
+                    "title": "Trong tài chính",
+                    "examples": [
+                      "Tin tức nhỏ gây hiệu ứng dây chuyền, dẫn đến khủng hoảng hệ thống.",
+                      "Khủng hoảng tài chính 1997: Phá giá đồng baht Thái Lan lan sang châu Á."
+                    ]
+                  },
+                  {
+                    "title": "Tại Việt Nam",
+                    "examples": [
+                      "2022: Tin đồn bắt giữ lãnh đạo FLC, Tân Hoàng Minh, Vạn Thịnh Phát → VN-Index giảm từ 1.500 → 900 điểm.",
+                      "Tin đồn nhỏ có thể rung chuyển thị trường."
+                    ]
+                  },
+                  {
+                    "title": "Ý nghĩa",
+                    "description": "F0 cần cảnh giác với cú sốc tâm lý, không chỉ yếu tố cơ bản."
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "1.1.6",
+              "title": "Tâm lý hành vi trong đầu tư",
+              "content": {
+                "introduction": "Tài chính hành vi giải thích tại sao nhà đầu tư thường phi lý trí.",
+                "main_content": [
+                  {
+                    "title": "Các hiện tượng phổ biến",
+                    "description": [
+                      "FOMO: Sợ mất cơ hội, mua giá cao.",
+                      "Herding Effect: Mua theo đám đông.",
+                      "Overconfidence: Quá tự tin vào dự đoán.",
+                      "Loss Aversion: Sợ thua lỗ, bán tháo hoảng loạn."
+                    ]
+                  },
+                  {
+                    "title": "Ví dụ Việt Nam",
+                    "examples": [
+                      "2021: FOMO đẩy VN-Index lên 1.500 điểm.",
+                      "2022: Herding effect khiến bán tháo dù định giá hấp dẫn."
+                    ]
+                  },
+                  {
+                    "title": "Ý nghĩa",
+                    "description": "F0 cần kiểm soát tâm lý, tránh bẫy hành vi."
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "section": "1.2",
+          "title": "Lịch sử thị trường tài chính và các cuộc khủng hoảng",
+          "subsections": [
+            {
+              "subsection": "1.2.1",
+              "title": "Sự hình thành thị trường chứng khoán",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Khởi nguồn từ châu Âu",
+                    "description": [
+                      "Sở Giao dịch Amsterdam (1602): Công ty Đông Ấn Hà Lan phát hành cổ phiếu đầu tiên, đánh dấu sự ra đời thị trường chứng khoán hiện đại.",
+                      "Chuyển hóa niềm tin tương lai thành giá trị hiện tại, gom vốn từ nhà đầu tư nhỏ lẻ."
+                    ]
+                  },
+                  {
+                    "title": "Phát triển ở Anh và Mỹ",
+                    "description": [
+                      "Sở Giao dịch London (1801): Trung tâm tài chính châu Âu.",
+                      "NYSE (1792): Thoả ước Buttonwood, nền tảng Phố Wall.",
+                      "NASDAQ (1971): Sàn giao dịch điện tử đầu tiên."
+                    ]
+                  },
+                  {
+                    "title": "Thị trường chứng khoán Việt Nam",
+                    "description": [
+                      "HOSE (2000): Bước ngoặt kinh tế thị trường.",
+                      "HNX (2005): Mở rộng quy mô.",
+                      "UPCoM (2009): Sân chơi cho doanh nghiệp chưa niêm yết.",
+                      "Vốn hóa đạt trên 90% GDP (2023), nhưng biến động mạnh do kinh tế mới nổi."
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "1.2.2",
+              "title": "Các cuộc khủng hoảng lớn",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Thị trường thế giới",
+                    "crises": [
+                      {
+                        "name": "Đại khủng hoảng 1929",
+                        "description": "Sụp đổ Phố Wall, Dow Jones mất 80% giá trị, hàng triệu người thất nghiệp.",
+                        "lesson": "Không quá lạc quan trong tăng trưởng nóng, cần giám sát tài chính."
+                      },
+                      {
+                        "name": "Khủng hoảng dầu mỏ 1973",
+                        "description": "OPEC cắt giảm sản lượng, giá dầu tăng gấp 4, gây lạm phát đình trệ.",
+                        "lesson": "Tính liên kết toàn cầu của thị trường tài chính."
+                      },
+                      {
+                        "name": "Khủng hoảng tài chính châu Á 1997",
+                        "description": "Đồng baht Thái Lan bị tấn công, thị trường khu vực mất 40–70%.",
+                        "lesson": "Vay nợ ngoại tệ và vốn nóng khiến thị trường dễ tổn thương."
+                      },
+                      {
+                        "name": "Khủng hoảng tài chính 2008",
+                        "description": "Bong bóng bất động sản Mỹ, Lehman Brothers phá sản, S&P 500 mất 56%.",
+                        "lesson": "Minh bạch thông tin, quản trị rủi ro, kiểm soát đòn bẩy."
+                      },
+                      {
+                        "name": "Khủng hoảng COVID-19 2020",
+                        "description": "Thị trường sụp đổ mạnh, phục hồi nhanh nhờ kích thích tài khóa – tiền tệ.",
+                        "lesson": "Chính sách tiền tệ và tâm lý FOMO đóng vai trò lớn."
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Thị trường Việt Nam",
+                    "crises": [
+                      {
+                        "name": "Bong bóng chứng khoán 2007–2009",
+                        "description": "VN-Index từ 1.170 điểm (2007) xuống 235 điểm (2009), mất hơn 80%.",
+                        "lesson": "F0 dễ 'đu đỉnh' do FOMO, thiếu hiểu biết chu kỳ."
+                      },
+                      {
+                        "name": "Suy thoái 2011–2012",
+                        "description": "Thắt chặt tiền tệ, lạm phát, nợ xấu, VN-Index quanh 300–400 điểm.",
+                        "lesson": "Rủi ro hệ thống trong nước nghiêm trọng không kém cú sốc toàn cầu."
+                      },
+                      {
+                        "name": "Tác động COVID-19",
+                        "description": "VN-Index từ 990 điểm xuống 660 điểm (3/2020), hồi phục lên 1.500 điểm (2021).",
+                        "lesson": "Khủng hoảng đi kèm cơ hội cho nhà đầu tư kiên nhẫn."
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "1.2.3",
+              "title": "Bài học cho nhà đầu tư",
+              "content": {
+                "lessons": [
+                  "Quy luật chu kỳ: Thị trường vận động theo sóng, không tăng mãi mãi.",
+                  "Quản trị rủi ro: Đa dạng hóa, quản lý đòn bẩy, đặt cắt lỗ.",
+                  "Tâm lý hành vi: Tránh FOMO, bầy đàn, quá tự tin.",
+                  "Cơ hội trong khủng hoảng: Nhà đầu tư kỷ luật có thể tận dụng sóng hồi phục."
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "section": "1.3",
+          "title": "Công cụ và phương pháp phân tích",
+          "subsections": [
+            {
+              "subsection": "1.3.1",
+              "title": "Phân tích cơ bản (FA)",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Khái niệm",
+                    "description": "FA đánh giá giá trị nội tại của cổ phiếu dựa trên tài chính, hoạt động kinh doanh, triển vọng tăng trưởng, kinh tế vĩ mô, ngành nghề."
+                  },
+                  {
+                    "title": "Nguyên lý",
+                    "description": [
+                      "Giá trị nội tại tồn tại, phản ánh sức mạnh tài chính.",
+                      "Thị trường không luôn hiệu quả, giá dài hạn tiệm cận giá trị nội tại.",
+                      "Đầu tư dài hạn mang lợi thế."
+                    ]
+                  },
+                  {
+                    "title": "Ứng dụng tại Việt Nam",
+                    "examples": [
+                      "Định giá cổ phiếu: Phân tích VNM qua báo cáo tài chính, ROE, dòng tiền.",
+                      "So sánh doanh nghiệp: MWG vs. FRT về tốc độ tăng trưởng.",
+                      "Nhận diện rủi ro: Nợ trái phiếu cao ở Novaland, Đất Xanh (2022–2023).",
+                      "Chiến lược đầu tư: Phù hợp cho đầu tư giá trị hoặc tăng trưởng."
+                    ]
+                  },
+                  {
+                    "title": "Ưu điểm",
+                    "description": [
+                      "Định giá chính xác dài hạn.",
+                      "Phù hợp đầu tư dài hạn.",
+                      "Nhận diện rủi ro tiềm ẩn.",
+                      "So sánh doanh nghiệp trong ngành.",
+                      "Nền tảng học thuật, logic rõ ràng."
+                    ]
+                  },
+                  {
+                    "title": "Nhược điểm",
+                    "description": [
+                      "Tốn thời gian, công sức.",
+                      "Không phù hợp lướt sóng ngắn hạn.",
+                      "Dữ liệu tài chính có thể thiếu minh bạch.",
+                      "Khó dự báo yếu tố bất ngờ.",
+                      "Yêu cầu kiến thức tài chính – kế toán."
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "1.3.1.1",
+              "title": "Phân tích kinh tế vĩ mô, ngành, doanh nghiệp",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Phân tích kinh tế vĩ mô",
+                    "description": [
+                      "Tăng trưởng GDP: GDP cao → lợi nhuận doanh nghiệp tăng.",
+                      "Lạm phát: Cao → sức mua giảm, một số ngành hưởng lợi.",
+                      "Chính sách tiền tệ: Lãi suất thấp → cổ phiếu tăng.",
+                      "Tỷ giá: Ảnh hưởng doanh nghiệp xuất nhập khẩu.",
+                      "Chính sách tài khóa: Đầu tư công → ngành xây dựng, bất động sản hưởng lợi."
+                    ],
+                    "examples": [
+                      "2020–2021: GDP Việt Nam dương, thị trường chứng khoán bùng nổ."
+                    ]
+                  },
+                  {
+                    "title": "Phân tích ngành",
+                    "description": [
+                      "Chu kỳ ngành: Năng lượng tái tạo tăng trưởng, xi măng bão hòa.",
+                      "Mô hình 5 áp lực cạnh tranh của Porter: Đánh giá mức độ hấp dẫn ngành.",
+                      "Xu hướng chính sách: Tín dụng xanh hỗ trợ năng lượng sạch."
+                    ]
+                  },
+                  {
+                    "title": "Phân tích doanh nghiệp",
+                    "description": [
+                      "Tài chính: Doanh thu, lợi nhuận, dòng tiền, nợ vay, ROE, EPS, P/E.",
+                      "Năng lực cạnh tranh: Thương hiệu, thị phần, công nghệ.",
+                      "Ban lãnh đạo: Minh bạch, uy tín.",
+                      "Chiến lược: Kế hoạch mở rộng, sản phẩm mới."
+                    ],
+                    "examples": [
+                      "MWG: Tăng trưởng doanh thu, uy tín lãnh đạo."
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "1.3.1.2",
+              "title": "Các chỉ số tài chính",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Tổng tài sản",
+                    "description": "Phản ánh quy mô, khả năng trả nợ, vị thế cạnh tranh."
+                  },
+                  {
+                    "title": "Tổng nợ phải trả",
+                    "description": "Thước đo rủi ro tài chính, đòn bẩy."
+                  },
+                  {
+                    "title": "Tỷ lệ lợi nhuận gộp",
+                    "description": "Đo hiệu quả sản xuất/kinh doanh."
+                  },
+                  {
+                    "title": "Tỷ lệ lợi nhuận ròng",
+                    "description": "Đo sức khỏe tài chính, quản trị chi phí."
+                  },
+                  {
+                    "title": "Tỷ lệ tăng trưởng doanh thu",
+                    "description": "Đo sức hút sản phẩm, tiềm năng dài hạn."
+                  },
+                  {
+                    "title": "Tỷ lệ tăng trưởng lợi nhuận",
+                    "description": "Đo khả năng tạo giá trị cho cổ đông."
+                  },
+                  {
+                    "title": "Xu hướng doanh thu và lợi nhuận",
+                    "description": "Nhận diện xu hướng dài hạn, mùa vụ, biến động bất thường."
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "1.3.2",
+              "title": "Phân tích kỹ thuật (TA)",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Nguyên lý chung",
+                    "description": [
+                      "Giá phản ánh tất cả thông tin.",
+                      "Giá vận động theo xu hướng.",
+                      "Lịch sử lặp lại do tâm lý con người."
+                    ]
+                  },
+                  {
+                    "title": "Các chỉ báo kỹ thuật",
+                    "indicators": [
+                      {
+                        "name": "Hỗ trợ và kháng cự",
+                        "description": "Hỗ trợ: Mức giá khó giảm thêm. Kháng cự: Mức giá khó tăng thêm.",
+                        "example": "VNM: Hỗ trợ 65.000–70.000 đồng, kháng cự 80.000–85.000 đồng."
+                      },
+                      {
+                        "name": "Khối lượng giao dịch",
+                        "description": "Giá tăng kèm khối lượng cao → xu hướng tin cậy.",
+                        "example": "HPG 2021: Khối lượng lớn, xu hướng tăng mạnh."
+                      },
+                      {
+                        "name": "RSI",
+                        "description": ">70 (quá mua), <30 (quá bán).",
+                        "example": "VNM 2020: RSI 25 → bật tăng 10%."
+                      },
+                      {
+                        "name": "MACD",
+                        "description": "MACD cắt lên Signal → mua, cắt xuống → bán.",
+                        "example": "VN-Index 2020: MACD cắt lên, sóng tăng đến 2021."
+                      },
+                      {
+                        "name": "EMA",
+                        "description": "Golden Cross (EMA50 cắt lên EMA200) → mua; Death Cross → bán.",
+                        "example": "VIC 2017: Golden Cross, chu kỳ tăng dài hạn."
+                      },
+                      {
+                        "name": "Bollinger Bands",
+                        "description": "Chạm upper band → quá mua; lower band → quá bán.",
+                        "example": "SSI, HCM 2021: Bands co hẹp, tăng giá gấp đôi."
+                      },
+                      {
+                        "name": "Stochastic Oscillator",
+                        "description": ">80 (quá mua), <20 (quá bán).",
+                        "example": "FPT 2023: Bật tăng khi Stochastic <20."
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Ưu điểm",
+                    "description": [
+                      "Đơn giản, trực quan.",
+                      "Phản ánh tâm lý thị trường.",
+                      "Hỗ trợ xác định thời điểm mua/bán.",
+                      "Ứng dụng linh hoạt nhiều khung thời gian.",
+                      "Dễ kết hợp với FA."
+                    ]
+                  },
+                  {
+                    "title": "Nhược điểm",
+                    "description": [
+                      "Tính chủ quan cao.",
+                      "Dựa trên dữ liệu quá khứ.",
+                      "Dễ bị nhiễu ở thị trường Việt Nam.",
+                      "Không đánh giá giá trị doanh nghiệp.",
+                      "Nguy cơ lạm dụng chỉ báo."
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "1.3.3",
+              "title": "Mẫu hình giá",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Khái niệm",
+                    "description": "Hình dạng đặc trưng từ diễn biến cung – cầu, phản ánh tâm lý, gợi ý hành động giá."
+                  },
+                  {
+                    "title": "Phân loại",
+                    "description": [
+                      "Tiếp diễn xu hướng: Tam giác, Cờ, Chữ nhật.",
+                      "Đảo chiều xu hướng: Vai – Đầu – Vai, Hai đáy, Hai đỉnh, Nêm."
+                    ]
+                  },
+                  {
+                    "title": "Mẫu hình phổ biến",
+                    "patterns": [
+                      {
+                        "name": "Vai – Đầu – Vai",
+                        "description": "3 đỉnh, đầu cao nhất, báo hiệu đảo chiều giảm.",
+                        "example": "HPG, NKG 2022."
+                      },
+                      {
+                        "name": "Hai đáy",
+                        "description": "2 đáy ngang, báo hiệu đảo chiều tăng.",
+                        "example": "VN-Index cuối 2022, quanh 900 điểm."
+                      },
+                      {
+                        "name": "Tam giác tăng dần",
+                        "description": "Đáy cao dần, kháng cự ngang, báo hiệu bứt phá tăng.",
+                        "example": "DIG, NLG 2021."
+                      },
+                      {
+                        "name": "Cờ và Cờ đuôi nheo",
+                        "description": "Điều chỉnh nhẹ sau tăng/giảm mạnh, xu hướng tiếp diễn.",
+                        "example": "VCB, TCB trong sóng tăng."
+                      },
+                      {
+                        "name": "Hai đỉnh",
+                        "description": "2 đỉnh ngang, báo hiệu đảo chiều giảm.",
+                        "example": "SSI, VND 2021."
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "1.4",
+              "title": "Kết luận và bài học",
+              "content": {
+                "lessons": [
+                  "Hiểu lý thuyết nền tảng: Dow, Elliott, EMH, kỳ vọng hợp lý giúp phân tích khoa học.",
+                  "Lịch sử thị trường: Khủng hoảng lặp lại, rủi ro luôn hiện hữu.",
+                  "FA: Đánh giá giá trị thực qua báo cáo tài chính.",
+                  "TA: Nhận diện xu hướng, điểm mua/bán, cần kết hợp FA.",
+                  "Kiểm chứng thực nghiệm: Backtesting giảm rủi ro cảm tính.",
+                  "Kỷ luật và quản trị rủi ro: Đặt stop-loss, quản lý vốn."
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapter": "2",
+      "title": "Phương pháp đầu tư",
+      "sections": [
+        {
+          "section": "2.1",
+          "title": "Chiến lược đầu tư",
+          "subsections": [
+            {
+              "subsection": "2.1.1",
+              "title": "Đầu tư giá trị",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Khái niệm",
+                    "description": "Mua cổ phiếu giá thị trường thấp hơn giá trị nội tại, dựa trên phân tích cơ bản."
+                  },
+                  {
+                    "title": "Cơ sở lý thuyết",
+                    "description": [
+                      "Thị trường ngắn hạn phi lý trí, dài hạn quay về giá trị thực.",
+                      "Xuất phát từ Benjamin Graham, áp dụng bởi Warren Buffett."
+                    ],
+                    "examples": [
+                      "Quốc tế: Buffett mua Coca-Cola 1987.",
+                      "Việt Nam: VNM 2012–2013, giá thấp, tăng mạnh sau 5 năm."
+                    ]
+                  },
+                  {
+                    "title": "Ưu điểm",
+                    "description": [
+                      "Giảm rủi ro khi mua giá an toàn.",
+                      "Tư duy dài hạn, bền vững.",
+                      "Phù hợp nhà đầu tư kiên nhẫn."
+                    ]
+                  },
+                  {
+                    "title": "Nhược điểm",
+                    "description": [
+                      "Đòi hỏi kỹ năng phân tích tài chính.",
+                      "Thị trường có thể phi lý lâu hơn dự đoán.",
+                      "Cơ hội ít trong bối cảnh thông tin minh bạch."
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "2.1.2",
+              "title": "Đầu tư tăng trưởng",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Khái niệm",
+                    "description": "Tập trung vào doanh nghiệp có tiềm năng tăng trưởng mạnh, dù định giá cao."
+                  },
+                  {
+                    "title": "Ưu điểm",
+                    "description": [
+                      "Lợi nhuận vượt trội khi doanh nghiệp bùng nổ.",
+                      "Phù hợp nhà đầu tư chấp nhận rủi ro cao."
+                    ]
+                  },
+                  {
+                    "title": "Nhược điểm",
+                    "description": [
+                      "Định giá cao, rủi ro khi kỳ vọng không đạt.",
+                      "Giá cổ phiếu biến động mạnh.",
+                      "Thường không trả cổ tức."
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "2.1.3",
+              "title": "Đầu tư theo xu hướng",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Khái niệm",
+                    "description": "Giao dịch dựa trên xu hướng giá, sử dụng phân tích kỹ thuật."
+                  },
+                  {
+                    "title": "Ví dụ",
+                    "description": "VN30F1M phái sinh tại Việt Nam."
+                  },
+                  {
+                    "title": "Ưu điểm",
+                    "description": [
+                      "Tận dụng động lượng thị trường.",
+                      "Dễ áp dụng với công cụ TA.",
+                      "Kiếm lợi nhuận nhanh trong thị trường biến động."
+                    ]
+                  },
+                  {
+                    "title": "Nhược điểm",
+                    "description": [
+                      "Rủi ro cao khi thị trường đi ngang.",
+                      "Dễ bị bẫy giả (false breakout).",
+                      "Đòi hỏi kỷ luật cắt lỗ."
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "2.1.4",
+              "title": "Đầu tư theo chỉ số",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Khái niệm",
+                    "description": "Đầu tư vào quỹ mô phỏng chỉ số (VN30, S&P500).",
+                    "example": "ETF VFMVN30."
+                  },
+                  {
+                    "title": "Ưu điểm",
+                    "description": [
+                      "Đa dạng hóa tự động, giảm rủi ro.",
+                      "Chi phí thấp, dễ tiếp cận.",
+                      "Phù hợp đầu tư dài hạn."
+                    ]
+                  },
+                  {
+                    "title": "Nhược điểm",
+                    "description": [
+                      "Không vượt trội hơn thị trường.",
+                      "Phụ thuộc tình hình kinh tế chung."
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "2.1.5",
+              "title": "Đầu tư định lượng",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Khái niệm",
+                    "description": "Sử dụng mô hình toán học, AI để ra quyết định.",
+                    "examples": [
+                      "Quỹ Renaissance Technologies (Mỹ).",
+                      "Công ty chứng khoán Việt Nam dùng AI phân tích dòng tiền."
+                    ]
+                  },
+                  {
+                    "title": "Ưu điểm",
+                    "description": [
+                      "Dựa trên dữ liệu, hạn chế cảm xúc.",
+                      "Khai thác cơ hội lặp lại."
+                    ]
+                  },
+                  {
+                    "title": "Nhược điểm",
+                    "description": [
+                      "Yêu cầu kiến thức toán, lập trình.",
+                      "Phụ thuộc chất lượng dữ liệu.",
+                      "Rủi ro khi mô hình không thích ứng biến động."
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "2.1.6",
+              "title": "Đầu tư theo chu kỳ kinh tế",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Khái niệm",
+                    "description": "Chọn ngành/cổ phiếu dựa trên chu kỳ kinh tế (phục hồi, tăng trưởng, suy thoái).",
+                    "example": "Suy thoái: Vàng, trái phiếu; Phục hồi: Ngân hàng, bất động sản."
+                  },
+                  {
+                    "title": "Ưu điểm",
+                    "description": [
+                      "Phân bổ tài sản hợp lý theo chu kỳ.",
+                      "Giảm rủi ro khi thị trường biến động."
+                    ]
+                  },
+                  {
+                    "title": "Nhược điểm",
+                    "description": [
+                      "Khó xác định chính xác giai đoạn chu kỳ.",
+                      "Cần kiến thức vĩ mô sâu."
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "section": "2.2",
+          "title": "Xây dựng danh mục đầu tư",
+          "subsections": [
+            {
+              "subsection": "2.2.1",
+              "title": "Nguyên tắc đa dạng hóa",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Khái niệm",
+                    "description": "Không 'bỏ trứng vào một giỏ'.",
+                    "example": "Danh mục: 40% cổ phiếu, 30% trái phiếu, 20% vàng, 10% tiền mặt."
+                  },
+                  {
+                    "title": "Ưu điểm",
+                    "description": [
+                      "Giảm rủi ro tổng thể.",
+                      "Ổn định lợi nhuận."
+                    ]
+                  },
+                  {
+                    "title": "Nhược điểm",
+                    "description": [
+                      "Quá đa dạng hóa làm lợi nhuận kém hấp dẫn.",
+                      "Khó quản lý danh mục phức tạp."
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "2.2.2",
+              "title": "Hiệu quả danh mục (Markowitz)",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Cơ sở lý thuyết",
+                    "description": "Tối ưu hóa danh mục dựa trên lợi nhuận và rủi ro, tìm Efficient Frontier."
+                  },
+                  {
+                    "title": "Ưu điểm",
+                    "description": [
+                      "Cơ sở khoa học, định lượng rõ ràng.",
+                      "Ứng dụng rộng trong quản lý quỹ."
+                    ]
+                  },
+                  {
+                    "title": "Nhược điểm",
+                    "description": [
+                      "Giả định dữ liệu lý tưởng.",
+                      "Khó áp dụng cho nhà đầu tư nhỏ lẻ."
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "2.2.3",
+              "title": "Tái cân bằng danh mục",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Khái niệm",
+                    "description": "Điều chỉnh tỷ trọng tài sản về mục tiêu ban đầu.",
+                    "example": "Danh mục 60% cổ phiếu, 40% trái phiếu → bán bớt cổ phiếu nếu tăng thành 75%."
+                  },
+                  {
+                    "title": "Ưu điểm",
+                    "description": [
+                      "Giữ rủi ro trong tầm kiểm soát.",
+                      "Tránh lệch lạc tài sản."
+                    ]
+                  },
+                  {
+                    "title": "Nhược điểm",
+                    "description": [
+                      "Tốn chi phí giao dịch.",
+                      "Có thể bỏ lỡ cơ hội tài sản tăng mạnh."
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "2.2.4",
+              "title": "Quản trị chi phí giao dịch, thuế, phí",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Khái niệm",
+                    "description": [
+                      "Chi phí: Phí môi giới, lưu ký, chênh lệch mua – bán.",
+                      "Thuế: Thuế TNCN 0,1% khi bán (Việt Nam).",
+                      "Ví dụ: Lợi nhuận 15%, chi phí + thuế 5% → lợi nhuận thực 10%."
+                    ]
+                  },
+                  {
+                    "title": "Ưu điểm",
+                    "description": [
+                      "Tối ưu hóa lợi nhuận ròng.",
+                      "Giảm hao hụt vốn."
+                    ]
+                  },
+                  {
+                    "title": "Nhược điểm",
+                    "description": [
+                      "Bỏ qua chi phí dẫn đến đánh giá sai hiệu quả chiến lược."
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapter": "3",
+      "title": "Quản trị rủi ro trong đầu tư",
+      "sections": [
+        {
+          "section": "3.1",
+          "title": "Mở đầu: Vì sao rủi ro là trung tâm?",
+          "content": {
+            "main_content": [
+              {
+                "title": "Tầm quan trọng",
+                "description": [
+                  "Lợi nhuận và rủi ro song hành.",
+                  "Quản trị rủi ro giúp bảo toàn vốn, tối ưu lợi nhuận bền vững.",
+                  "Warren Buffett: Quy tắc 1 – Đừng để mất tiền; Quy tắc 2 – Đừng quên quy tắc 1."
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "section": "3.2",
+          "title": "Phân loại rủi ro",
+          "subsections": [
+            {
+              "subsection": "3.2.1",
+              "title": "Rủi ro kinh doanh (phi hệ thống)",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Định nghĩa",
+                    "description": "Rủi ro từ doanh nghiệp/ ngành, không ảnh hưởng toàn thị trường."
+                  },
+                  {
+                    "title": "Các dạng",
+                    "description": [
+                      "Quản trị: Năng lực, đạo đức lãnh đạo (FLC 2022).",
+                      "Ngành nghề: Chu kỳ ngành, ví dụ thép (HPG 2021–2022).",
+                      "Sản phẩm: VinFast với hạ tầng sạc chưa đồng bộ.",
+                      "Tài chính: Nợ vay cao, Vietnam Airlines 2020–2022."
+                    ]
+                  },
+                  {
+                    "title": "Khả năng kiểm soát",
+                    "description": "Giảm thiểu bằng đa dạng hóa danh mục."
+                  },
+                  {
+                    "title": "Ví dụ",
+                    "examples": [
+                      "FLC: Sụp đổ niềm tin quản trị.",
+                      "Hòa Phát: Lợi nhuận giảm 70% do chu kỳ thép.",
+                      "Vietnam Airlines: Nợ lớn, nguy cơ mất thanh khoản."
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "3.2.2",
+              "title": "Rủi ro thị trường (hệ thống)",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "Định nghĩa",
+                    "description": "Rủi ro vĩ mô ảnh hưởng toàn thị trường, không thể loại bỏ bằng đa dạng hóa."
+                  },
+                  {
+                    "title": "Các dạng",
+                    "description": [
+                      "Lãi suất: NHNN tăng lãi suất 2022, VN-Index giảm 30%.",
+                      "Tỷ giá: USD tăng, ảnh hưởng dệt may (TNG, May 10).",
+                      "Thanh khoản: Khủng hoảng trái phiếu, SCB 2022.",
+                      "Chính trị, pháp lý: Siết tín dụng bất động sản 2022–2023."
+                    ]
+                  },
+                  {
+                    "title": "Khả năng quản trị",
+                    "description": [
+                      "Phòng ngừa bằng hedging (VN30, vàng).",
+                      "Phân bổ tài sản, giữ tiền mặt, đặt stop-loss."
+                    ]
+                  },
+                  {
+                    "title": "Ví dụ",
+                    "examples": [
+                      "COVID-19 2020: VN-Index giảm 30% trong 2 tháng.",
+                      "2022: Lãi suất, trái phiếu, thanh khoản khiến VN-Index từ 1.530 → 873 điểm."
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "subsection": "3.2.3",
+              "title": "So sánh và kết luận",
+              "content": {
+                "main_content": [
+                  {
+                    "title": "So sánh",
+                    "comparison": [
+                      {
+                        "criteria": "Phạm vi ảnh hưởng",
+                        "business_risk": "Một doanh nghiệp/ ngành",
+                        "market_risk": "Toàn thị trường, nền kinh tế"
+                      },
+                      {
+                        "criteria": "Khả năng kiểm soát",
+                        "business_risk": "Giảm thiểu bằng đa dạng hóa",
+                        "market_risk": "Không thể loại bỏ, chỉ phòng ngừa"
+                      },
+                      {
+                        "criteria": "Ví dụ Việt Nam",
+                        "business_risk": "FLC, Hòa Phát, Vietnam Airlines",
+                        "market_risk": "COVID-19, lãi suất tăng, khủng hoảng trái phiếu 2022"
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Bài học",
+                    "description": [
+                      "Không 'all-in' vào một mã/ ngành.",
+                      "Chuẩn bị chiến lược phòng ngừa vĩ mô."
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
