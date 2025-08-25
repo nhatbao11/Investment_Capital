@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import Logo from "../../assets/images/YT LOGO.png";
+import Logo from "../../assets/images/Logo01.jpg";
 
 interface HeaderProps {
   className?: string;
