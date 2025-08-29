@@ -20,9 +20,11 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
   const isActive = (path: string) => location.pathname === path;
 
   const navLinkClass = (path: string) =>
-    isActive(path)
-      ? "text-blue-900 font-semibold"
-      : "text-black hover:text-blue-900 hover:underline";
+    `font-bold transition-all duration-200 ease-in-out border border-gray-200 rounded px-2 py-1 flex items-center ${
+      isActive(path)
+        ? "bg-blue-900 text-white"
+        : "text-blue-900 hover:bg-blue-900 hover:text-white"
+    }`;
 
   useEffect(() => {
     let ticking = false;
@@ -89,12 +91,12 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
             <h1
               className={`font-bold transition-all duration-300 ease-in-out ${
                 isScrolled ? "text-lg" : "text-xl"
-              } text-black`}
+              } text-blue-900 -mt-1`}
             >
               Y&T Capital
             </h1>
             <p
-              className={`text-xs font-bold transition-all duration-300 ease-in-out text-black ${
+              className={`text-xs font-bold transition-all duration-300 ease-in-out text-blue-900 ${
                 isScrolled
                   ? "opacity-0 -translate-y-1 pointer-events-none select-none h-0 overflow-hidden"
                   : "opacity-100 translate-y-0 h-auto"
@@ -117,18 +119,14 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
           <Link
             to="/login"
             target="_blank"
-            className="px-2 py-1 rounded text-black
-              transition-colors duration-200 ease-in-out
-              hover:bg-gray-200 hover:underline-none"
+            className="font-bold text-blue-900 px-2 py-1 rounded transition-all duration-200 ease-in-out hover:bg-blue-900 hover:text-white border border-gray-200"
           >
             Đăng nhập
           </Link>
           <Link
             to="/signup"
             target="_blank"
-            className="px-2 py-1 rounded text-black
-              transition-colors duration-200 ease-in-out
-              hover:bg-gray-200 hover:underline-none"
+            className="font-bold text-blue-900 px-2 py-1 rounded transition-all duration-200 ease-in-out hover:bg-blue-900 hover:text-white border border-gray-200"
           >
             Đăng ký
           </Link>
@@ -136,19 +134,19 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
           <div className="relative">
             <button
               onClick={() => setLangOpen((v) => !v)}
-              className="px-2 py-1 border border-gray-200 rounded text-black hover:text-blue-900 hover:underline"
+              className="font-bold text-black px-2 py-1 border border-gray-200 rounded transition-all duration-200 ease-in-out hover:bg-blue-900 hover:text-white"
             >
               🌐
             </button>
             {langOpen && (
               <div className="absolute right-0 mt-1 w-28 bg-white border border-gray-200 rounded shadow">
-                <button className="w-full px-3 py-1 text-left hover:bg-gray-100">
+                <button className="w-full px-3 py-1 text-left font-bold text-black hover:bg-blue-900 hover:text-white">
                   🇻🇳 Tiếng Việt
                 </button>
-                <button className="w-full px-3 py-1 text-left hover:bg-gray-100">
+                <button className="w-full px-3 py-1 text-left font-bold text-black hover:bg-blue-900 hover:text-white">
                   🇬🇧 English
                 </button>
-                <button className="w-full px-3 py-1 text-left hover:bg-gray-100">
+                <button className="w-full px-3 py-1 text-left font-bold text-black hover:bg-blue-900 hover:text-white">
                   🇯🇵 日本語
                 </button>
               </div>
@@ -156,18 +154,15 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
           </div>
         </div>
 
-        <nav className="flex space-x-4 md:space-x-8 text-base transition-all duration-300 ease-in-out">
+        <nav className="flex space-x-4 md:space-x-8 text-base transition-all duration-300 ease-in-out items-center">
           <Link to="/about" className={navLinkClass("/about")}>
             Về chúng tôi
           </Link>
-          <Link to="/stock" className={navLinkClass("/stock")}>
-            Bộ lọc cổ phiếu
+          <Link to="/sector" className={navLinkClass("/sector")}>
+            Phân tích Ngành
           </Link>
           <Link to="/analysis" className={navLinkClass("/analysis")}>
             Phân tích Doanh nghiệp
-          </Link>
-          <Link to="/sector" className={navLinkClass("/sector")}>
-            Phân tích Ngành
           </Link>
           <div className="relative group">
             <Link
@@ -188,19 +183,19 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
                   <div className="flex flex-col gap-1 min-w-0">
                     <h3 className="font-bold text-black text-base">1. Kiến thức đầu tư</h3>
                     <h4
-                      className="text-blue-900 font-semibold text-sm cursor-pointer hover:underline"
+                      className="font-bold text-blue-900 text-sm cursor-pointer hover:bg-blue-900 hover:text-white rounded px-2 py-1"
                       onClick={() => navigate("/investment#ly-thuyet")}
                     >
                       1.1. Lý thuyết nền tảng
                     </h4>
                     <h4
-                      className="text-blue-900 font-semibold text-sm cursor-pointer hover:underline"
+                      className="font-bold text-blue-900 text-sm cursor-pointer hover:bg-blue-900 hover:text-white rounded px-2 py-1"
                       onClick={() => navigate("/investment#lich-su")}
                     >
                       1.2. Lịch sử thị trường tài chính và các cuộc khủng hoảng
                     </h4>
                     <h4
-                      className="text-blue-900 font-semibold text-sm cursor-pointer hover:underline"
+                      className="font-bold text-blue-900 text-sm cursor-pointer hover:bg-blue-900 hover:text-white rounded px-2 py-1"
                       onClick={() => navigate("/investment#cong-cu")}
                     >
                       1.3. Công cụ và phương pháp phân tích
@@ -209,13 +204,13 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
                   <div className="flex flex-col gap-1 min-w-0">
                     <h3 className="font-bold text-black text-base">2. Phương pháp đầu tư</h3>
                     <h4
-                      className="text-blue-900 font-semibold text-sm cursor-pointer hover:underline"
+                      className="font-bold text-blue-900 text-sm cursor-pointer hover:bg-blue-900 hover:text-white rounded px-2 py-1"
                       onClick={() => navigate("/investment#chien-luoc")}
                     >
                       2.1. Chiến lược đầu tư
                     </h4>
                     <h4
-                      className="text-blue-900 font-semibold text-sm cursor-pointer hover:underline"
+                      className="font-bold text-blue-900 text-sm cursor-pointer hover:bg-blue-900 hover:text-white rounded px-2 py-1"
                       onClick={() => navigate("/investment#danh-muc")}
                     >
                       2.2. Xây dựng danh mục đầu tư
@@ -224,19 +219,19 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
                   <div className="flex flex-col gap-1 min-w-0">
                     <h3 className="font-bold text-black text-base">3. Quản trị rủi ro</h3>
                     <h4
-                      className="text-blue-900 font-semibold text-sm cursor-pointer hover:underline"
+                      className="font-bold text-blue-900 text-sm cursor-pointer hover:bg-blue-900 hover:text-white rounded px-2 py-1"
                       onClick={() => navigate("/investment#risk-overview")}
                     >
                       3.1. Tổng quan về rủi ro
                     </h4>
                     <h4
-                      className="text-blue-900 font-semibold text-sm cursor-pointer hover:underline"
+                      className="font-bold text-blue-900 text-sm cursor-pointer hover:bg-blue-900 hover:text-white rounded px-2 py-1"
                       onClick={() => navigate("/investment#phan-loai")}
                     >
                       3.2. Phân loại rủi ro
                     </h4>
                     <h4
-                      className="text-blue-900 font-semibold text-sm cursor-pointer hover:underline"
+                      className="font-bold text-blue-900 text-sm cursor-pointer hover:bg-blue-900 hover:text-white rounded px-2 py-1"
                       onClick={() => navigate("/investment#phuong-phap")}
                     >
                       3.3. Phương pháp quản trị rủi ro

@@ -18,7 +18,7 @@ const Home: React.FC = () => {
           className="absolute left-1/2 -translate-x-1/2 bottom-20 md:bottom-24 group"
         >
           <HiOutlineChevronDoubleDown
-            className="text-blue-900 text-5xl animate-bounce drop-shadow-lg"
+            className="text-white text-5xl animate-bounce drop-shadow-lg"
           />
         </button>
       </div>

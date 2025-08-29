@@ -7,6 +7,7 @@ import Analysis from "./pages/Analysis";
 import Investment from "./pages/Investment";
 import Contact from "./pages/Contact";
 import Home from "./pages/Home";
+import Sector from "./pages/Sector";
 import "./index.css";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
@@ -23,7 +24,8 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/stock" element={<StockFilter />} />
             <Route path="/analysis" element={<Analysis />} />
-            <Route path="/analysis/:ticker" element={<Analysis />} />
+            {/* <Route path="/analysis/:ticker" element={<Analysis />} /> */}
+            <Route path="/sector" element={<Sector />} />
             <Route path="/investment" element={<Investment />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />

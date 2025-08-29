@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Analysis: React.FC = () => {
+const Sector: React.FC = () => {
   const openPDF = (pdfUrl: string) => {
     window.open(pdfUrl, '_blank');
   };
@@ -11,12 +11,12 @@ const Analysis: React.FC = () => {
       <div className="relative w-full h-[40vh] sm:h-[50vh] md:h-[60vh]">
         <img
           src="placeholder.jpg" // Thay bằng ảnh thực
-          alt="Phân tích Doanh nghiệp"
+          alt="Phân tích Ngành"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg">
-            Phân tích Doanh nghiệp
+            Phân tích Ngành
           </h1>
         </div>
       </div>
@@ -27,13 +27,13 @@ const Analysis: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center gap-4 sm:gap-6 md:gap-8">
           <div className="w-full md:w-1/2 p-4 bg-gray-800 rounded-lg shadow-lg">
             <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-300 mb-3 sm:mb-4">
-              Chỉ số Tài chính Cốt lõi
+              Ngành Tài chính
             </h3>
             <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-3 sm:mb-4">
-              Tóm tắt các chỉ số tài chính quan trọng như P/E, EPS, ROE và vốn hóa thị trường.
+              Tổng quan về ngành tài chính, bao gồm xu hướng ngân hàng, bảo hiểm và đầu tư, với các chỉ số kinh tế vĩ mô ảnh hưởng.
             </p>
             <button
-              onClick={() => openPDF('/path/to/finance.pdf')} // Thay bằng đường dẫn PDF thực
+              onClick={() => openPDF('/path/to/finance-sector.pdf')} // Thay bằng đường dẫn PDF thực
               className="bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded hover:bg-blue-600 transition duration-300"
             >
               Xem thêm
@@ -42,7 +42,7 @@ const Analysis: React.FC = () => {
           <div className="w-full md:w-1/2">
             <img
               src="placeholder1.jpg" // Thay bằng ảnh thực
-              alt="Ảnh minh họa 1"
+              alt="Ảnh minh họa Ngành Tài chính"
               className="w-full h-auto rounded-lg shadow-lg object-cover"
             />
           </div>
@@ -53,19 +53,19 @@ const Analysis: React.FC = () => {
           <div className="w-full md:w-1/2">
             <img
               src="placeholder2.jpg" // Thay bằng ảnh thực
-              alt="Ảnh minh họa 2"
+              alt="Ảnh minh họa Ngành Công nghệ"
               className="w-full h-auto rounded-lg shadow-lg object-cover"
             />
           </div>
           <div className="w-full md:w-1/2 p-4 bg-gray-800 rounded-lg shadow-lg">
             <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-300 mb-3 sm:mb-4">
-              Khuyến nghị & Tín hiệu
+              Ngành Công nghệ
             </h3>
             <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-3 sm:mb-4">
-              Đánh giá triển vọng đầu tư và các tín hiệu thị trường quan trọng.
+              Phân tích ngành công nghệ, tập trung vào đổi mới AI, phần mềm và phần cứng, cùng với các thách thức toàn cầu.
             </p>
             <button
-              onClick={() => openPDF('/path/to/recommendation.pdf')} // Thay bằng đường dẫn PDF thực
+              onClick={() => openPDF('/path/to/tech-sector.pdf')} // Thay bằng đường dẫn PDF thực
               className="bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded hover:bg-blue-600 transition duration-300"
             >
               Xem thêm
@@ -77,13 +77,13 @@ const Analysis: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center gap-4 sm:gap-6 md:gap-8">
           <div className="w-full md:w-1/2 p-4 bg-gray-800 rounded-lg shadow-lg">
             <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-300 mb-3 sm:mb-4">
-              Mục tiêu Giá & Phân tích
+              Ngành Sản xuất
             </h3>
             <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-3 sm:mb-4">
-              Phân tích giá mục tiêu, giá hiện tại và các yếu tố cơ bản/kỹ thuật.
+              Đánh giá ngành sản xuất, bao gồm chuỗi cung ứng, tự động hóa và tác động của thương mại quốc tế.
             </p>
             <button
-              onClick={() => openPDF('/path/to/price-analysis.pdf')} // Thay bằng đường dẫn PDF thực
+              onClick={() => openPDF('/path/to/manufacturing-sector.pdf')} // Thay bằng đường dẫn PDF thực
               className="bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded hover:bg-blue-600 transition duration-300"
             >
               Xem thêm
@@ -92,7 +92,7 @@ const Analysis: React.FC = () => {
           <div className="w-full md:w-1/2">
             <img
               src="placeholder3.jpg" // Thay bằng ảnh thực
-              alt="Ảnh minh họa 3"
+              alt="Ảnh minh họa Ngành Sản xuất"
               className="w-full h-auto rounded-lg shadow-lg object-cover"
             />
           </div>
@@ -103,19 +103,19 @@ const Analysis: React.FC = () => {
           <div className="w-full md:w-1/2">
             <img
               src="placeholder4.jpg" // Thay bằng ảnh thực
-              alt="Ảnh minh họa 4"
+              alt="Ảnh minh họa Ngành Năng lượng"
               className="w-full h-auto rounded-lg shadow-lg object-cover"
             />
           </div>
           <div className="w-full md:w-1/2 p-4 bg-gray-800 rounded-lg shadow-lg">
             <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-300 mb-3 sm:mb-4">
-              Mô tả Doanh nghiệp
+              Ngành Năng lượng
             </h3>
             <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-3 sm:mb-4">
-              Tổng quan về hoạt động kinh doanh, chiến lược và tiềm năng phát triển.
+              Khảo sát ngành năng lượng, từ dầu khí đến năng lượng tái tạo, với trọng tâm vào bền vững và chuyển đổi.
             </p>
             <button
-              onClick={() => openPDF('/path/to/description.pdf')} // Thay bằng đường dẫn PDF thực
+              onClick={() => openPDF('/path/to/energy-sector.pdf')} // Thay bằng đường dẫn PDF thực
               className="bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded hover:bg-blue-600 transition duration-300"
             >
               Xem thêm
@@ -127,4 +127,4 @@ const Analysis: React.FC = () => {
   );
 };
 
-export default Analysis;
+export default Sector;
