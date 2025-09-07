@@ -15,7 +15,7 @@ const Slide: React.FC<SlideProps> = ({ className }) => {
         loop
       />
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white">
-        <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 sm:p-12 max-w-4xl mx-4">
+        {/* <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 sm:p-12 max-w-4xl mx-4"> */}
           {/* <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
             Y&T TECH & SERVICES INVESTORS
           </h1>
@@ -23,7 +23,7 @@ const Slide: React.FC<SlideProps> = ({ className }) => {
             Shaping Tomorrow Through Agile Innovation
           </p> */}
         </div>
-      </div>
+      {/* </div> */}
     </div>
   );
 };
