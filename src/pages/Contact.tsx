@@ -93,7 +93,7 @@ const Contact: React.FC = () => {
                         href="mailto:minhnhat1009@gmail.com" 
                         className="text-blue-600 hover:text-blue-800 transition-colors text-lg"
                       >
-                        minhnhat1009@gmail.com
+                        ytcapital.group@gmail.com
                       </a>
                     </div>
                   </motion.div>
