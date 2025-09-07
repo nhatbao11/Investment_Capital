@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 import { motion } from "framer-motion";
 import TeamCard from "../components/ui/TeamCard";
 import MemberModal, { type Member } from "../components/ui/DetailTeamCard";
@@ -225,12 +225,13 @@ const About: React.FC = () => {
             <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
               Liên hệ với chúng tôi để bắt đầu hành trình hợp tác và phát triển.
             </p>
-            <Link
-              to="/contact#contact-form"
-              className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition duration-300 shadow-lg"
-            >
-              Liên hệ ngay
-            </Link>
+            <HashLink
+  smooth
+  to="/contact#contact-form"
+  className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition duration-300 shadow-lg"
+>
+  Liên hệ ngay
+</HashLink>
           </motion.div>
         </div>
       </section>

@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { HiOutlineChevronDoubleDown, HiTrendingUp, HiShieldCheck, HiLightBulb, HiUsers } from "react-icons/hi";
 import Slide from "../components/Layout/Slide";
 import Vechungtoi from "../assets/images/vechungtoi.jpg";
+import { HashLink } from "react-router-hash-link";
+
 
 const Home: React.FC = () => {
   const scrollToNext = () => {
@@ -216,9 +218,13 @@ const Home: React.FC = () => {
               Liên hệ với chúng tôi ngay hôm nay để được tư vấn miễn phí và khám phá cơ hội đầu tư phù hợp
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/contact#contact-form" className="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition duration-300 shadow-lg text-center">
-                Liên hệ ngay
-              </Link>
+            <HashLink
+  smooth
+  to="/contact#contact-form"
+  className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition duration-300 shadow-lg"
+>
+  Liên hệ ngay
+</HashLink>
               <Link to="/investment" className="border-2 border-white text-white hover:bg-white hover:text-blue-900 px-8 py-4 rounded-lg text-lg font-semibold transition duration-300 text-center">
                 Xem giải pháp
               </Link>
