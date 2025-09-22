@@ -1,101 +1,107 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { HiOutlineChevronDoubleDown, HiTrendingUp, HiShieldCheck, HiLightBulb, HiUsers } from "react-icons/hi";
-import Slide from "../components/Layout/Slide";
-import Vechungtoi from "../assets/images/vechungtoi.jpg";
-import { HashLink } from "react-router-hash-link";
+"use client"
 
+import type React from "react"
+import { Link } from "react-router-dom"
+import { motion } from "framer-motion"
+import { HiOutlineChevronDoubleDown, HiTrendingUp, HiShieldCheck, HiLightBulb, HiUsers } from "react-icons/hi"
+import Slide from "../components/Layout/Slide"
+import Vechungtoi from "../assets/images/vechungtoi.jpg"
+import { HashLink } from "react-router-hash-link"
+import { useLanguage } from "../contexts/LanguageContext"
 
 const Home: React.FC = () => {
+  const { t } = useLanguage()
+
   const scrollToNext = () => {
-    document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
-  };
+    document.getElementById("features")?.scrollIntoView({ behavior: "smooth" })
+  }
 
   const features = [
     {
       icon: <HiTrendingUp className="text-4xl text-blue-900" />,
-      title: "Phân tích chuyên sâu",
-      description: "Đánh giá toàn diện thị trường và cơ hội đầu tư với dữ liệu thời gian thực"
+      title: t("home.features.analysis.title"),
+      description: t("home.features.analysis.description"),
     },
     {
       icon: <HiShieldCheck className="text-4xl text-yellow-500" />,
-      title: "Quản lý rủi ro",
-      description: "Chiến lược bảo vệ vốn và tối ưu hóa lợi nhuận với mức rủi ro được kiểm soát"
+      title: t("home.features.risk.title"),
+      description: t("home.features.risk.description"),
     },
     {
       icon: <HiLightBulb className="text-4xl text-blue-900" />,
-      title: "Giải pháp sáng tạo",
-      description: "Tận dụng công nghệ AI và Machine Learning nhằm dự báo xu hướng thị trường, nhận diện cơ hội đầu tư tiềm năng"
+      title: t("home.features.innovation.title"),
+      description: t("home.features.innovation.description"),
     },
     {
       icon: <HiUsers className="text-4xl text-yellow-500" />,
-      title: "Đội ngũ chuyên gia",
-      description: "Các chuyên gia tài chính giàu kinh nghiệm đồng hành cùng bạn"
-    }
-  ];
+      title: t("home.features.team.title"),
+      description: t("home.features.team.description"),
+    },
+  ]
 
   const stats = [
-    { number: "Chuyên nghiệp", label: "Dịch vụ tận tâm và minh bạch" },
-    { number: "Tối ưu rủi ro", label: "Ưu tiên bảo toàn vốn dài hạn" },
-    { number: "Đồng hành", label: "Lắng nghe và hỗ trợ kịp thời" },
-    { number: "Tin cậy", label: "Giải pháp dựa trên dữ liệu" }
-  ];
+    { number: t("home.stats.professional"), label: t("home.stats.professional.desc") },
+    { number: t("home.stats.risk"), label: t("home.stats.risk.desc") },
+    { number: t("home.stats.support"), label: t("home.stats.support.desc") },
+    { number: t("home.stats.trust"), label: t("home.stats.trust.desc") },
+  ]
 
   return (
-    <div className="bg-white overflow-x-hidden">
-      {/* Hero Section with Video */}
+    <div className="bg-background overflow-x-hidden">
       <div className="relative h-screen">
         <Slide className="-mt-px" />
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-900/60 via-slate-800/50 to-slate-900/60">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center text-white px-4"
+            className="text-center text-white px-6 max-w-6xl mx-auto"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
-              Y&T CAPITAL
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
+              {t("home.hero.title")}
             </h1>
-            <p className="text-xl sm:text-2xl md:text-3xl text-blue-100 max-w-4xl mx-auto mb-8">
-              Shaping Tomorrow Through Agile Innovation
+            <p className="text-xl sm:text-2xl md:text-3xl text-slate-200 max-w-4xl mx-auto mb-6 font-light">
+              {t("home.hero.subtitle")}
             </p>
-            <p className="text-lg sm:text-xl text-blue-200 max-w-3xl mx-auto mb-12">
-              Khám phá cơ hội đầu tư cùng chúng tôi - nơi kết nối tài chính và đổi mới để xây dựng tương lai bền vững
+            <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed">
+              {t("home.hero.description")}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/about" className="border-2 border-white text-white hover:bg-white hover:text-blue-900 px-8 py-4 rounded-lg text-lg font-semibold transition duration-300 text-center">
-                Tìm hiểu thêm
-              </Link>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <Link
+  to="/about"
+  className="text-lg px-10 py-4 rounded-xl font-semibold 
+             border border-black text-white
+             hover:bg-white hover:text-blue-900
+             shadow-xl hover:shadow-2xl 
+             transition-all duration-300"
+>
+  {t("home.hero.learnMore")}
+</Link>
+
             </div>
           </motion.div>
         </div>
         <button
           onClick={scrollToNext}
-          aria-label="Cuộn xuống"
-          className="absolute left-1/2 -translate-x-1/2 bottom-25 group"
+          aria-label={t("home.hero.scrollDown")}
+          className="absolute left-1/2 -translate-x-1/2 bottom-8 group"
         >
-          <HiOutlineChevronDoubleDown
-            className="text-white text-3xl sm:text-4xl animate-bounce drop-shadow-lg"
-          />
+          <HiOutlineChevronDoubleDown className="text-white text-4xl animate-bounce drop-shadow-lg group-hover:text-accent transition-colors" />
         </button>
       </div>
 
-      {/* Features Section */}
-      <section id="features" className="py-16 sm:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="features" className="py-24 bg-background">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-900 mb-6">
-              Tại sao chọn Y&T Capital?
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-700 max-w-3xl mx-auto">
-              Chúng tôi mang đến những giải pháp đầu tư toàn diện và chuyên nghiệp
+            <h2 className="text-4xl sm:text-5xl font-bold text-primary mb-6">{t("home.features.title")}</h2>
+            <p className="text-xl text-foreground max-w-3xl mx-auto leading-relaxed">
+              {t("home.features.subtitle")}
             </p>
           </motion.div>
 
@@ -105,28 +111,23 @@ const Home: React.FC = () => {
                 key={index}
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
+                transition={{ duration: 0.8, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="text-center p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 hover:shadow-lg transition duration-300"
+                className="card p-8 text-center group hover:shadow-xl transition-all duration-300"
               >
-                <div className="flex justify-center mb-4">
+                <div className="flex justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-bold text-blue-900 mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-700">
-                  {feature.description}
-                </p>
+                <h3 className="text-xl font-bold text-primary mb-4">{feature.title}</h3>
+                <p className="text-foreground leading-relaxed">{feature.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 sm:py-20 bg-gradient-to-r from-yellow-400 to-yellow-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 bg-gradient-to-r from-primary to-primary/90">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <motion.div
@@ -137,50 +138,44 @@ const Home: React.FC = () => {
                 viewport={{ once: true }}
                 className="text-center"
               >
-                <div className="text-2xl sm:text-3xl font-bold text-white mb-2">
-                  {stat.number}
-                </div>
-                <div className="text-base sm:text-lg text-yellow-100 font-semibold">
-                  {stat.label}
-                </div>
+                <div className="text-3xl sm:text-4xl font-bold text-white mb-3">{stat.number}</div>
+                <div className="text-lg text-primary-foreground/90 font-medium">{stat.label}</div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* About Preview Section */}
-      <section className="py-16 sm:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section className="py-24 bg-background">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl sm:text-4xl font-bold text-blue-900 mb-6">
-                Về chúng tôi
-              </h2>
-              <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              Y&T Capital là công ty đầu tư mới với tầm nhìn dài hạn, tập trung xây dựng những giải pháp đầu tư sáng tạo và bền vững cho khách hàng. 
-              </p>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <span className="text-gray-700">Đội ngũ chuyên gia giàu kinh nghiệm</span>
+              <h2 className="text-4xl sm:text-5xl font-bold text-primary mb-8">{t("home.about.title")}</h2>
+              <p className="text-xl text-foreground mb-8 leading-relaxed">{t("home.about.description")}</p>
+              <div className="space-y-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-3 h-3 bg-blue-900 rounded-full flex-shrink-0"></div>
+                  <span className="text-muted-foreground text-lg">{t("home.about.point1")}</span>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-3 h-3 bg-blue-900 rounded-full"></div>
-                  <span className="text-gray-700">Công nghệ phân tích tiên tiến</span>
+                <div className="flex items-center space-x-4">
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full flex-shrink-0"></div>
+                  <span className="text-muted-foreground text-lg">{t("home.about.point2")}</span>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <span className="text-gray-700">Dịch vụ khách hàng 24/7</span>
+                <div className="flex items-center space-x-4">
+                  <div className="w-3 h-3 bg-blue-900 rounded-full flex-shrink-0"></div>
+                  <span className="text-muted-foreground text-lg">{t("home.about.point3")}</span>
                 </div>
               </div>
-              <Link to="/about" className="inline-block mt-8 bg-blue-900 hover:bg-blue-800 text-white px-8 py-4 rounded-lg text-lg font-semibold transition duration-300">
-                Tìm hiểu thêm về chúng tôi
+              <Link
+                to="/about"
+                className="btn-primary inline-block mt-10 px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                {t("home.about.learnMore")}
               </Link>
             </motion.div>
             <motion.div
@@ -190,11 +185,11 @@ const Home: React.FC = () => {
               viewport={{ once: true }}
               className="relative"
             >
-              <div className="bg-gradient-to-br from-blue-100 to-blue-200 p-8 rounded-2xl shadow-lg">
+              <div className="card p-6 shadow-xl">
                 <img
-                  src={Vechungtoi}
+                  src={Vechungtoi || "/placeholder.svg?height=400&width=600&query=professional investment team"}
                   alt="Y&T Capital Team"
-                  className="w-full h-auto rounded-lg shadow-lg"
+                  className="w-full h-80 object-cover rounded-lg"
                 />
               </div>
             </motion.div>
@@ -202,38 +197,38 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 sm:py-20 bg-gradient-to-r from-blue-900 to-blue-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="py-24 bg-gradient-to-br from-slate-900 to-slate-800">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
-              Sẵn sàng bắt đầu hành trình đầu tư?
-            </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Liên hệ với chúng tôi ngay hôm nay để được tư vấn miễn phí và khám phá cơ hội đầu tư phù hợp
+            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-8">{t("home.cta.title")}</h2>
+            <p className="text-xl text-slate-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+              {t("home.cta.description")}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <HashLink
-  smooth
-  to="/contact#contact-form"
-  className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition duration-300 shadow-lg"
->
-  Liên hệ ngay
-</HashLink>
-              <Link to="/investment" className="border-2 border-white text-white hover:bg-white hover:text-blue-900 px-8 py-4 rounded-lg text-lg font-semibold transition duration-300 text-center">
-                Xem giải pháp
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <HashLink
+                smooth
+                to="/contact#contact-form"
+                className="btn-accent px-10 py-4 text-lg font-semibold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300"
+              >
+                {t("home.cta.contact")}
+              </HashLink>
+              <Link
+                to="/investment"
+                className="btn-outline px-10 py-4 text-lg font-semibold rounded-xl transition-all duration-300"
+              >
+                {t("home.cta.solutions")}
               </Link>
             </div>
           </motion.div>
         </div>
       </section>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

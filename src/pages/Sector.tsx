@@ -1,61 +1,84 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import PageHeader from '../components/ui/PageHeader';
-import phantichnganh from '../assets/images/phantichnganh.png';
+"use client"
+
+import type React from "react"
+import { motion } from "framer-motion"
+import { HiOfficeBuilding, HiDesktopComputer, HiCog, HiHome } from "react-icons/hi"
+import PageHeader from "../components/ui/PageHeader"
+import phantichnganh from "../assets/images/phantichnganh.png"
+import { useLanguage } from "../contexts/LanguageContext"
 
 const Sector: React.FC = () => {
+  const { t } = useLanguage()
+
   const openPDF = (pdfUrl: string) => {
-    window.open(pdfUrl, '_blank');
-  };
+    window.open(pdfUrl, "_blank")
+  }
 
   const sectors = [
     {
-      id: 'finance',
-      title: 'Ngành Tài chính',
-      description: 'Tổng quan về ngành tài chính, bao gồm xu hướng ngân hàng, bảo hiểm và đầu tư, với các chỉ số kinh tế vĩ mô ảnh hưởng.',
-      color: 'blue',
-      icon: '🏦',
-      metrics: ['Lãi suất', 'Tỷ lệ nợ xấu', 'Vốn hóa', 'ROE']
+      id: "banking",
+      title: t("sector.categories.banking"),
+      description: t("sector.categories.banking.desc"),
+      accent: false,
+      icon: <HiOfficeBuilding className="text-5xl text-blue-900" />,
+      metrics: ["Lãi suất", "Tỷ lệ nợ xấu", "Vốn hóa", "ROE"],
     },
     {
-      id: 'technology',
-      title: 'Ngành Công nghệ',
-      description: 'Phân tích ngành công nghệ, tập trung vào đổi mới AI, phần mềm và phần cứng, cùng với các thách thức toàn cầu.',
-      color: 'yellow',
-      icon: '💻',
-      metrics: ['R&D', 'Tăng trưởng', 'Đổi mới', 'Thị phần']
+      id: "technology",
+      title: t("sector.categories.technology"),
+      description: t("sector.categories.technology.desc"),
+      accent: false,
+      icon: <HiDesktopComputer className="text-5xl text-yellow-500" />,
+      metrics: ["R&D", "Tăng trưởng", "Đổi mới", "Thị phần"],
     },
     {
-      id: 'manufacturing',
-      title: 'Ngành Sản xuất',
-      description: 'Đánh giá ngành sản xuất, bao gồm chuỗi cung ứng, tự động hóa và tác động của thương mại quốc tế.',
-      color: 'blue',
-      icon: '🏭',
-      metrics: ['Năng suất', 'Chi phí', 'Chuỗi cung ứng', 'Tự động hóa']
+      id: "manufacturing",
+      title: t("sector.categories.manufacturing"),
+      description: t("sector.categories.manufacturing.desc"),
+      accent: false,
+      icon: <HiCog className="text-5xl text-blue-900" />,
+      metrics: ["Năng suất", "Chi phí", "Chuỗi cung ứng", "Tự động hóa"],
     },
     {
-      id: 'energy',
-      title: 'Ngành Năng lượng',
-      description: 'Khảo sát ngành năng lượng, từ dầu khí đến năng lượng tái tạo, với trọng tâm vào bền vững và chuyển đổi.',
-      color: 'yellow',
-      icon: '⚡',
-      metrics: ['Giá dầu', 'Năng lượng tái tạo', 'Bền vững', 'Chuyển đổi']
-    }
-  ];
+      id: "realestate",
+      title: t("sector.categories.realestate"),
+      description: t("sector.categories.realestate.desc"),
+      accent: false,
+      icon: <HiHome className="text-5xl text-yellow-500" />,
+      metrics: ["Giá BĐS", "Thanh khoản", "Quy hoạch", "Đầu tư"],
+    },
+  ]
 
   return (
-    <div className="bg-white text-gray-900 min-h-screen">
-      {/* Page Header */}
-      <PageHeader
-        title="Phân tích Ngành"
-        subtitle="Khám phá cơ hội đầu tư thông qua phân tích chuyên sâu các ngành kinh tế chủ chốt"
-        // backgroundClass="bg-gradient-to-br from-blue-900 to-blue-700"
-        backgroundImage={phantichnganh}
+    <div className="bg-background text-foreground min-h-screen">
+      <PageHeader title={t("sector.hero.title")} subtitle={t("sector.hero.subtitle")} backgroundImage={phantichnganh} />
 
-      />
+      <div className="max-w-7xl mx-auto py-24 px-6 lg:px-8 space-y-24">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-20"
+        >
+          <h2 className="text-4xl sm:text-5xl font-bold text-primary mb-8">{t("sector.intro.title")}</h2>
+          <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+            {t("sector.intro.description")}
+          </p>
+        </motion.div>
 
-      {/* Content sections */}
-      <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 space-y-16 md:space-y-20">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="mb-20"
+        >
+          <h3 className="text-3xl sm:text-4xl font-bold text-primary mb-16 text-center">
+            {t("sector.categories.title")}
+          </h3>
+        </motion.div>
+
         {sectors.map((sector, index) => (
           <motion.div
             key={sector.id}
@@ -63,42 +86,30 @@ const Sector: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: index * 0.2 }}
             viewport={{ once: true }}
-            className={`flex flex-col lg:flex-row items-center gap-8 lg:gap-12 ${
-              index % 2 === 1 ? 'lg:flex-row-reverse' : ''
-            }`}
+            className={`flex flex-col lg:flex-row items-center gap-16 ${index % 2 === 1 ? "lg:flex-row-reverse" : ""}`}
           >
             <div className="w-full lg:w-1/2">
-              <div className={`p-6 sm:p-8 rounded-2xl shadow-lg ${
-                sector.color === 'blue' 
-                  ? 'bg-gradient-to-br from-blue-50 to-blue-100' 
-                  : 'bg-gradient-to-br from-yellow-50 to-yellow-100'
-              }`}>
-                <div className="flex items-center mb-4">
-                  <div className="text-4xl mr-4">{sector.icon}</div>
-                  <h3 className={`text-2xl sm:text-3xl font-bold ${
-                    sector.color === 'blue' ? 'text-blue-900' : 'text-yellow-900'
-                  }`}>
+              <div className="card p-10">
+                <div className="flex items-center mb-8">
+                  <div className={`mr-6 ${sector.accent ? "text-accent" : "text-primary"}`}>{sector.icon}</div>
+                  <h3 className={`text-3xl font-bold ${sector.accent ? "text-accent" : "text-primary"}`}>
                     {sector.title}
                   </h3>
                 </div>
-                <p className="text-gray-700 mb-6 text-base sm:text-lg leading-relaxed">
-                  {sector.description}
-                </p>
-                <div className="grid grid-cols-2 gap-3 mb-6">
+                <p className="text-muted-foreground mb-8 text-lg leading-relaxed">{sector.description}</p>
+                <div className="grid grid-cols-2 gap-4 mb-8">
                   {sector.metrics.map((metric, idx) => (
-                    <div key={idx} className="bg-white p-3 rounded-lg shadow-sm text-center">
-                      <div className={`text-sm font-semibold ${
-                        sector.color === 'blue' ? 'text-blue-600' : 'text-yellow-600'
-                      }`}>{metric}</div>
+                    <div key={idx} className="bg-muted p-4 rounded-xl shadow-sm text-center">
+                      <div className={`text-sm font-semibold ${sector.accent ? "text-accent" : "text-primary"}`}>
+                        {metric}
+                      </div>
                     </div>
                   ))}
                 </div>
                 <button
                   onClick={() => openPDF(`/path/to/${sector.id}-sector.pdf`)}
-                  className={`px-6 py-3 rounded-lg transition duration-300 font-medium ${
-                    sector.color === 'blue' 
-                      ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                      : 'bg-yellow-600 hover:bg-yellow-700 text-white'
+                  className={`px-8 py-4 rounded-xl transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl ${
+                    sector.accent ? "btn-accent" : "btn-primary"
                   }`}
                 >
                   Xem báo cáo ngành
@@ -106,24 +117,19 @@ const Sector: React.FC = () => {
               </div>
             </div>
             <div className="w-full lg:w-1/2">
-              <div className="bg-gradient-to-br from-gray-100 to-gray-200 p-8 rounded-2xl shadow-lg">
-                <div className={`aspect-video rounded-lg flex items-center justify-center ${
-                  sector.color === 'blue' 
-                    ? 'bg-gradient-to-br from-blue-400 to-blue-600' 
-                    : 'bg-gradient-to-br from-yellow-400 to-yellow-600'
-                }`}>
-                  <div className="text-white text-center">
-                    <div className="text-4xl mb-2">{sector.icon}</div>
-                    <div className="text-lg font-semibold">Biểu đồ {sector.title}</div>
-                  </div>
-                </div>
+              <div className="card p-8">
+                <img
+                  src={`/${sector.id}-sector-analysis.jpg`}
+                  alt={`Biểu đồ ${sector.title}`}
+                  className="w-full h-64 object-cover rounded-xl"
+                />
               </div>
             </div>
           </motion.div>
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Sector;
+export default Sector

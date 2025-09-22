@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
   const { t } = useLanguage() // Added translation function
 
   return (
-    <footer className="relative bg-gradient-to-br from-gray-50 via-white to-blue-50 text-black border-t border-gray-200 font-sans mt-8 sm:mt-16 overflow-hidden">
+    <footer className="relative bg-gradient-to-br from-gray-50 via-white to-blue-50 text-black border-t border-gray-200 font-sans mt-0 sm:mt-0 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-r from-blue-900/5 to-yellow-500/5"></div>
 

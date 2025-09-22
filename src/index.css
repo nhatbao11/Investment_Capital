@@ -1,4 +1,5 @@
 @import "tailwindcss";
+/* Simplified to only import the consolidated design system */
 @import "./styles/design-system.css";
 
 /* Reset scroll position on route change */
