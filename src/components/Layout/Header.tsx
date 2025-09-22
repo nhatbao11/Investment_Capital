@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect, useRef } from "react"
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { Link, useLocation} from "react-router-dom"
 import { HiMenu, HiX, HiSparkles } from "react-icons/hi"
 import { motion, AnimatePresence } from "framer-motion"
 import Logo from "../../assets/images/Logo01.jpg"
@@ -17,7 +17,7 @@ const SCROLL_UP_THRESHOLD = 30
 
 const Header: React.FC<HeaderProps> = ({ className }) => {
   const location = useLocation()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const { language, setLanguage, t } = useLanguage() // Added language context
   const [langOpen, setLangOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
