@@ -21,7 +21,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
   const { language, setLanguage, t } = useLanguage() // Added language context
   const [langOpen, setLangOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const [showInvestmentDropdown, setShowInvestmentDropdown] = useState(false)
+  // const [showInvestmentDropdown, setShowInvestmentDropdown] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const headerRef = useRef<HTMLElement | null>(null)
 
@@ -85,10 +85,10 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
     }
   }, [isScrolled])
 
-  const goToInvestment = (hash: string) => {
-    setShowInvestmentDropdown(false)
-    navigate(`/investment#${encodeURIComponent(hash)}`)
-  }
+  // const goToInvestment = (hash: string) => {
+  //   setShowInvestmentDropdown(false)
+  //   navigate(`/investment#${encodeURIComponent(hash)}`)
+  // }
 
   return (
     <motion.header
