@@ -1,19 +1,51 @@
 "use client"
 
 import type React from "react"
-import { Link } from "react-router-dom"
+import Link from "next/link"
 import { motion } from "framer-motion"
 import { HiOutlineChevronDoubleDown, HiTrendingUp, HiShieldCheck, HiLightBulb, HiUsers } from "react-icons/hi"
 import Slide from "../components/Layout/Slide"
-import Vechungtoi from "../assets/images/vechungtoi.jpg"
-import { HashLink } from "react-router-hash-link"
+import Image from "next/image"
 import { useLanguage } from "../contexts/LanguageContext"
+import HeroSection from "../components/sections/HeroSection"
+// import FeaturesSection from "../components/sections/FeaturesSection"
+import ServicesSection from "../components/sections/ServicesSection"
+import FeedbackSection from "../components/sections/FeedbackSection"
+import { useState, useEffect } from "react"
+import { usePosts } from "../services/hooks/usePosts"
+import { Post } from "../services/types/posts"
+import PostImage from "../components/ui/PostImage"
+import { postsApi } from "../services/api/posts"
 
 const Home: React.FC = () => {
   const { t } = useLanguage()
+  const { fetchLatestPosts } = usePosts()
+  const [latestPosts, setLatestPosts] = useState<Post[]>([])
 
   const scrollToNext = () => {
     document.getElementById("features")?.scrollIntoView({ behavior: "smooth" })
+  }
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    const loadLatestPosts = async () => {
+      try {
+        const posts = await fetchLatestPosts(6)
+        setLatestPosts(posts)
+      } catch (error) {
+        console.error('Failed to load latest posts:', error)
+      }
+    }
+    loadLatestPosts()
+  }, [])
+
+  const handleViewReport = async (post: Post) => {
+    try {
+      // Tăng lượt xem khi click vào bài viết
+      await postsApi.incrementViewCount(post.id)
+    } catch (error) {
+      console.error('Error incrementing view count:', error)
+    }
   }
 
   const features = [
@@ -21,74 +53,199 @@ const Home: React.FC = () => {
       icon: <HiTrendingUp className="text-4xl text-blue-900" />,
       title: t("home.features.analysis.title"),
       description: t("home.features.analysis.description"),
+      href: "/sector",
     },
     {
       icon: <HiShieldCheck className="text-4xl text-yellow-500" />,
       title: t("home.features.risk.title"),
       description: t("home.features.risk.description"),
+      href: "/analysis",
     },
     {
       icon: <HiLightBulb className="text-4xl text-blue-900" />,
       title: t("home.features.innovation.title"),
       description: t("home.features.innovation.description"),
+      href: "/investment",
     },
     {
       icon: <HiUsers className="text-4xl text-yellow-500" />,
       title: t("home.features.team.title"),
       description: t("home.features.team.description"),
+      href: "/about",
     },
-  ]
-
-  const stats = [
-    { number: t("home.stats.professional"), label: t("home.stats.professional.desc") },
-    { number: t("home.stats.risk"), label: t("home.stats.risk.desc") },
-    { number: t("home.stats.support"), label: t("home.stats.support.desc") },
-    { number: t("home.stats.trust"), label: t("home.stats.trust.desc") },
-  ]
+  ];
 
   return (
     <div className="bg-background overflow-x-hidden">
-      <div className="relative h-screen">
+      <div className="relative md:h-[87vh]">
         <Slide className="-mt-px" />
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-900/60 via-slate-800/50 to-slate-900/60">
+        <div className="absolute inset-0 flex items-end md:items-start justify-start bg-gradient-to-b from-slate-900/70 via-slate-900/30 to-transparent md:bg-gradient-to-br md:from-slate-900/60 md:via-slate-800/50 md:to-slate-900/60">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center text-white px-6 max-w-6xl mx-auto"
+            className="text-left text-white px-4 sm:px-6 max-w-3xl sm:max-w-5xl mb-8 sm:mb-0 md:mt-20 lg:mt-28 xl:mt-32"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
               {t("home.hero.title")}
             </h1>
-            <p className="text-xl sm:text-2xl md:text-3xl text-slate-200 max-w-4xl mx-auto mb-6 font-light">
+
+            <p className="text-base sm:text-xl md:text-2xl text-slate-200 font-medium max-w-2xl sm:max-w-4xl mb-5 drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
               {t("home.hero.subtitle")}
             </p>
-            <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed">
-              {t("home.hero.description")}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Link
-  to="/about"
-  className="text-lg px-10 py-4 rounded-xl font-semibold 
-             border border-black text-white
-             hover:bg-white hover:text-blue-900
-             shadow-xl hover:shadow-2xl 
-             transition-all duration-300"
->
-  {t("home.hero.learnMore")}
-</Link>
 
+            <div className="flex flex-row gap-4 sm:gap-6 justify-start">
+              <Link
+                href="/about"
+                className="px-6 py-2 text-base font-semibold rounded-md text-white bg-blue-900 relative overflow-hidden before:absolute before:top-0 before:left-[-100%] before:h-full before:w-full before:bg-yellow-500 before:transition-all before:duration-500 hover:before:left-0 shadow-md transition-colors duration-300">
+                <span className="relative z-10">{t("home.hero.learnMore")}</span>
+              </Link>
             </div>
           </motion.div>
+
         </div>
-        <button
+
+        {/* <button
           onClick={scrollToNext}
           aria-label={t("home.hero.scrollDown")}
           className="absolute left-1/2 -translate-x-1/2 bottom-8 group"
         >
           <HiOutlineChevronDoubleDown className="text-white text-4xl animate-bounce drop-shadow-lg group-hover:text-accent transition-colors" />
-        </button>
+        </button> */}
       </div>
+
+      <div className="relative z-10 bg-blue-900/50 backdrop-blur-md px-6 py-10 sm:p-14 w-full animate-slide-in-left md:-mt-35">
+      <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="text-center mb-5"
+            >
+               <p className="text-base sm:text-xl text-white leading-relaxed text-center">
+          {t("home.hero.description")}
+        </p>
+            </motion.div>
+       
+      </div>
+
+      {/*about us*/}
+      <div className="bg-blue-900/80 text-white px-8 py-12 -mt-1">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center gap-6">
+
+          <div className="md:w-1/4 text-left">
+            <h2 className="text-xl font-semibold">{t("home.about.title")}</h2>
+          </div>
+
+          <div className="md:w-3/4 relative">
+          
+            <div className="absolute left-0 top-0 h-full w-px bg-white/40"></div>
+
+            <div className="pl-6 md:pl-10">
+              <p className="text-sm md:text-base leading-relaxed">
+                "{t("home.about.mission")}"
+              </p>
+              <div className="flex flex-col sm:flex-row gap-6 justify-start mt-3">
+                <Link
+                  href="/about"
+                  className="px-6 py-2 text-base font-semibold rounded-md text-white bg-yellow-500 relative overflow-hidden before:absolute before:top-0 before:left-[-100%] before:h-full before:w-full before:bg-blue-900 before:transition-all before:duration-500 hover:before:left-0 shadow-md transition-colors duration-300">
+                  <span className="relative z-10">{t("home.about.learnMore")}</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Latest posts hidden as requested */}
+      {false && (
+        <section className="py-24 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-8">
+                Bài viết mới nhất
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Khám phá các bài phân tích chuyên sâu về ngành và doanh nghiệp từ đội ngũ chuyên gia của chúng tôi
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {latestPosts.map((post, index) => (
+                <motion.div
+                  key={post.id}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                >
+                  <PostImage 
+                    src={post.thumbnail_url} 
+                    alt={post.title}
+                  />
+
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        post.category === 'nganh' 
+                          ? 'bg-blue-100 text-blue-800' 
+                          : 'bg-green-100 text-green-800'
+                      }`}>
+                        {post.category === 'nganh' ? 'Phân tích ngành' : 'Phân tích doanh nghiệp'}
+                      </span>
+                    </div>
+
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
+                      {post.title}
+                    </h3>
+
+                    <p className="text-gray-600 mb-4 line-clamp-3">
+                      {post.content.substring(0, 120)}...
+                    </p>
+
+                    <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                      <div className="flex items-center gap-4">
+                        <span>{new Date(post.created_at).toLocaleDateString('vi-VN')}</span>
+                        <span>{post.view_count} lượt xem</span>
+                      </div>
+                    </div>
+
+                  <Link
+                    href={post.category === 'nganh' ? '/sector' : '/analysis'}
+                    onClick={() => handleViewReport(post)}
+                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Đọc thêm
+                  </Link>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="text-center mt-12">
+              <Link
+                href="/sector"
+                className="inline-flex items-center px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors mr-4"
+              >
+                Xem phân tích ngành
+              </Link>
+              <Link
+                href="/analysis"
+                className="inline-flex items-center px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+              >
+                Xem phân tích doanh nghiệp
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       <section id="features" className="py-24 bg-background">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -99,106 +256,41 @@ const Home: React.FC = () => {
             viewport={{ once: true }}
             className="text-center mb-20"
           >
-            <h2 className="text-4xl sm:text-5xl font-bold text-primary mb-6">{t("home.features.title")}</h2>
+            <h2 className="text-4xl sm:text-5xl font-bold text-primary mb-3 -mt-10">{t("home.features.title")}</h2>
             <p className="text-xl text-foreground max-w-3xl mx-auto leading-relaxed">
               {t("home.features.subtitle")}
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 -mt-7">
             {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="card p-8 text-center group hover:shadow-xl transition-all duration-300"
-              >
-                <div className="flex justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-bold text-primary mb-4">{feature.title}</h3>
-                <p className="text-foreground leading-relaxed">{feature.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 bg-gradient-to-r from-primary to-primary/90">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.5 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center"
-              >
-                <div className="text-3xl sm:text-4xl font-bold text-white mb-3">{stat.number}</div>
-                <div className="text-lg text-primary-foreground/90 font-medium">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-24 bg-background">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-4xl sm:text-5xl font-bold text-primary mb-8">{t("home.about.title")}</h2>
-              <p className="text-xl text-foreground mb-8 leading-relaxed">{t("home.about.description")}</p>
-              <div className="space-y-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-3 h-3 bg-blue-900 rounded-full flex-shrink-0"></div>
-                  <span className="text-muted-foreground text-lg">{t("home.about.point1")}</span>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full flex-shrink-0"></div>
-                  <span className="text-muted-foreground text-lg">{t("home.about.point2")}</span>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="w-3 h-3 bg-blue-900 rounded-full flex-shrink-0"></div>
-                  <span className="text-muted-foreground text-lg">{t("home.about.point3")}</span>
-                </div>
-              </div>
-              <Link
-                to="/about"
-                className="btn-primary inline-block mt-10 px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                {t("home.about.learnMore")}
+              <Link key={index} href={feature.href}>
+                <motion.div
+                  onMouseEnter={() => setHoverIndex(index)}
+                  onMouseLeave={() => setHoverIndex(null)}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className={`card p-8 text-center transition-all duration-300 cursor-pointer
+              ${hoverIndex === index ? "shadow-2xl scale-105 z-10" : "opacity-60"}`}
+                >
+                  <div className="flex justify-center mb-6 transition-transform duration-300">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-xl font-bold text-primary mb-4 inline-block">{feature.title}</h3>
+                  <p className="text-foreground leading-relaxed">{feature.description}</p>
+                </motion.div>
               </Link>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="relative"
-            >
-              <div className="card p-6 shadow-xl">
-                <img
-                  src={Vechungtoi || "/placeholder.svg?height=400&width=600&query=professional investment team"}
-                  alt="Y&T Capital Team"
-                  className="w-full h-80 object-cover rounded-lg"
-                />
-              </div>
-            </motion.div>
+            ))}
           </div>
         </div>
       </section>
+      {/* Feedback Section */}
+      <FeedbackSection />
 
       <section className="py-24 bg-gradient-to-br from-slate-900 to-slate-800">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center -mt-10">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -209,19 +301,16 @@ const Home: React.FC = () => {
             <p className="text-xl text-slate-300 mb-12 max-w-3xl mx-auto leading-relaxed">
               {t("home.cta.description")}
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <HashLink
-                smooth
-                to="/contact#contact-form"
-                className="btn-accent px-10 py-4 text-lg font-semibold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300"
-              >
-                {t("home.cta.contact")}
-              </HashLink>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center -mb-10">
               <Link
-                to="/investment"
-                className="btn-outline px-10 py-4 text-lg font-semibold rounded-xl transition-all duration-300"
-              >
-                {t("home.cta.solutions")}
+                href="/contactcontact"
+                className="px-6 py-2 text-base font-semibold rounded-md text-white bg-blue-900 relative overflow-hidden before:absolute before:top-0 before:left-[-100%] before:h-full before:w-full before:bg-yellow-500 before:transition-all before:duration-500 hover:before:left-0 shadow-md transition-colors duration-300">
+                <span className="relative z-10">{t("home.cta.contact")}</span>
+              </Link>
+              <Link
+                href="/investment"
+                className="px-6 py-2 text-base font-semibold rounded-md text-white bg-yellow-500 relative overflow-hidden before:absolute before:top-0 before:left-[-100%] before:h-full before:w-full before:bg-blue-900 before:transition-all before:duration-500 hover:before:left-0 shadow-md transition-colors duration-300">
+                <span className="relative z-10">{t("home.cta.solutions")}</span>
               </Link>
             </div>
           </motion.div>

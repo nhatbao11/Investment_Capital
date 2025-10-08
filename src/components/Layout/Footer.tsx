@@ -4,7 +4,7 @@ import type React from "react"
 import { FaLinkedin, FaFacebook, FaTiktok } from "react-icons/fa"
 import { MdLocationOn, MdEmail, MdAccessTime, MdPhone } from "react-icons/md"
 import { motion } from "framer-motion"
-import Logo from "../../assets/images/Logo01.jpg"
+// Removed import for Next.js compatibility
 import { useLanguage } from "../../contexts/LanguageContext" // Added language context
 
 const Footer: React.FC = () => {
@@ -31,7 +31,7 @@ const Footer: React.FC = () => {
               className="relative mb-3"
             >
               <img
-                src={Logo || "/placeholder.svg"}
+                src="/images/Logo01.jpg"
                 alt="Y&T Capital Logo"
                 className="w-20 sm:w-24 lg:w-28 h-auto rounded-full shadow-lg hover:shadow-xl transition-shadow duration-300"
               />
@@ -64,7 +64,7 @@ const Footer: React.FC = () => {
               <h4 className="font-bold text-blue-900 text-sm sm:text-base lg:text-lg mb-3 sm:mb-4 group-hover:text-yellow-600 transition-colors duration-300">
                 {t("footer.address")}
               </h4>
-              <motion.p
+              <motion.div
                 className="flex items-start text-gray-700 font-medium hover:text-blue-900 transition-all duration-300 hover:scale-105"
                 whileHover={{ x: 5 }}
               >
@@ -72,7 +72,7 @@ const Footer: React.FC = () => {
                   <MdLocationOn className="text-blue-900 mr-2 mt-1 text-base sm:text-lg lg:text-xl" />
                 </motion.div>
                 <span className="leading-relaxed">92, 19E, Phường An Lạc, TP. Hồ Chí Minh</span>
-              </motion.p>
+              </motion.div>
             </motion.div>
 
             {/* Liên hệ */}
@@ -87,7 +87,7 @@ const Footer: React.FC = () => {
                 {t("footer.contact")}
               </h4>
               <div className="space-y-2 sm:space-y-3">
-                <motion.p
+                <motion.div
                   className="flex items-center text-gray-700 font-medium hover:text-blue-900 transition-all duration-300 hover:scale-105"
                   whileHover={{ x: 5 }}
                 >
@@ -95,8 +95,8 @@ const Footer: React.FC = () => {
                     <MdEmail className="text-blue-900 mr-2 text-base sm:text-lg lg:text-xl" />
                   </motion.div>
                   <span className="break-all">ytcapital.group@gmail.com</span>
-                </motion.p>
-                <motion.p
+                </motion.div>
+                <motion.div
                   className="flex items-center text-gray-700 font-medium hover:text-blue-900 transition-all duration-300 hover:scale-105"
                   whileHover={{ x: 5 }}
                 >
@@ -104,8 +104,8 @@ const Footer: React.FC = () => {
                     <MdPhone className="text-blue-900 mr-2 text-base sm:text-lg lg:text-xl" />
                   </motion.div>
                   <span>0909 123 456</span>
-                </motion.p>
-                <motion.p
+                </motion.div>
+                <motion.div
                   className="flex items-start text-gray-700 font-medium hover:text-blue-900 transition-all duration-300 hover:scale-105"
                   whileHover={{ x: 5 }}
                 >
@@ -113,7 +113,7 @@ const Footer: React.FC = () => {
                     <MdAccessTime className="text-blue-900 mr-2 mt-0.5 text-base sm:text-lg lg:text-xl" />
                   </motion.div>
                   <span className="leading-relaxed">{t("footer.hours")}</span>
-                </motion.p>
+                </motion.div>
               </div>
             </motion.div>
 
@@ -130,8 +130,8 @@ const Footer: React.FC = () => {
               </h4>
               <ul className="space-y-2 sm:space-y-3 text-gray-700 font-medium">
                 {[
-                  { href: "/terms", text: t("footer.terms") },
-                  { href: "/privacy", text: t("footer.privacy") },
+                  { href: "/terms.pdf", text: t("footer.terms"), isPdf: true },
+                  { href: "/privacy.pdf", text: t("footer.privacy"), isPdf: true },
                   { href: "/about", text: t("footer.about") },
                   { href: "/services", text: t("footer.services") },
                 ].map((item, index) => (
@@ -147,6 +147,8 @@ const Footer: React.FC = () => {
                     <a
                       href={item.href}
                       className="hover:text-blue-900 hover:underline transition-all duration-300 block py-1"
+                      target={item.isPdf ? "_blank" : undefined}
+                      rel={item.isPdf ? "noopener noreferrer" : undefined}
                     >
                       {item.text}
                     </a>

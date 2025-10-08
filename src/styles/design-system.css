@@ -449,6 +449,8 @@ body {
   cursor: pointer;
   transition: all var(--transition-normal);
   white-space: nowrap;
+  min-height: 44px; /* touch target */
+  min-width: 44px;  /* touch target */
 }
 
 .btn-primary {
@@ -542,6 +544,7 @@ body {
   color: var(--gray-900);
   background-color: var(--white);
   transition: all var(--transition-normal);
+  min-height: 44px; /* touch target */
 }
 
 .form-input:focus {
@@ -659,5 +662,4 @@ html {
 /* Fix for scroll position issue when navigating */
 .scroll-to-top-on-mount {
   scroll-behavior: auto;
-  scroll-top: 0;
 }

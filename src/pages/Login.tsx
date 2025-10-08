@@ -1,56 +1,126 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
-import { FaGoogle, FaFacebook, FaEye, FaEyeSlash } from "react-icons/fa"
-import Logo from "../assets/images/YT LOGO.png"
+import { FaEye, FaEyeSlash } from "react-icons/fa"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { useLanguage } from "../contexts/LanguageContext"
+import { useAuth } from "../services/hooks/useAuth"
 
 const Login: React.FC = () => {
   const { t } = useLanguage()
+  const router = useRouter()
+  const { login, loading, error, user } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
+  const [formError, setFormError] = useState("")
+  const [newsletterOptIn, setNewsletterOptIn] = useState(false)
+  
+  const gsiInited = useRef(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Handle redirect after successful login
+  useEffect(() => {
+    console.log('Login useEffect - user:', user, 'loading:', loading)
+    if (user && !loading) {
+      console.log('User role:', user.role)
+      if (user.role === 'admin') {
+        console.log('Redirecting to admin page')
+        // Use window.location for static export mode
+        window.location.href = "/admin/"
+      } else {
+        console.log('Redirecting to home')
+        // Use window.location for static export mode
+        window.location.href = "/"
+      }
+    }
+  }, [user, loading])
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Login:", { email, password })
+    setFormError("")
+    
+    if (!email || !password) {
+      setFormError("Vui lòng điền đầy đủ email và mật khẩu")
+      return
+    }
+    
+    try {
+      console.log('Attempting login with:', { email, password })
+      await login({ email, password, newsletter_opt_in: newsletterOptIn })
+      if (error) {
+        setFormError(error)
+      }
+      // Redirect will be handled by useEffect when user state updates
+    } catch (err: any) {
+      console.error('Login error:', err)
+      
+      // Xử lý lỗi validation
+      if (err.response?.data?.code === 'VALIDATION_ERROR') {
+        const validationErrors = err.response.data.errors
+        if (validationErrors && validationErrors.length > 0) {
+          setFormError(validationErrors[0].message)
+          return
+        }
+      }
+      
+      // Xử lý lỗi đăng nhập
+      if (err.response?.data?.code === 'INVALID_CREDENTIALS') {
+        setFormError("Email hoặc mật khẩu không đúng")
+        return
+      }
+      
+      if (err.response?.data?.code === 'ACCOUNT_DEACTIVATED') {
+        setFormError("Tài khoản đã bị vô hiệu hóa")
+        return
+      }
+      
+      // Xử lý lỗi mạng
+      if (err.code === 'NETWORK_ERROR' || err.message?.includes('Network Error')) {
+        setFormError("Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng hoặc thử lại sau.")
+        return
+      }
+      
+      // Lỗi khác
+      if (err.response?.data?.message) {
+        setFormError(err.response.data.message)
+      } else {
+        setFormError("Đăng nhập thất bại. Vui lòng thử lại.")
+      }
+    }
   }
 
-  const handleGoogleLogin = () => {
-    console.log("Google login")
-  }
-
-  const handleFacebookLogin = () => {
-    console.log("Facebook login")
-  }
+  // Google login removed per requirement
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <div className="flex items-center justify-center mb-6">
-            <div className="flex items-center space-x-3">
-              <img src={Logo || "/placeholder.svg"} alt="Y&T Capital Logo" className="h-10 w-10" />
-              <h1 className="text-2xl font-bold text-white">Y&T Capital</h1>
-            </div>
-          </div>
-          <h2 className="text-3xl font-bold text-white mb-2">{t("login.subtitle")}</h2>
-          <p className="text-slate-300 text-sm">{t("login.title")}</p>
-        </motion.div>
+    <div className="relative min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-cover bg-center" style={{ backgroundImage: "url('/images/vechungtoi.jpg')" }}>
+      <div className="absolute inset-0 bg-black/55" />
 
+      {/* Top bar: logo + brand left, contact right */}
+      <div className="absolute top-0 left-0 right-0 px-4 sm:px-6 lg:px-8 py-4">
+        <div className="flex items-center justify-between">
+          <Link href="/" className="flex items-center space-x-2">
+            <img src="/images/Logo01.jpg" alt="Y&T Capital Logo" className="h-8 w-8 rounded-full" />
+            <span className="text-white font-bold text-base sm:text-lg">Y&T Capital</span>
+          </Link>
+          <Link href="/contact" className="text-white/90 hover:text-white font-semibold">
+            {t("header.contact")}
+          </Link>
+        </div>
+      </div>
+
+      <div className="relative z-10 max-w-md w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
           className="bg-white rounded-2xl shadow-2xl p-8"
         >
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-bold text-slate-900">Đăng nhập</h2>
+          </div>
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-2">
@@ -95,62 +165,36 @@ const Login: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-slate-300 rounded"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-700">
-                  {t("login.remember")}
-                </label>
+            {(formError || error) && (
+              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+                {formError || error}
               </div>
-              <div className="text-sm">
-                <a href="#" className="font-medium text-primary-600 hover:text-primary-500 transition-colors">
-                  {t("login.forgot")}
-                </a>
-              </div>
+            )}
+
+            {/* Tùy chọn nhận email khi có tin mới nhất (không bắt buộc) */}
+            <div className="flex items-start">
+              <input
+                id="newsletterOptIn"
+                name="newsletterOptIn"
+                type="checkbox"
+                checked={newsletterOptIn}
+                onChange={(e) => setNewsletterOptIn(e.target.checked)}
+                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-slate-300 rounded mt-1"
+              />
+              <label htmlFor="newsletterOptIn" className="ml-3 block text-sm text-slate-700 leading-5">
+                Tôi đồng ý nhận email khi có tin mới nhất
+              </label>
             </div>
 
             <button
               type="submit"
-              className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+              disabled={loading}
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:transform-none"
             >
-              {t("login.submit")}
+              {loading ? "Đang đăng nhập..." : "Đăng nhập"}
             </button>
 
-            <div className="mt-6">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-300" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-slate-500 font-medium">Hoặc tiếp tục với</span>
-                </div>
-              </div>
-
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={handleGoogleLogin}
-                  className="w-full inline-flex justify-center items-center py-3 px-4 border border-slate-300 rounded-lg shadow-sm bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-all duration-200"
-                >
-                  <FaGoogle className="h-4 w-4 text-red-500" />
-                  <span className="ml-2">Google</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleFacebookLogin}
-                  className="w-full inline-flex justify-center items-center py-3 px-4 border border-slate-300 rounded-lg shadow-sm bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-all duration-200"
-                >
-                  <FaFacebook className="h-4 w-4 text-blue-600" />
-                  <span className="ml-2">Facebook</span>
-                </button>
-              </div>
-            </div>
+            {/* Google login UI removed per requirement */}
 
             <div className="text-center pt-4">
               <p className="text-sm text-slate-600">

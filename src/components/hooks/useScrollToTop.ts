@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 
 /**
  * Hook to automatically scroll to top when route changes
@@ -7,16 +7,16 @@ import { useLocation } from 'react-router-dom';
  * when navigating to a new page
  */
 export const useScrollToTop = () => {
-  const location = useLocation();
+  const pathname = usePathname();
 
   useEffect(() => {
-    // Scroll to top when location changes
+    // Scroll to top when pathname changes
     window.scrollTo({
       top: 0,
       left: 0,
       behavior: 'auto' // Use 'auto' for instant scroll, 'smooth' for animated
     });
-  }, [location.pathname]);
+  }, [pathname]);
 };
 
 export default useScrollToTop;

@@ -8,26 +8,37 @@ interface TeamCardProps {
 }
 
 const TeamCard: React.FC<TeamCardProps> = ({ name, title, image, onClick }) => {
+  console.log('TeamCard rendering:', { name, title, image });
+  
   return (
     <button
       type="button"
       onClick={onClick}
-      className="group relative w-full text-left flex flex-col items-center bg-gray-800 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
+      className="group relative w-full text-left flex flex-col items-center bg-white p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
     >
-      <img
-  src={image}
-  alt={name}
-  className="w-40 h-40 rounded-xl border-4 border-gray-700 shadow-md object-cover group-hover:scale-105 transition-transform duration-300"
-/>
-
-      <div className="mt-4 text-center">
-        <h4 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">
-          {name}
-        </h4>
-        <p className="text-sm text-gray-400">{title}</p>
+      <div className="relative w-48 h-48 border-4 border-gray-200 shadow-md overflow-hidden group-hover:scale-105 transition-transform duration-300 mb-4">
+        <img
+          src={image}
+          alt={name}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            console.error('Image failed to load:', image);
+            console.error('Error details:', e);
+          }}
+          onLoad={() => {
+            console.log('Image loaded successfully:', image);
+          }}
+        />
       </div>
 
-      <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="text-center">
+        <h4 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">
+          {name}
+        </h4>
+        <p className="text-sm text-gray-600">{title}</p>
+      </div>
+
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     </button>
   );
 };

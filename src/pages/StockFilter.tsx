@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import stocksData from '../data/stocks.json';
 
 const StockFilter: React.FC = () => {
@@ -12,7 +14,7 @@ const StockFilter: React.FC = () => {
     peAvg: '',
     sector: 'All',
   });
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     const applyFilters = () => {
@@ -42,7 +44,7 @@ const StockFilter: React.FC = () => {
   };
 
   const handleView = (ticker: string) => {
-    navigate(`/analysis/${ticker}`);
+    router.push(`/analysis/${ticker}`);
   };
 
   return (
