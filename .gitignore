@@ -34,3 +34,23 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Large files
+*.tar.gz
+investment_capital_deploy.tar.gz
+deploy.tar.gz
+temp_deploy/
+deploy.ps1
+deploy-to-vps.sh
+setup-vps.sh
+
+# Documentation files
+DEPLOYMENT_GUIDE.md
+DEPLOYMENT.md
+FRONTEND_BACKEND_INTEGRATION.md
+MIGRATION_SUMMARY.md
+README.md
+
+# Config files for deployment
+nginx.conf
+ecosystem.config.js
