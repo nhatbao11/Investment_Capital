@@ -57,7 +57,7 @@ const FeedbackSection: React.FC = () => {
     try {
       const u = new URL(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1')
       return u.origin
-    } catch { return 'http://localhost:5000' }
+    } catch { return 'http://localhost:5000/api/v1' }
   })()
 
   const displayFeedbacks = safeFeedbacks.length > 0 ? safeFeedbacks.map((fb: any) => ({

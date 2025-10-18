@@ -40,7 +40,7 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
 
   const resolveApiOrigin = () => {
     const raw = (process as any).env.NEXT_PUBLIC_API_URL || ''
-    if (!raw) return 'http://localhost:5000'
+    if (!raw) return 'http://localhost:5000/api/v1'
     try {
       return new URL(raw).origin
     } catch {
@@ -58,42 +58,29 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
       if (post.pdf_url) {
         let pdfUrl = post.pdf_url;
         
-        // Nếu URL bắt đầu với /uploads/, thêm domain
+        // Nếu URL bắt đầu với /uploads/, sử dụng API route
         if (pdfUrl.startsWith('/uploads/')) {
-          const origin = resolveApiOrigin();
-          pdfUrl = `${origin}${pdfUrl}`;
+          pdfUrl = `/api${pdfUrl}`;
         }
         
-        // Nếu URL không có protocol, thêm https://
-        if (!pdfUrl.startsWith('http://') && !pdfUrl.startsWith('https://')) {
+        // Nếu URL không có protocol, thêm domain
+        if (!pdfUrl.startsWith('http://') && !pdfUrl.startsWith('https://') && !pdfUrl.startsWith('/api/')) {
           pdfUrl = `https://yt2future.com${pdfUrl}`;
         }
         
-        // Opening PDF
-        
         // Mở PDF trong tab mới
-        const newWindow = window.open(pdfUrl, '_blank', 'noopener,noreferrer');
-        
-        if (!newWindow) {
-          // Nếu popup bị chặn, thử download
-          const link = document.createElement('a');
-          link.href = pdfUrl;
-          link.download = post.title || 'report.pdf';
-          link.target = '_blank';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
+        window.open(pdfUrl, '_blank', 'noopener,noreferrer');
       } else {
         // Không có PDF, chuyển đến trang chi tiết
         window.location.href = `/posts/${post.id}`;
       }
     } catch (error) {
+      console.error('Error opening PDF:', error);
       
       // Fallback: thử mở trực tiếp
       if (post.pdf_url) {
         const fallbackUrl = post.pdf_url.startsWith('/uploads/') 
-          ? `https://yt2future.com${post.pdf_url}` 
+          ? `/api${post.pdf_url}` 
           : post.pdf_url;
         window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
       } else {

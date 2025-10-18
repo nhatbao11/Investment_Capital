@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
 export interface Category {
   id: number;
@@ -23,7 +23,7 @@ export interface UpdateCategoryData {
 }
 
 class CategoriesAPI {
-  private baseUrl = `${API_BASE}/api/v1/categories`;
+  private baseUrl = `${API_BASE}/categories`;
 
   async getAll(): Promise<Category[]> {
     const response = await fetch(this.baseUrl);

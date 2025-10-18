@@ -108,8 +108,8 @@ const AdminDashboard: React.FC = () => {
       setTotalKnowledge(knowledgePagination?.total || knowledge.length || 0)
       try {
         const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : ''
-        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-        const r = await fetch(`${API_BASE}/api/v1/bookjourney/admin/all?page=1&limit=1`, { headers: { Authorization: `Bearer ${token}` } })
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1'
+        const r = await fetch(`${API_BASE}/bookjourney/admin/all?page=1&limit=1`, { headers: { Authorization: `Bearer ${token}` } })
         if (r.ok) {
           const j = await r.json()
           setTotalBookJourney(j?.pagination?.total || (j?.data?.length || 0))
@@ -525,25 +525,25 @@ const AdminDashboard: React.FC = () => {
                 </div>
               ) : (
                 <div className="overflow-x-auto border border-gray-200 rounded-lg shadow" style={{ maxHeight: '60vh' }}>
-                  <table className="min-w-full divide-y divide-gray-200">
+                  <table className="w-full table-fixed divide-y divide-gray-200">
                     <thead className="bg-gray-50 sticky top-0">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/5">
                           Tiêu đề
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">
                           Danh mục
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">
                           Trạng thái
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[8%]">
                           Lượt xem
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]">
                           Ngày tạo
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[8%]">
                           Thao tác
                         </th>
                       </tr>
@@ -551,12 +551,12 @@ const AdminDashboard: React.FC = () => {
                     <tbody className="bg-white divide-y divide-gray-200">
                       {posts.map((post) => (
                         <tr key={post.id}>
-                          <td className="px-6 py-4">
+                          <td className="px-6 py-4 w-2/5">
                             <div className="text-sm font-medium text-gray-900 truncate max-w-xs">
                               {post.title}
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4 whitespace-nowrap w-1/6">
                             <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                               post.category === 'nganh' 
                                 ? 'bg-blue-100 text-blue-800' 
@@ -565,7 +565,7 @@ const AdminDashboard: React.FC = () => {
                               {post.category === 'nganh' ? 'Ngành' : 'Doanh nghiệp'}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4 whitespace-nowrap w-1/6">
                             <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                               post.status === 'published' 
                                 ? 'bg-green-100 text-green-800'
@@ -577,13 +577,13 @@ const AdminDashboard: React.FC = () => {
                                post.status === 'draft' ? 'Bản nháp' : 'Lưu trữ'}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 w-[8%]">
                             {post.view_count || 0}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-[10%]">
                             {new Date(post.created_at).toLocaleDateString('vi-VN')}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[8%]">
                             <div className="flex space-x-2">
                               <button
                                 onClick={() => setEditingPost(post)}
@@ -653,25 +653,25 @@ const AdminDashboard: React.FC = () => {
                 </div>
               ) : (
                 <div className="overflow-x-auto border border-gray-200 rounded-lg shadow" style={{ maxHeight: '60vh' }}>
-                  <table className="min-w-full divide-y divide-gray-200">
+                  <table className="w-full table-fixed divide-y divide-gray-200">
                     <thead className="bg-gray-50 sticky top-0">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/5">
                           Tiêu đề
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">
                           Ảnh
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">
                           Trạng thái
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[8%]">
                           Lượt xem
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]">
                           Ngày tạo
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[8%]">
                           Thao tác
                         </th>
                       </tr>
@@ -679,12 +679,12 @@ const AdminDashboard: React.FC = () => {
                     <tbody className="bg-white divide-y divide-gray-200">
                       {knowledge.map((item) => (
                         <tr key={item.id}>
-                          <td className="px-6 py-4">
+                          <td className="px-6 py-4 w-2/5">
                             <div className="text-sm font-medium text-gray-900 truncate max-w-xs">
                               {item.title}
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4 whitespace-nowrap w-1/6">
                             {item.image_url ? (
                               <img
                                 src={item.image_url}
@@ -697,7 +697,7 @@ const AdminDashboard: React.FC = () => {
                               </div>
                             )}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4 whitespace-nowrap w-1/6">
                             <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                               item.status === 'published' 
                                 ? 'bg-green-100 text-green-800'
@@ -709,13 +709,13 @@ const AdminDashboard: React.FC = () => {
                                item.status === 'draft' ? 'Bản nháp' : 'Lưu trữ'}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 w-[8%]">
                             {item.view_count || 0}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-[10%]">
                             {new Date(item.created_at).toLocaleDateString('vi-VN')}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[8%]">
                             <div className="flex space-x-2">
                               <button
                                 onClick={() => setEditingKnowledge(item)}
@@ -785,29 +785,29 @@ const AdminDashboard: React.FC = () => {
                   <p className="text-gray-500">Chưa có phản hồi nào</p>
                 </div>
               ) : (
-                <div className="overflow-x-auto border border-gray-200 rounded-lg shadow max-h-[60vh]">
-                  <table className="w-full table-fixed divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                <div className="overflow-x-auto border border-gray-200 rounded-lg shadow" style={{ maxHeight: '60vh' }}>
+                  <table className="min-w-full table-fixed divide-y divide-gray-200">
+                    <thead className="bg-gray-50 sticky top-0">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[15%]">
                           Tên
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[15%]">
                           Công ty
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/5">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/3">
                           Nội dung
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[8%]">
                           Đánh giá
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[12%]">
                           Trạng thái
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]">
                           Ngày tạo
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[7%]">
                           Thao tác
                         </th>
                       </tr>
@@ -815,38 +815,38 @@ const AdminDashboard: React.FC = () => {
                     <tbody className="bg-white divide-y divide-gray-200">
                       {feedbacks.map((feedback) => (
                         <tr key={feedback.id}>
-                          <td className="px-6 py-4 whitespace-nowrap w-1/6">
+                          <td className="px-6 py-4 whitespace-nowrap w-[15%]">
                             <div className="text-sm font-medium text-gray-900">
                               {feedback.name}
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 w-1/6">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 w-[15%]">
                             {feedback.company || '-'}
                           </td>
-                          <td className="px-6 py-4 w-2/5">
-                            <div className="text-sm text-gray-900 truncate">
+                          <td className="px-6 py-4 w-1/3">
+                            <div className="text-sm text-gray-900 truncate max-w-xs">
                               {feedback.content}
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 w-1/12">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 w-[8%]">
                             {feedback.rating ? `${feedback.rating}/5` : '-'}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap w-1/6">
+                          <td className="px-6 py-4 whitespace-nowrap w-[12%]">
                             <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                              feedback.status === 'approved' 
+                              feedback.status === 'approved'
                                 ? 'bg-green-100 text-green-800'
                                 : feedback.status === 'rejected'
                                 ? 'bg-red-100 text-red-800'
                                 : 'bg-yellow-100 text-yellow-800'
                             }`}>
-                              {feedback.status === 'approved' ? 'Đã duyệt' : 
+                              {feedback.status === 'approved' ? 'Đã duyệt' :
                                feedback.status === 'rejected' ? 'Từ chối' : 'Chờ duyệt'}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-1/6">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-[10%]">
                             {new Date(feedback.created_at).toLocaleDateString('vi-VN')}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium w-1/12">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[7%]">
                             <div className="flex space-x-2">
                               <button
                                 onClick={() => handleApproveFeedback(feedback.id)}

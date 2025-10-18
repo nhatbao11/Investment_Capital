@@ -63,7 +63,7 @@ const InvestmentFeed: React.FC<InvestmentFeedProps> = ({ title }) => {
         setIsSearching(search !== debouncedSearch);
         
         const ENV_BASE = process.env.NEXT_PUBLIC_API_URL || '';
-        const DEFAULT_BASE = 'http://localhost:5000';
+        const DEFAULT_BASE = 'http://localhost:5000/api/v1';
         
         // Check if user is admin to show all statuses
         const userRole = localStorage.getItem('userRole');
@@ -136,7 +136,7 @@ const InvestmentFeed: React.FC<InvestmentFeedProps> = ({ title }) => {
 
   const resolveApiOrigin = () => {
     const raw = (process as any).env.NEXT_PUBLIC_API_URL || ''
-    if (!raw) return 'http://localhost:5000'
+    if (!raw) return 'http://localhost:5000/api/v1'
     try {
       return new URL(raw).origin
     } catch {
@@ -146,18 +146,27 @@ const InvestmentFeed: React.FC<InvestmentFeedProps> = ({ title }) => {
 
   const handleViewReport = async (post: InvestmentPost) => {
     try {
-      // Xử lý PDF
-      if (post.content && post.content.startsWith('/uploads/')) {
-        // Local file - construct full URL
-        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-        const fullUrl = `${API_BASE}${post.content}`;
-        window.open(fullUrl, '_blank');
-      } else if (post.content && post.content.startsWith('http')) {
-        // External URL - open directly
-        window.open(post.content, '_blank');
+      // Xử lý PDF - sử dụng image_url vì đó là nơi chứa PDF
+      let pdfUrl = post.image_url || post.content;
+      
+      if (pdfUrl) {
+        // Nếu URL bắt đầu với /uploads/, sử dụng API route
+        if (pdfUrl.startsWith('/uploads/')) {
+          pdfUrl = `/api${pdfUrl}`;
+        }
+        // Nếu URL chứa localhost:5000, thay thế bằng API route
+        else if (pdfUrl.includes('localhost:5000/uploads/')) {
+          pdfUrl = pdfUrl.replace('http://localhost:5000/uploads/', '/api/uploads/');
+        }
+        // Nếu URL không có protocol, thêm domain
+        else if (!pdfUrl.startsWith('http://') && !pdfUrl.startsWith('https://') && !pdfUrl.startsWith('/api/')) {
+          pdfUrl = `https://yt2future.com${pdfUrl}`;
+        }
+        
+        // Mở PDF trong tab mới
+        window.open(pdfUrl, '_blank', 'noopener,noreferrer');
       } else {
-        // Fallback - show alert
-        alert('Không thể mở file PDF');
+        alert('Không có file PDF để mở');
       }
     } catch (error) {
       console.error('Error opening report:', error);

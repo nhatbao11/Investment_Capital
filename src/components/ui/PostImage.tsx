@@ -19,15 +19,8 @@ const PostImage: React.FC<PostImageProps> = ({
     if (!url) return fallbackSrc;
     if (url.startsWith('http')) return url;
     if (url.startsWith('/uploads/')) {
-      // Sử dụng API origin từ config
-      const apiOrigin = (() => {
-        try { 
-          return new URL(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1').origin;
-        } catch { 
-          return 'http://localhost:5000';
-        }
-      })();
-      return `${apiOrigin}${url}`;
+      // Sử dụng API route cho uploads
+      return `/api${url}`;
     }
     return url;
   };

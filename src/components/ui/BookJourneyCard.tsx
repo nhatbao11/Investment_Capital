@@ -36,7 +36,7 @@ const BookJourneyCard: React.FC<BookJourneyCardProps> = ({
     });
   };
 
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
   return (
     <Card className="p-4 sm:p-6 md:p-7" hover={false} variant="outlined">

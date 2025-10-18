@@ -36,7 +36,7 @@ const BookJourneyGrid: React.FC<BookJourneyGridProps> = ({
   limit = 6
 }) => {
   const [books, setBooks] = useState<BookJourney[]>([]);
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const mobileTrackRef = useRef<HTMLDivElement | null>(null);
@@ -81,18 +81,30 @@ const BookJourneyGrid: React.FC<BookJourneyGridProps> = ({
   const handleView = async (book: BookJourney) => {
     try {
       // Tăng lượt xem khi mở PDF
-      await fetch(`${API_BASE}/api/v1/bookjourney/${book.id}/view`, {
+      await fetch(`${API_BASE}/bookjourney/${book.id}/view`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
       });
     } catch (error) {
-      // Failed to update view count
+      console.error('Failed to update view count:', error);
     }
     
-    const pdfUrl = book.pdf_url.startsWith('http') ? book.pdf_url : `https://yt2future.com${book.pdf_url}`;
-    window.open(pdfUrl, '_blank');
+    // Xử lý PDF URL
+    let pdfUrl = book.pdf_url;
+    
+    // Nếu URL bắt đầu với /uploads/, sử dụng API route
+    if (pdfUrl.startsWith('/uploads/')) {
+      pdfUrl = `/api${pdfUrl}`;
+    }
+    
+    // Nếu URL không có protocol, thêm domain
+    if (!pdfUrl.startsWith('http://') && !pdfUrl.startsWith('https://') && !pdfUrl.startsWith('/api/')) {
+      pdfUrl = `https://yt2future.com${pdfUrl}`;
+    }
+    
+    window.open(pdfUrl, '_blank', 'noopener,noreferrer');
   };
 
   // Bỏ hành động download; chỉ xem

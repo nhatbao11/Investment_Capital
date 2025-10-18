@@ -100,7 +100,7 @@ export default function ProfilePage() {
   }
 
   const apiOrigin = (() => {
-    try { return new URL(API_CONFIG.BASE_URL).origin } catch { return 'http://localhost:5000' }
+    try { return new URL(API_CONFIG.BASE_URL).origin } catch { return 'http://localhost:5000/api/v1' }
   })()
   const displayAvatar = (() => {
     const url = (avatarPreview || avatarUrl || '/images/Logo01.jpg')

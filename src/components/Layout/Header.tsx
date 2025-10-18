@@ -123,7 +123,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
     }
   }, [avatarFile])
 
-  const apiOrigin = (() => { try { return new URL(API_CONFIG.BASE_URL).origin } catch { return 'http://localhost:5000' } })()
+  const apiOrigin = (() => { try { return new URL(API_CONFIG.BASE_URL).origin } catch { return 'http://localhost:5000/api/v1' } })()
   const avatarUrl = (() => {
     const url = (avatarPreview || (user as any)?.avatar_url || '/images/Logo01.jpg')
     if (!url) return '/images/Logo01.jpg'

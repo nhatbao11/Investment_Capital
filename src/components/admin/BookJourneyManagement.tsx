@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
-import { FaEdit, FaTrash, FaEye, FaPlus, FaTimes } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaEye, FaPlus, FaTimes, FaBook } from 'react-icons/fa';
 
 type Status = 'draft' | 'published' | 'archived';
 
@@ -23,7 +23,7 @@ interface Props {
 }
 
 const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
   const [items, setItems] = useState<BookJourney[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -122,7 +122,7 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
       setSaving(true);
       const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : '';
       const method = editing ? 'PUT' : 'POST';
-      const url = editing ? `${API_BASE}/api/v1/bookjourney/${editing.id}` : `${API_BASE}/api/v1/bookjourney`;
+      const url = editing ? `${API_BASE}/bookjourney/${editing.id}` : `${API_BASE}/bookjourney`;
 
       // Dùng FormData để hỗ trợ upload từ máy
       const fd = new FormData();
@@ -188,51 +188,84 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
         <div className="text-center py-8">Đang tải...</div>
       ) : (
         <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="overflow-x-auto max-h-[60vh]">
-            <table className="min-w-full table-fixed divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+          <div className="overflow-x-auto" style={{ maxHeight: '60vh' }}>
+            <table className="w-full table-fixed divide-y divide-gray-200">
+              <thead className="bg-gray-50 sticky top-0">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/5">TIÊU ĐỀ</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">ẢNH</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">TRẠNG THÁI</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">LƯỢT XEM</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">LƯỢT TẢI</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">NGÀY TẠO</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">THAO TÁC</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/3">
+                    Tiêu đề
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]">
+                    Ảnh
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[15%]">
+                    Trạng thái
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[8%]">
+                    Lượt xem
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[8%]">
+                    Lượt tải
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[15%]">
+                    Ngày tạo
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]">
+                    Thao tác
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {items.map((b) => (
                   <tr key={b.id}>
-                    <td className="px-6 py-4 whitespace-nowrap w-2/5">
-                      <div className="text-sm font-medium text-gray-900 truncate">{b.title}</div>
-                      {b.description && <div className="text-sm text-gray-500 truncate">{b.description}</div>}
+                    <td className="px-6 py-4 w-1/3">
+                      <div className="text-sm font-medium text-gray-900 truncate max-w-xs">
+                        {b.title}
+                      </div>
+                      {b.description && <div className="text-sm text-gray-500 truncate max-w-xs">{b.description}</div>}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap w-1/6">
+                    <td className="px-6 py-4 whitespace-nowrap w-[10%]">
                       {b.image_url ? (
-                        <img src={b.image_url.startsWith('http') ? b.image_url : `${API_BASE}${b.image_url}`} alt={b.title} className="h-12 w-8 object-cover rounded" />
+                        <img src={b.image_url ? (b.image_url.startsWith('http') ? b.image_url : b.image_url.startsWith('/uploads/') ? `/api${b.image_url}` : `${API_BASE.replace('/api/v1', '')}${b.image_url}`) : '/images/Logo01.jpg'} alt={b.title} className="h-12 w-12 object-cover rounded" />
                       ) : (
-                        <div className="h-12 w-8 bg-gray-200 rounded" />
+                        <div className="h-12 w-12 bg-gray-200 rounded flex items-center justify-center">
+                          <FaBook className="h-6 w-6 text-gray-400" />
+                        </div>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap w-1/6">
-                      <select
-                        value={b.status}
-                        onChange={(e) => updateStatus(b.id, e.target.value as Status)}
-                        className="text-xs px-2 py-1 border border-gray-300 rounded"
-                      >
-                        <option value="draft">Bản nháp</option>
-                        <option value="published">Đã xuất bản</option>
-                        <option value="archived">Lưu trữ</option>
-                      </select>
+                    <td className="px-6 py-4 whitespace-nowrap w-[15%]">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        b.status === 'published' 
+                          ? 'bg-green-100 text-green-800'
+                          : b.status === 'draft'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        {b.status === 'published' ? 'Đã xuất bản' : 
+                         b.status === 'draft' ? 'Bản nháp' : 'Lưu trữ'}
+                      </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 w-1/12">{b.view_count}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 w-1/12">{b.download_count}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-1/6">{new Date(b.created_at).toLocaleDateString('vi-VN')}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium w-1/12">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 w-[8%]">
+                      {b.view_count || 0}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 w-[8%]">
+                      {b.download_count || 0}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-[15%]">
+                      {new Date(b.created_at).toLocaleDateString('vi-VN')}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[10%]">
                       <div className="flex items-center space-x-2">
                         <button className="text-blue-600 hover:text-blue-900" title="Sửa" onClick={() => openEdit(b)}><FaEdit /></button>
-                        <button className="text-green-600 hover:text-green-900" title="Xem PDF" onClick={() => window.open(b.pdf_url.startsWith('http') ? b.pdf_url : `${API_BASE}${b.pdf_url}`, '_blank')}><FaEye /></button>
+                <button className="text-green-600 hover:text-green-900" title="Xem PDF" onClick={() => {
+                  let pdfUrl = b.pdf_url;
+                  if (pdfUrl.startsWith('/uploads/')) {
+                    pdfUrl = `/api${pdfUrl}`;
+                  } else if (!pdfUrl.startsWith('http://') && !pdfUrl.startsWith('https://') && !pdfUrl.startsWith('/api/')) {
+                    pdfUrl = `https://yt2future.com${pdfUrl}`;
+                  }
+                  window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+                }}><FaEye /></button>
                         <button className="text-red-600 hover:text-red-900" title="Xóa" onClick={() => remove(b.id)}><FaTrash /></button>
                       </div>
                     </td>

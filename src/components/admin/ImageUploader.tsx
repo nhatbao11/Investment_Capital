@@ -49,7 +49,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           // First try with direct fetch to see if it's an apiClient issue
           const token = localStorage.getItem('access_token');
 
-          const response = await fetch('http://localhost:5000/api/v1/upload/test-upload', {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1'}/upload/test-upload`, {
             method: 'POST',
             body: formData,
             headers: {

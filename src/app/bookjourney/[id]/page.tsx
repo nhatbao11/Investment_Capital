@@ -69,12 +69,26 @@ const BookJourneyDetail: React.FC = () => {
         method: 'GET'
       });
       
+      // Xử lý PDF URL
+        let pdfUrl = book.pdf_url;
+        if (pdfUrl.startsWith('/uploads/')) {
+          pdfUrl = `/api${pdfUrl}`;
+        } else if (!pdfUrl.startsWith('http://') && !pdfUrl.startsWith('https://') && !pdfUrl.startsWith('/api/')) {
+          pdfUrl = `https://yt2future.com${pdfUrl}`;
+        }
+      
       // Mở PDF trong tab mới
-      window.open(book.pdf_url, '_blank');
+      window.open(pdfUrl, '_blank', 'noopener,noreferrer');
     } catch (error) {
       console.error('Error downloading book:', error);
       // Vẫn mở PDF ngay cả khi không tăng được count
-      window.open(book.pdf_url, '_blank');
+        let pdfUrl = book.pdf_url;
+        if (pdfUrl.startsWith('/uploads/')) {
+          pdfUrl = `/api${pdfUrl}`;
+        } else if (!pdfUrl.startsWith('http://') && !pdfUrl.startsWith('https://') && !pdfUrl.startsWith('/api/')) {
+          pdfUrl = `https://yt2future.com${pdfUrl}`;
+        }
+      window.open(pdfUrl, '_blank', 'noopener,noreferrer');
     } finally {
       setPdfLoading(false);
     }
@@ -251,7 +265,7 @@ const BookJourneyDetail: React.FC = () => {
               {/* PDF Embed */}
               <div className="border rounded-lg overflow-hidden">
                 <iframe
-                  src={`${book.pdf_url}#toolbar=1&navpanes=1&scrollbar=1`}
+                  src={`${book.pdf_url.startsWith('/uploads/') ? `/api${book.pdf_url}` : book.pdf_url}#toolbar=1&navpanes=1&scrollbar=1`}
                   className="w-full h-96 lg:h-[600px]"
                   title={book.title}
                   onLoad={() => setPdfLoading(false)}
