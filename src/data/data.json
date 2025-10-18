@@ -1,0 +1,77 @@
+{
+  "1. Kiến thức đầu tư": {
+    "1.1. Lý thuyết nền tảng": {
+      "1.1.1": "Lý thuyết Dow – nền móng của phân tích kỹ thuật",
+      "1.1.2": "Sóng Elliott – hành vi chu kỳ thị trường",
+      "1.1.3": "Lý thuyết Thị trường Hiệu quả (EMH)",
+      "1.1.4": "Lý thuyết kỳ vọng hợp lý (Rational Expectation Theory)",
+      "1.1.5": "Hiệu ứng cánh bướm – sự nhạy cảm trong biến động tài chính",
+      "1.1.6": "Tâm lý hành vi trong đầu tư: FOMO, Herding Effect, Overconfidence,…"
+    },
+    "1.2. Lịch sử thị trường tài chính và các cuộc khủng hoảng": {
+      "1.2.1": "Sự hình thành thị trường chứng khoán",
+      "1.2.2": {
+        "1.2.2.1": "Thị trường thế giới (1929, 1973, 1997, 2008, COVID-19)",
+        "1.2.2.2": "Thị trường Việt Nam (2007–2009, 2011–2012, COVID-19)"
+      },
+      "1.2.3": "Bài học rút ra cho nhà đầu tư"
+    },
+    "1.3. Công cụ và phương pháp phân tích": {
+      "1.3.1. Phân tích cơ bản (FA)": {
+        "1.3.1.1": "Khái niệm, nguyên lý, ứng dụng",
+        "1.3.1.2": "Phân tích kinh tế vĩ mô, ngành, và doanh nghiệp (mô hình 3 lớp)",
+        "1.3.1.3": "Các chỉ số tài chính quan trọng: P/E, P/B, ROE, EPS, DCF, …"
+      },
+      "1.3.2. Phân tích kỹ thuật (TA)": {
+        "1.3.2.1": "Nguyên lý chung và giả định cơ bản",
+        "1.3.2.2": {
+          "Indicators": [
+            "Volume – khối lượng giao dịch",
+            "RSI (Relative Strength Index) – sức mạnh giá",
+            "MACD",
+            "EMA10, EMA50, EMA200 – đường trung bình động",
+            "Bollinger Bands",
+            "Stochastic Oscillator"
+          ],
+          "Note": "Mỗi chỉ báo: lịch sử hình thành, ý nghĩa, tín hiệu mua/bán"
+        }
+      },
+      "1.3.3. Mẫu hình giá (Chart Patterns)": {
+        "1.3.3.1": "Mẫu hình tiếp diễn: cờ, tam giác, nêm",
+        "1.3.3.2": "Mẫu hình đảo chiều: đầu vai, 2 đỉnh/đáy, cốc tay cầm"
+      },
+      "1.3.4": "Kiểm chứng thực nghiệm: ứng dụng dữ liệu lịch sử để test hiệu quả mô hình"
+    }
+  },
+  "2. Phương pháp đầu tư": {
+    "2.1. Chiến lược đầu tư": {
+      "2.1.1": "Đầu tư giá trị (Value Investing)",
+      "2.1.2": "Đầu tư tăng trưởng (Growth Investing)",
+      "2.1.3": "Đầu tư theo xu hướng (Trend Following)",
+      "2.1.4": "Đầu tư theo chỉ số (Index Fund)",
+      "2.1.5": "Đầu tư định lượng (Quantitative Investing)",
+      "2.1.6": "Đầu tư chủ động và thụ động",
+      "2.1.7": "Đầu tư theo chu kỳ kinh tế"
+    },
+    "2.2. Xây dựng danh mục đầu tư (Portfolio Management)": {
+      "2.2.1": "Nguyên tắc đa dạng hóa (Diversification)",
+      "2.2.2": "Hiệu quả danh mục (Markowitz Model, Efficient Frontier)",
+      "2.2.3": "Tái cân bằng danh mục",
+      "2.2.4": "Quản trị chi phí giao dịch, thuế, phí"
+    }
+  },
+  "3. Quản trị rủi ro": {
+    "3.1. Tổng quan về rủi ro": "Định nghĩa và vai trò trong đầu tư",
+    "3.2. Phân loại rủi ro": [
+      "Rủi ro hệ thống (systematic risk)",
+      "Rủi ro phi hệ thống (unsystematic risk)",
+      "Rủi ro kinh doanh",
+      "Rủi ro thị trường (lãi suất, tỷ giá, thanh khoản, pháp lý, chính trị)"
+    ],
+    "3.3. Phương pháp quản trị rủi ro": {
+      "3.3.1": "Stop-loss, Take profit",
+      "3.3.2": "Quản lý vốn (position sizing, Kelly formula)",
+      "3.3.3": "Kỷ luật giao dịch"
+    }
+  }
+}
