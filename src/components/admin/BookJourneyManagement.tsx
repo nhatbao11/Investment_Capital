@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FaEdit, FaTrash, FaEye, FaPlus, FaTimes, FaBook } from 'react-icons/fa';
 import { resolveFileUrl, resolvePdfUrl } from '../../utils/apiConfig';
+import { useNotification } from '../ui/Notification';
 
 type Status = 'draft' | 'published' | 'archived';
 
@@ -24,6 +25,7 @@ interface Props {
 }
 
 const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
+  const { addNotification } = useNotification()
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
   const [items, setItems] = useState<BookJourney[]>([]);
   const [loading, setLoading] = useState(true);
@@ -155,7 +157,11 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
       });
       if (resp.ok) {
         setMessage({ type: 'success', text: editing ? 'Cập nhật hành trình sách thành công' : 'Tạo hành trình sách thành công' });
-        try { alert(editing ? 'Cập nhật hành trình sách thành công' : 'Tạo hành trình sách thành công') } catch {}
+        addNotification({
+          type: 'success',
+          title: 'Thành công',
+          message: editing ? 'Cập nhật hành trình sách thành công' : 'Tạo hành trình sách thành công'
+        })
         // Đóng sau một chút để người dùng thấy thông báo
         setTimeout(() => {
           setShowModal(false);

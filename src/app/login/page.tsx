@@ -4,7 +4,7 @@ import Footer from '@/components/Layout/Footer'
 
 export const metadata: Metadata = {
   title: 'Đăng nhập',
-  description: 'Đăng nhập vào tài khoản Y&T Group để truy cập các dịch vụ đầu tư chuyên nghiệp.',
+  description: 'Đăng nhập vào tài khoản Y&T Group để tìm hiểu các kiến thức đầu tư chuyên nghiệp.',
   keywords: [
     'đăng nhập',
     'tài khoản',

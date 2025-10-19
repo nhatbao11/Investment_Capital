@@ -2,13 +2,14 @@
 
 import React, { useEffect, useMemo, useState } from "react"
 import { motion } from "framer-motion"
-import { FaEye, FaCalendar, FaUser, FaFileAlt, FaSearch } from "react-icons/fa"
+import { FaEye, FaCalendar, FaUser, FaFileAlt, FaSearch, FaFilter } from "react-icons/fa"
 import PostImage from "./PostImage"
 import { usePosts } from "../../services/hooks/usePosts"
 import { postsApi } from "../../services/api/posts"
 import { useLanguage } from "../../contexts/LanguageContext"
 import { useDebounce } from "../../hooks/useDebounce"
 import { resolvePdfUrl } from "../../utils/apiConfig"
+import { useCategories } from "../../services/hooks/useCategories"
 
 interface PostFeedProps {
   category: 'nganh' | 'doanh_nghiep'
@@ -19,22 +20,37 @@ interface PostFeedProps {
 const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', title }) => {
   const { t } = useLanguage()
   const { fetchPosts, posts, loading, pagination } = usePosts()
+  const { categories, fetchCategories } = useCategories()
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
   const [sort, setSort] = useState<'latest' | 'popular'>('latest')
   const [isSearching, setIsSearching] = useState(false)
+  const [showFilters, setShowFilters] = useState(false)
   
   // Debounce search để tránh gọi API quá nhiều
   const debouncedSearch = useDebounce(search, 500)
 
+  // Load categories on mount
+  useEffect(() => {
+    fetchCategories()
+  }, [])
+
   useEffect(() => {
     const load = async () => {
       setIsSearching(search !== debouncedSearch)
-      await fetchPosts({ category, status: 'published', page, limit: 12, search: debouncedSearch }) as any
+      await fetchPosts({ 
+        category, 
+        status: 'published', 
+        page, 
+        limit: 12, 
+        search: debouncedSearch,
+        category_id: selectedCategoryId || undefined 
+      }) as any
       setIsSearching(false)
     }
     load()
-  }, [category, page, sort, debouncedSearch])
+  }, [category, page, sort, debouncedSearch, selectedCategoryId])
 
   const featured = useMemo(() => posts.slice(0, 3), [posts])
   const rest = useMemo(() => posts.slice(3), [posts])
@@ -84,6 +100,7 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-3 mb-6 sm:mb-8">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 leading-tight">{title}</h2>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2">
+          {/* Search Input */}
           <div className="relative">
             <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
             <input 
@@ -98,8 +115,65 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
               </div>
             )}
           </div>
+
+          {/* Filter Button */}
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className={`flex items-center gap-2 px-4 py-2 sm:py-2.5 border rounded-lg text-sm transition-colors ${
+              selectedCategoryId ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-300 hover:border-gray-400'
+            }`}
+          >
+            <FaFilter className="text-sm" />
+            <span>Danh mục</span>
+            {selectedCategoryId && (
+              <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
+                {categories.find(c => c.id === selectedCategoryId)?.name || '1'}
+              </span>
+            )}
+          </button>
         </div>
       </div>
+
+      {/* Category Filter Dropdown */}
+      {showFilters && (
+        <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => {
+                setSelectedCategoryId(null)
+                setPage(1)
+              }}
+              className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
+                selectedCategoryId === null
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border'
+              }`}
+            >
+              Tất cả danh mục
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => {
+                  setSelectedCategoryId(cat.id)
+                  setPage(1)
+                }}
+                className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
+                  selectedCategoryId === cat.id
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-white text-gray-700 hover:bg-gray-100 border'
+                }`}
+                style={{ 
+                  borderColor: selectedCategoryId === cat.id ? cat.color : undefined,
+                  backgroundColor: selectedCategoryId === cat.id ? cat.color : undefined
+                }}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Featured row */}
       {loading ? (

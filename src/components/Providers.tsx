@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { LanguageProvider } from "@/contexts/LanguageContext"
+import { NotificationProvider } from "@/components/ui/Notification"
 
 interface ProvidersProps {
   children: React.ReactNode
@@ -10,10 +11,13 @@ interface ProvidersProps {
 export default function Providers({ children }: ProvidersProps) {
   return (
     <LanguageProvider>
-      {children}
+      <NotificationProvider>
+        {children}
+      </NotificationProvider>
     </LanguageProvider>
   )
 }
+
 
 
 

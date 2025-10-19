@@ -5,6 +5,7 @@ import { FaTimes, FaImage, FaSave, FaSpinner } from 'react-icons/fa';
 // import SimpleEditor from './SimpleEditor';
 import ImageUploader from './ImageUploader';
 import { categoriesAPI, Category } from '../../services/api/categories';
+import { useNotification } from '../ui/Notification';
 
 interface InvestmentKnowledgeForm {
   id?: number;
@@ -32,6 +33,7 @@ const InvestmentKnowledgeModal: React.FC<InvestmentKnowledgeModalProps> = ({
   knowledge,
   loading = false
 }) => {
+  const { addNotification } = useNotification()
   const [formData, setFormData] = useState<InvestmentKnowledgeForm>({
     title: '',
     image_url: '',
@@ -112,13 +114,21 @@ const InvestmentKnowledgeModal: React.FC<InvestmentKnowledgeModalProps> = ({
       
       // Validate required fields
       if (!formData.title.trim()) {
-        alert('Vui lòng nhập tiêu đề');
+        addNotification({
+          type: 'warning',
+          title: 'Cảnh báo',
+          message: 'Vui lòng nhập tiêu đề'
+        });
         return;
       }
 
       // For new knowledge, PDF is required
       if (!knowledge && !pdfFile && !pdfUrl.trim()) {
-        alert('Vui lòng chọn file PDF hoặc nhập URL PDF');
+        addNotification({
+          type: 'warning',
+          title: 'Cảnh báo',
+          message: 'Vui lòng chọn file PDF hoặc nhập URL PDF'
+        });
         return;
       }
 
@@ -271,7 +281,11 @@ const InvestmentKnowledgeModal: React.FC<InvestmentKnowledgeModalProps> = ({
                           setNewCategoryName('');
                           setShowNewCategory(false);
                         } catch (error) {
-                          alert('Lỗi tạo danh mục: ' + (error as Error).message);
+                          addNotification({
+                            type: 'error',
+                            title: 'Lỗi',
+                            message: 'Lỗi tạo danh mục: ' + (error as Error).message
+                          });
                         }
                       }
                     }}

@@ -8,16 +8,19 @@ import { useFeedbacks } from '../../services/hooks/useFeedbacks'
 import { feedbacksApi } from '../../services/api/feedbacks'
 import { useUsers } from '../../services/hooks/useUsers'
 import { useInvestmentKnowledge } from '../../services/hooks/useInvestmentKnowledge'
+import { useCategories } from '../../services/hooks/useCategories'
 import { authApi } from '../../services/api/auth'
 import { FaPlus, FaEdit, FaTrash, FaEye, FaCheck, FaTimes, FaChartBar, FaUsers, FaFileAlt, FaComments, FaSignOutAlt, FaHome, FaLightbulb, FaBook } from 'react-icons/fa'
 import PostModal from '../../components/admin/PostModal'
 import InvestmentKnowledgeModal from '../../components/admin/InvestmentKnowledgeModal'
 import BookJourneyManagement from '../../components/admin/BookJourneyManagement'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { useNotification } from '../../components/ui/Notification'
 
 const AdminDashboard: React.FC = () => {
   const router = useRouter()
   const { t } = useLanguage()
+  const { addNotification } = useNotification()
   const { user, loading: authLoading, logout } = useAuth()
   const { posts, loading: postsLoading, fetchPosts, deletePost, createPost, updatePost, pagination: postsPagination } = usePosts()
   const { feedbacks, loading: feedbacksLoading, fetchFeedbacks, deleteFeedback, approveFeedback, rejectFeedback, fetchFeedbackStats, stats, pagination: feedbacksPagination } = useFeedbacks()
@@ -25,15 +28,19 @@ const AdminDashboard: React.FC = () => {
   const [allFeedbacks, setAllFeedbacks] = useState<any[]>([])
   const { users, loading: usersLoading, fetchUsers, updateUser, deleteUser, pagination: usersPagination } = useUsers()
   const { knowledge, loading: knowledgeLoading, fetchKnowledge, createKnowledge, updateKnowledge, deleteKnowledge, pagination: knowledgePagination } = useInvestmentKnowledge()
+  const { categories, loading: categoriesLoading, fetchCategories, createCategory, updateCategory, deleteCategory } = useCategories()
   const [totalKnowledge, setTotalKnowledge] = useState<number>(0)
   const [totalBookJourney, setTotalBookJourney] = useState<number>(0)
   
-  const [activeTab, setActiveTab] = useState<'posts' | 'feedbacks' | 'users' | 'stats' | 'investment' | 'bookjourney'>('posts')
+  const [activeTab, setActiveTab] = useState<'posts' | 'feedbacks' | 'users' | 'stats' | 'investment' | 'bookjourney' | 'categories'>('posts')
   // users are loaded via hook
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [editingPost, setEditingPost] = useState<any>(null)
   const [showKnowledgeModal, setShowKnowledgeModal] = useState(false)
   const [editingKnowledge, setEditingKnowledge] = useState<any>(null)
+  const [showCategoryModal, setShowCategoryModal] = useState(false)
+  const [editingCategory, setEditingCategory] = useState<any>(null)
+  const [categoryForm, setCategoryForm] = useState({ name: '', description: '', color: '#3B82F6' })
   const [postFilter, setPostFilter] = useState<{ status?: 'draft' | 'published' | 'archived' | 'all'; category?: 'nganh' | 'doanh_nghiep' | 'all' }>({ status: 'all', category: 'all' })
   const [postsPage, setPostsPage] = useState(1)
   const [postsLimit, setPostsLimit] = useState(10)
@@ -170,7 +177,20 @@ const AdminDashboard: React.FC = () => {
 
   const handleDeletePost = async (id: number) => {
     if (confirm('Bạn có chắc chắn muốn xóa bài viết này?')) {
-      await deletePost(id)
+      const success = await deletePost(id)
+      if (success) {
+        addNotification({
+          type: 'success',
+          title: 'Thành công',
+          message: 'Xóa bài viết thành công'
+        })
+      } else {
+        addNotification({
+          type: 'error',
+          title: 'Lỗi',
+          message: 'Không thể xóa bài viết'
+        })
+      }
     }
   }
 
@@ -178,7 +198,18 @@ const AdminDashboard: React.FC = () => {
     if (confirm('Bạn có chắc chắn muốn xóa phản hồi này?')) {
       const ok = await deleteFeedback(id)
       if (ok) {
+        addNotification({
+          type: 'success',
+          title: 'Thành công',
+          message: 'Xóa phản hồi thành công'
+        })
         await refreshFeedbacks()
+      } else {
+        addNotification({
+          type: 'error',
+          title: 'Lỗi',
+          message: 'Không thể xóa phản hồi'
+        })
       }
     }
   }
@@ -186,14 +217,36 @@ const AdminDashboard: React.FC = () => {
   const handleApproveFeedback = async (id: number) => {
     const res = await approveFeedback(id)
     if (res) {
+      addNotification({
+        type: 'success',
+        title: 'Thành công',
+        message: 'Duyệt phản hồi thành công'
+      })
       await refreshFeedbacks()
+    } else {
+      addNotification({
+        type: 'error',
+        title: 'Lỗi',
+        message: 'Không thể duyệt phản hồi'
+      })
     }
   }
 
   const handleRejectFeedback = async (id: number) => {
     const res = await rejectFeedback(id)
     if (res) {
+      addNotification({
+        type: 'success',
+        title: 'Thành công',
+        message: 'Từ chối phản hồi thành công'
+      })
       await refreshFeedbacks()
+    } else {
+      addNotification({
+        type: 'error',
+        title: 'Lỗi',
+        message: 'Không thể từ chối phản hồi'
+      })
     }
   }
 
@@ -201,13 +254,41 @@ const AdminDashboard: React.FC = () => {
     try {
       if (editingPost) {
         const res = await updatePost(editingPost.id, data)
-        if (res) alert('Cập nhật bài viết thành công')
+        if (res) {
+          addNotification({
+            type: 'success',
+            title: 'Thành công',
+            message: 'Cập nhật bài viết thành công'
+          })
+        } else {
+          addNotification({
+            type: 'error',
+            title: 'Lỗi',
+            message: 'Không thể cập nhật bài viết'
+          })
+        }
       } else {
         const res = await createPost(data)
-        if (res) alert('Tạo bài viết thành công')
+        if (res) {
+          addNotification({
+            type: 'success',
+            title: 'Thành công',
+            message: 'Tạo bài viết thành công'
+          })
+        } else {
+          addNotification({
+            type: 'error',
+            title: 'Lỗi',
+            message: 'Không thể tạo bài viết'
+          })
+        }
       }
     } catch (e: any) {
-      alert(e?.response?.data?.message || 'Lưu bài viết thất bại')
+      addNotification({
+        type: 'error',
+        title: 'Lỗi',
+        message: e?.response?.data?.message || 'Lưu bài viết thất bại'
+      })
     } finally {
       setEditingPost(null)
       setShowCreateModal(false)
@@ -255,26 +336,132 @@ const AdminDashboard: React.FC = () => {
     }
   }
 
+  // Category handlers
+  const handleSaveCategory = async () => {
+    try {
+      if (editingCategory) {
+        const res = await updateCategory(editingCategory.id, categoryForm)
+        if (res) {
+          addNotification({
+            type: 'success',
+            title: 'Thành công',
+            message: 'Cập nhật danh mục thành công'
+          })
+        } else {
+          addNotification({
+            type: 'error',
+            title: 'Lỗi',
+            message: 'Không thể cập nhật danh mục'
+          })
+        }
+      } else {
+        const res = await createCategory(categoryForm)
+        if (res) {
+          addNotification({
+            type: 'success',
+            title: 'Thành công',
+            message: 'Tạo danh mục thành công'
+          })
+        } else {
+          addNotification({
+            type: 'error',
+            title: 'Lỗi',
+            message: 'Không thể tạo danh mục'
+          })
+        }
+      }
+    } catch (e: any) {
+      addNotification({
+        type: 'error',
+        title: 'Lỗi',
+        message: e?.response?.data?.message || 'Lưu danh mục thất bại'
+      })
+    } finally {
+      setEditingCategory(null)
+      setShowCategoryModal(false)
+      setCategoryForm({ name: '', description: '', color: '#3B82F6' })
+    }
+  }
+
+  const handleDeleteCategory = async (id: number) => {
+    if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
+      const success = await deleteCategory(id)
+      if (success) {
+        addNotification({
+          type: 'success',
+          title: 'Thành công',
+          message: 'Xóa danh mục thành công'
+        })
+      } else {
+        addNotification({
+          type: 'error',
+          title: 'Lỗi',
+          message: 'Không thể xóa danh mục'
+        })
+      }
+    }
+  }
+
+  const openCreateCategory = () => {
+    setEditingCategory(null)
+    setCategoryForm({ name: '', description: '', color: '#3B82F6' })
+    setShowCategoryModal(true)
+  }
+
+  const openEditCategory = (category: any) => {
+    setEditingCategory(category)
+    setCategoryForm({ 
+      name: category.name, 
+      description: category.description || '', 
+      color: category.color || '#3B82F6' 
+    })
+    setShowCategoryModal(true)
+  }
+
   const handleSaveKnowledge = async (data: FormData) => {
     try {
       if (editingKnowledge) {
         const res = await updateKnowledge(editingKnowledge.id, data as any)
         if (res) {
-          alert('Cập nhật kiến thức đầu tư thành công')
+          addNotification({
+            type: 'success',
+            title: 'Thành công',
+            message: 'Cập nhật kiến thức đầu tư thành công'
+          })
           setEditingKnowledge(null)
           setShowKnowledgeModal(false)
+        } else {
+          addNotification({
+            type: 'error',
+            title: 'Lỗi',
+            message: 'Không thể cập nhật kiến thức đầu tư'
+          })
         }
       } else {
         const res = await createKnowledge(data as any)
         if (res) {
-          alert('Tạo kiến thức đầu tư thành công')
+          addNotification({
+            type: 'success',
+            title: 'Thành công',
+            message: 'Tạo kiến thức đầu tư thành công'
+          })
           setEditingKnowledge(null)
           setShowKnowledgeModal(false)
+        } else {
+          addNotification({
+            type: 'error',
+            title: 'Lỗi',
+            message: 'Không thể tạo kiến thức đầu tư'
+          })
         }
       }
     } catch (e: any) {
       console.error('Save knowledge error:', e)
-      alert(e?.response?.data?.message || 'Lưu kiến thức đầu tư thất bại')
+      addNotification({
+        type: 'error',
+        title: 'Lỗi',
+        message: e?.response?.data?.message || 'Lưu kiến thức đầu tư thất bại'
+      })
     }
   }
 
@@ -446,6 +633,7 @@ const AdminDashboard: React.FC = () => {
                 { id: 'posts', name: 'Quản lý bài viết', icon: FaFileAlt },
                 { id: 'investment', name: 'Kiến thức đầu tư', icon: FaLightbulb },
                 { id: 'bookjourney', name: 'Hành trình sách', icon: FaBook },
+                { id: 'categories', name: 'Quản lý danh mục', icon: FaChartBar },
                 { id: 'feedbacks', name: 'Quản lý phản hồi', icon: FaComments },
                 { id: 'users', name: 'Quản lý người dùng', icon: FaUsers },
                 { id: 'stats', name: 'Thống kê', icon: FaChartBar },
@@ -763,6 +951,73 @@ const AdminDashboard: React.FC = () => {
           {activeTab === 'bookjourney' && (
             <div className="p-6">
               <BookJourneyManagement onClose={() => setActiveTab('posts')} />
+            </div>
+          )}
+
+          {activeTab === 'categories' && (
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold text-gray-900">Quản lý danh mục</h2>
+                <button
+                  onClick={openCreateCategory}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                >
+                  <FaPlus className="h-4 w-4 mr-2" />
+                  Thêm danh mục
+                </button>
+              </div>
+
+              {categoriesLoading ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                  <p className="mt-2 text-gray-600">Đang tải...</p>
+                </div>
+              ) : categories.length === 0 ? (
+                <div className="text-center py-8">
+                  <FaChartBar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-500">Chưa có danh mục nào</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {categories.map((category) => (
+                    <div key={category.id} className="bg-white border rounded-lg p-4 shadow-sm">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center mb-2">
+                            <div 
+                              className="w-4 h-4 rounded-full mr-3" 
+                              style={{ backgroundColor: category.color }}
+                            ></div>
+                            <h3 className="font-semibold text-gray-900">{category.name}</h3>
+                          </div>
+                          {category.description && (
+                            <p className="text-sm text-gray-600 mb-2">{category.description}</p>
+                          )}
+                          <div className="text-xs text-gray-500">
+                            {category.knowledge_count || 0} bài viết
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2 ml-4">
+                          <button
+                            onClick={() => openEditCategory(category)}
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            title="Sửa"
+                          >
+                            <FaEdit className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteCategory(category.id)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Xóa"
+                          >
+                            <FaTrash className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -1223,6 +1478,102 @@ const AdminDashboard: React.FC = () => {
         knowledge={editingKnowledge}
         loading={knowledgeLoading}
       />
+
+      {/* Category Modal */}
+      {showCategoryModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                {editingCategory ? 'Sửa danh mục' : 'Thêm danh mục mới'}
+              </h3>
+              <button
+                onClick={() => {
+                  setShowCategoryModal(false)
+                  setEditingCategory(null)
+                  setCategoryForm({ name: '', description: '', color: '#3B82F6' })
+                }}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <FaTimes className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={(e) => { e.preventDefault(); handleSaveCategory(); }}>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Tên danh mục *
+                  </label>
+                  <input
+                    type="text"
+                    value={categoryForm.name}
+                    onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Nhập tên danh mục"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Mô tả
+                  </label>
+                  <textarea
+                    value={categoryForm.description}
+                    onChange={(e) => setCategoryForm({ ...categoryForm, description: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Nhập mô tả danh mục"
+                    rows={3}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Màu sắc
+                  </label>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="color"
+                      value={categoryForm.color}
+                      onChange={(e) => setCategoryForm({ ...categoryForm, color: e.target.value })}
+                      className="w-12 h-10 border border-gray-300 rounded-lg cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={categoryForm.color}
+                      onChange={(e) => setCategoryForm({ ...categoryForm, color: e.target.value })}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="#3B82F6"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowCategoryModal(false)
+                    setEditingCategory(null)
+                    setCategoryForm({ name: '', description: '', color: '#3B82F6' })
+                  }}
+                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  disabled={!categoryForm.name.trim() || categoriesLoading}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {categoriesLoading ? 'Đang lưu...' : (editingCategory ? 'Cập nhật' : 'Tạo mới')}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

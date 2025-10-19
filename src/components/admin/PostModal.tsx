@@ -5,6 +5,7 @@ import { FaTimes, FaSave } from 'react-icons/fa'
 import { Post, CreatePostRequest, UpdatePostRequest } from '../../services/types/posts'
 import { postsApi } from '../../services/api/posts'
 import { categoriesAPI, Category } from '../../services/api/categories'
+import { useNotification } from '../ui/Notification'
 
 interface PostModalProps {
   isOpen: boolean
@@ -21,6 +22,7 @@ const PostModal: React.FC<PostModalProps> = ({
   post, 
   loading = false 
 }) => {
+  const { addNotification } = useNotification()
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -107,7 +109,11 @@ const PostModal: React.FC<PostModalProps> = ({
       }
       await onSave(payload)
       try {
-        alert(post ? 'Cập nhật bài viết thành công' : 'Tạo bài viết thành công')
+        addNotification({
+          type: 'success',
+          title: 'Thành công',
+          message: post ? 'Cập nhật bài viết thành công' : 'Tạo bài viết thành công'
+        })
       } catch {}
       onClose()
     } catch (error: any) {

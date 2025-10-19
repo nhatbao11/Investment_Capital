@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     default: 'Y&T Group - Shaping Tomorrow Through Agile Innovation',
     template: '%s | Y&T Group'
   },
-  description: 'Y&T Group là công ty đầu tư chuyên nghiệp, cung cấp giải pháp đầu tư toàn diện và bền vững. Khám phá cơ hội đầu tư cùng chúng tôi.',
+  description: 'Y&T Group là đơn vị đầu tư chuyên nghiệp, cung cấp giải pháp đầu tư toàn diện và bền vững. Khám phá cơ hội đầu tư cùng chúng tôi.',
   keywords: [
     'đầu tư',
     'tài chính',
@@ -28,12 +28,17 @@ export const metadata: Metadata = {
   authors: [{ name: 'Y&T Group' }],
   creator: 'Y&T Group',
   publisher: 'Y&T Group',
+  icons: {
+    icon: '/images/YT LOGO.png',
+    shortcut: '/images/YT LOGO.png',
+    apple: '/images/YT LOGO.png',
+  },
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://ytcapital.com'),
+  metadataBase: new URL('https://yt2future.com'),
   alternates: {
     canonical: '/',
     languages: {
@@ -44,9 +49,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'vi_VN',
-    url: 'https://ytcapital.com',
+    url: 'https://yt2future.com',
     title: 'Y&T Group - Shaping Tomorrow Through Agile Innovation',
-    description: 'Y&T Group là công ty đầu tư chuyên nghiệp, cung cấp giải pháp đầu tư toàn diện và bền vững.',
+    description: 'Y&T Group là đơn vị đầu tư chuyên nghiệp, cung cấp giải pháp đầu tư toàn diện và bền vững.',
     siteName: 'Y&T Group',
     images: [
       {
@@ -60,7 +65,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Y&T Group - Shaping Tomorrow Through Agile Innovation',
-    description: 'Y&T Group là công ty đầu tư chuyên nghiệp, cung cấp giải pháp đầu tư toàn diện và bền vững.',
+    description: 'Y&T Group là đơn vị đầu tư chuyên nghiệp, cung cấp giải pháp đầu tư toàn diện và bền vững.',
     images: ['/og-image.png'],
     creator: '@ytcapital',
   },

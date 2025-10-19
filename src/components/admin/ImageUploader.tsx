@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaImage, FaTimes, FaUpload } from 'react-icons/fa';
 import { apiClient } from '../../services/api/client';
+import { useNotification } from '../ui/Notification';
 
 interface ImageUploaderProps {
   onImagesChange: (images: string[]) => void;
@@ -13,6 +14,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   onImagesChange,
   disabled = false
 }) => {
+  const { addNotification } = useNotification()
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -30,13 +32,21 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       for (const file of files) {
         // Validate file type
         if (!file.type.startsWith('image/')) {
-          alert(`File ${file.name} không phải là ảnh. Vui lòng chọn file ảnh.`);
+          addNotification({
+            type: 'warning',
+            title: 'Cảnh báo',
+            message: `File ${file.name} không phải là ảnh. Vui lòng chọn file ảnh.`
+          });
           continue;
         }
 
         // Validate file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
-          alert(`File ${file.name} quá lớn. Vui lòng chọn file nhỏ hơn 5MB.`);
+          addNotification({
+            type: 'warning',
+            title: 'Cảnh báo',
+            message: `File ${file.name} quá lớn. Vui lòng chọn file nhỏ hơn 5MB.`
+          });
           continue;
         }
 
@@ -90,7 +100,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     } catch (error: any) {
       console.error('Upload error:', error);
       const errorMessage = error.message || 'Lỗi không xác định';
-      alert(`Lỗi khi upload ảnh: ${errorMessage}`);
+      addNotification({
+        type: 'error',
+        title: 'Lỗi',
+        message: `Lỗi khi upload ảnh: ${errorMessage}`
+      });
     } finally {
       setUploading(false);
     }
