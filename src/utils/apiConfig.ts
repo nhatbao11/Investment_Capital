@@ -65,9 +65,10 @@ export const resolveFileUrl = (fileUrl: string): string => {
     return fileUrl;
   }
   
-  // Nếu bắt đầu với /uploads/, sử dụng API route
+  // Nếu bắt đầu với /uploads/, sử dụng backend API trực tiếp
   if (fileUrl.startsWith('/uploads/')) {
-    return `/api${fileUrl}`;
+    const baseUrl = getImageBaseUrl();
+    return `${baseUrl}${fileUrl}`;
   }
   
   // Nếu bắt đầu với /api/, trả về nguyên
@@ -91,9 +92,10 @@ export const resolvePdfUrl = (pdfUrl: string): string => {
     return pdfUrl;
   }
   
-  // Nếu bắt đầu với /uploads/, sử dụng API route
+  // Nếu bắt đầu với /uploads/, sử dụng backend API trực tiếp
   if (pdfUrl.startsWith('/uploads/')) {
-    return `/api${pdfUrl}`;
+    const baseUrl = getImageBaseUrl();
+    return `${baseUrl}${pdfUrl}`;
   }
   
   // Nếu bắt đầu với /api/, trả về nguyên

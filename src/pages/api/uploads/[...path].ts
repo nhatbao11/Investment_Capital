@@ -19,12 +19,43 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Security check - ensure the path is within uploads directory
     const uploadsDir = path.join(baseDir, 'backend', 'uploads')
     if (!fullPath.startsWith(uploadsDir)) {
-      return res.status(403).json({ error: 'Access denied' })
+      return res.status(403).json({ 
+        error: 'Access denied',
+        debug: {
+          filePath,
+          baseDir,
+          fullPath,
+          uploadsDir,
+          isWithinUploads: fullPath.startsWith(uploadsDir)
+        }
+      })
     }
 
     // Check if file exists
     if (!fs.existsSync(fullPath)) {
-      return res.status(404).json({ error: 'File not found' })
+      // Debug: list some files in the directory
+      let debugInfo = {
+        filePath,
+        fullPath,
+        uploadsDir,
+        uploadsDirExists: fs.existsSync(uploadsDir),
+        nodeEnv: process.env.NODE_ENV
+      }
+      
+      try {
+        const parentDir = path.dirname(fullPath)
+        debugInfo.parentDirExists = fs.existsSync(parentDir)
+        if (fs.existsSync(parentDir)) {
+          debugInfo.parentDirFiles = fs.readdirSync(parentDir)
+        }
+      } catch (e) {
+        debugInfo.parentDirError = e instanceof Error ? e.message : 'Unknown error'
+      }
+      
+      return res.status(404).json({ 
+        error: 'File not found',
+        debug: debugInfo
+      })
     }
 
     // Get file stats
