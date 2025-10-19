@@ -34,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Check if file exists
     if (!fs.existsSync(fullPath)) {
       // Debug: list some files in the directory
-      let debugInfo = {
+      let debugInfo: any = {
         filePath,
         fullPath,
         uploadsDir,
