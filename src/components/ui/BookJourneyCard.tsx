@@ -6,6 +6,7 @@ import Card from './Card';
 import Heading from './Heading';
 import Text from './Text';
 import Button from './Button';
+import { resolveFileUrl } from '../../utils/apiConfig';
 
 interface BookJourney {
   id: number;
@@ -36,7 +37,6 @@ const BookJourneyCard: React.FC<BookJourneyCardProps> = ({
     });
   };
 
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
   return (
     <Card className="p-4 sm:p-6 md:p-7" hover={false} variant="outlined">
@@ -45,7 +45,7 @@ const BookJourneyCard: React.FC<BookJourneyCardProps> = ({
         {book.image_url && (
           <div className="w-full md:w-72 md:flex-shrink-0">
             <img
-              src={book.image_url.startsWith('http') ? book.image_url : `${API_BASE}${book.image_url}`}
+              src={resolveFileUrl(book.image_url)}
               alt={book.title}
               className="w-full h-40 sm:h-48 md:h-full md:w-72 object-cover rounded-xl md:rounded-2xl border border-gray-200 shadow-sm"
             />

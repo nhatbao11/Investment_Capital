@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>API Connection Test</h1>
+    <div id="results"></div>
+    
+    <script>
+        async function testAPIs() {
+            const results = document.getElementById('results');
+            
+            // Test BookJourney API
+            try {
+                const bookResponse = await fetch('http://localhost:5000/api/v1/bookjourney?limit=6');
+                const bookData = await bookResponse.json();
+                results.innerHTML += '<h2>BookJourney API:</h2>';
+                results.innerHTML += '<pre>' + JSON.stringify(bookData, null, 2) + '</pre>';
+            } catch (error) {
+                results.innerHTML += '<h2>BookJourney API Error:</h2>';
+                results.innerHTML += '<p style="color: red;">' + error.message + '</p>';
+            }
+            
+            // Test Investment Knowledge API
+            try {
+                const invResponse = await fetch('http://localhost:5000/api/v1/investment-knowledge?status=published&page=1&limit=12');
+                const invData = await invResponse.json();
+                results.innerHTML += '<h2>Investment Knowledge API:</h2>';
+                results.innerHTML += '<pre>' + JSON.stringify(invData, null, 2) + '</pre>';
+            } catch (error) {
+                results.innerHTML += '<h2>Investment Knowledge API Error:</h2>';
+                results.innerHTML += '<p style="color: red;">' + error.message + '</p>';
+            }
+        }
+        
+        testAPIs();
+    </script>
+</body>
+</html>
+
+

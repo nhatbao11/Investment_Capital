@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { FaEdit, FaTrash, FaEye, FaPlus, FaTimes, FaBook } from 'react-icons/fa';
+import { resolveFileUrl, resolvePdfUrl } from '../../utils/apiConfig';
 
 type Status = 'draft' | 'published' | 'archived';
 
@@ -34,7 +35,7 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
     try {
       setLoading(true);
       const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : '';
-      const resp = await fetch(`${API_BASE}/api/v1/bookjourney/admin/all?page=${page}&limit=${limit}`, {
+      const resp = await fetch(`${API_BASE}/bookjourney/admin/all?page=${page}&limit=${limit}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!resp.ok) throw new Error('Fetch failed');
@@ -226,7 +227,7 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap w-[10%]">
                       {b.image_url ? (
-                        <img src={b.image_url ? (b.image_url.startsWith('http') ? b.image_url : b.image_url.startsWith('/uploads/') ? `/api${b.image_url}` : `${API_BASE.replace('/api/v1', '')}${b.image_url}`) : '/images/Logo01.jpg'} alt={b.title} className="h-12 w-12 object-cover rounded" />
+                        <img src={b.image_url ? resolveFileUrl(b.image_url) : '/images/Logo01.jpg'} alt={b.title} className="h-12 w-12 object-cover rounded" />
                       ) : (
                         <div className="h-12 w-12 bg-gray-200 rounded flex items-center justify-center">
                           <FaBook className="h-6 w-6 text-gray-400" />
@@ -258,12 +259,7 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
                       <div className="flex items-center space-x-2">
                         <button className="text-blue-600 hover:text-blue-900" title="Sửa" onClick={() => openEdit(b)}><FaEdit /></button>
                 <button className="text-green-600 hover:text-green-900" title="Xem PDF" onClick={() => {
-                  let pdfUrl = b.pdf_url;
-                  if (pdfUrl.startsWith('/uploads/')) {
-                    pdfUrl = `/api${pdfUrl}`;
-                  } else if (!pdfUrl.startsWith('http://') && !pdfUrl.startsWith('https://') && !pdfUrl.startsWith('/api/')) {
-                    pdfUrl = `https://yt2future.com${pdfUrl}`;
-                  }
+                  const pdfUrl = resolvePdfUrl(b.pdf_url);
                   window.open(pdfUrl, '_blank', 'noopener,noreferrer');
                 }}><FaEye /></button>
                         <button className="text-red-600 hover:text-red-900" title="Xóa" onClick={() => remove(b.id)}><FaTrash /></button>

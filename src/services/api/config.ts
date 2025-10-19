@@ -1,7 +1,9 @@
+import { getApiBaseUrl, getImageBaseUrl } from '../../utils/apiConfig';
+
 // API Configuration
 export const API_CONFIG = {
-  // Backend URL - thay đổi theo VPS IP của bạn
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1',
+  // Backend URL - tự động detect môi trường
+  BASE_URL: getApiBaseUrl(),
   TIMEOUT: 15000,
   HEADERS: {
     'Content-Type': 'application/json',
@@ -10,11 +12,7 @@ export const API_CONFIG = {
 
 // Helper để lấy base URL cho static files (uploads)
 export const getApiOrigin = () => {
-  try {
-    return new URL(API_CONFIG.BASE_URL).origin;
-  } catch {
-    return 'http://localhost:5000';
-  }
+  return getImageBaseUrl();
 };
 
 // API Response Types

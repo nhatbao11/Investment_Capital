@@ -34,3 +34,6 @@ INSERT INTO post_categories (name, description, color, category_type) VALUES
 
 
 
+
+
+

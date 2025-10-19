@@ -1,4 +1,6 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+import { getApiBaseUrl } from '../../utils/apiConfig';
+
+const API_BASE = getApiBaseUrl();
 
 export interface Category {
   id: number;

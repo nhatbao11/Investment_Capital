@@ -1,4 +1,5 @@
 import React from 'react';
+import { resolveFileUrl } from '../../utils/apiConfig';
 
 interface PostImageProps {
   src?: string;
@@ -17,12 +18,7 @@ const PostImage: React.FC<PostImageProps> = ({
 }) => {
   const resolveUrl = (url?: string) => {
     if (!url) return fallbackSrc;
-    if (url.startsWith('http')) return url;
-    if (url.startsWith('/uploads/')) {
-      // Sử dụng API route cho uploads
-      return `/api${url}`;
-    }
-    return url;
+    return resolveFileUrl(url);
   };
 
   return (

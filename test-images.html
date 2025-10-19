@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Images</title>
+</head>
+<body>
+    <h1>Test Image URLs</h1>
+    
+    <h2>BookJourney Image:</h2>
+    <img src="/api/uploads/bookjourney/bookjourney_1760860049133_mwofvn6ladq.png" alt="BookJourney" style="max-width: 300px;">
+    
+    <h2>Investment Knowledge Image:</h2>
+    <img src="/api/uploads/investment/investment_17603759..." alt="Investment" style="max-width: 300px;">
+    
+    <script>
+        // Test API calls
+        async function testAPIs() {
+            try {
+                // Test BookJourney
+                const bookResponse = await fetch('http://localhost:5000/api/v1/bookjourney?limit=1');
+                const bookData = await bookResponse.json();
+                console.log('BookJourney data:', bookData);
+                
+                // Test Investment Knowledge
+                const invResponse = await fetch('http://localhost:5000/api/v1/investment-knowledge?status=published&page=1&limit=1');
+                const invData = await invResponse.json();
+                console.log('Investment data:', invData);
+                
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        testAPIs();
+    </script>
+</body>
+</html>

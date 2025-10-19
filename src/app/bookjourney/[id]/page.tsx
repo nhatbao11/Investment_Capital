@@ -7,6 +7,7 @@ import Heading from '../../../components/ui/Heading';
 import Text from '../../../components/ui/Text';
 import Button from '../../../components/ui/Button';
 import Container from '../../../components/ui/Container';
+import { resolveFileUrl, resolvePdfUrl } from '../../../utils/apiConfig';
 
 interface BookJourney {
   id: number;
@@ -70,25 +71,13 @@ const BookJourneyDetail: React.FC = () => {
       });
       
       // Xử lý PDF URL
-        let pdfUrl = book.pdf_url;
-        if (pdfUrl.startsWith('/uploads/')) {
-          pdfUrl = `/api${pdfUrl}`;
-        } else if (!pdfUrl.startsWith('http://') && !pdfUrl.startsWith('https://') && !pdfUrl.startsWith('/api/')) {
-          pdfUrl = `https://yt2future.com${pdfUrl}`;
-        }
-      
-      // Mở PDF trong tab mới
-      window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+        const pdfUrl = resolvePdfUrl(book.pdf_url);
+        window.open(pdfUrl, '_blank', 'noopener,noreferrer');
     } catch (error) {
       console.error('Error downloading book:', error);
       // Vẫn mở PDF ngay cả khi không tăng được count
-        let pdfUrl = book.pdf_url;
-        if (pdfUrl.startsWith('/uploads/')) {
-          pdfUrl = `/api${pdfUrl}`;
-        } else if (!pdfUrl.startsWith('http://') && !pdfUrl.startsWith('https://') && !pdfUrl.startsWith('/api/')) {
-          pdfUrl = `https://yt2future.com${pdfUrl}`;
-        }
-      window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+        const pdfUrl = resolvePdfUrl(book.pdf_url);
+        window.open(pdfUrl, '_blank', 'noopener,noreferrer');
     } finally {
       setPdfLoading(false);
     }

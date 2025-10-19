@@ -6,6 +6,7 @@ import { FaEye, FaCalendar, FaUser, FaFileAlt, FaSearch } from "react-icons/fa"
 import { useLanguage } from "../../contexts/LanguageContext"
 import { categoriesAPI, Category } from "../../services/api/categories"
 import { useDebounce } from "../../hooks/useDebounce"
+import { getApiBaseUrl, resolveFileUrl, resolvePdfUrl } from "../../utils/apiConfig"
 
 // Interface cho dữ liệu investment từ admin
 interface InvestmentPost {
@@ -62,8 +63,7 @@ const InvestmentFeed: React.FC<InvestmentFeedProps> = ({ title }) => {
         setLoading(true);
         setIsSearching(search !== debouncedSearch);
         
-        const ENV_BASE = process.env.NEXT_PUBLIC_API_URL || '';
-        const DEFAULT_BASE = 'http://localhost:5000/api/v1';
+        const API_BASE = getApiBaseUrl();
         
         // Check if user is admin to show all statuses
         const userRole = localStorage.getItem('userRole');
@@ -85,25 +85,11 @@ const InvestmentFeed: React.FC<InvestmentFeedProps> = ({ title }) => {
           params.append('category_id', selectedCategory.toString());
         }
         
-        const candidates = [
-          ENV_BASE ? `${ENV_BASE}/api/v1/investment-knowledge?${params}` : '',
-          `${DEFAULT_BASE}/api/v1/investment-knowledge?${params}`
-        ].filter(Boolean);
+        const url = `${API_BASE}/investment-knowledge?${params}`;
 
-        let data: any = null;
-        let lastErr: any = null;
-        for (const url of candidates) {
-          try {
-            const resp = await fetch(url);
-            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-            data = await resp.json();
-            lastErr = null;
-            break;
-          } catch (e) {
-            lastErr = e;
-          }
-        }
-        if (!data) throw lastErr || new Error('Failed to fetch investment knowledge');
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
         
         // Sort by created_at ASC (oldest first)
         const sortedPosts = data.data.knowledge.sort((a: InvestmentPost, b: InvestmentPost) => 
@@ -147,24 +133,11 @@ const InvestmentFeed: React.FC<InvestmentFeedProps> = ({ title }) => {
   const handleViewReport = async (post: InvestmentPost) => {
     try {
       // Xử lý PDF - sử dụng image_url vì đó là nơi chứa PDF
-      let pdfUrl = post.image_url || post.content;
+      const pdfUrl = post.image_url || post.content;
       
       if (pdfUrl) {
-        // Nếu URL bắt đầu với /uploads/, sử dụng API route
-        if (pdfUrl.startsWith('/uploads/')) {
-          pdfUrl = `/api${pdfUrl}`;
-        }
-        // Nếu URL chứa localhost:5000, thay thế bằng API route
-        else if (pdfUrl.includes('localhost:5000/uploads/')) {
-          pdfUrl = pdfUrl.replace('http://localhost:5000/uploads/', '/api/uploads/');
-        }
-        // Nếu URL không có protocol, thêm domain
-        else if (!pdfUrl.startsWith('http://') && !pdfUrl.startsWith('https://') && !pdfUrl.startsWith('/api/')) {
-          pdfUrl = `https://yt2future.com${pdfUrl}`;
-        }
-        
-        // Mở PDF trong tab mới
-        window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+        const resolvedUrl = resolvePdfUrl(pdfUrl);
+        window.open(resolvedUrl, '_blank', 'noopener,noreferrer');
       } else {
         alert('Không có file PDF để mở');
       }
@@ -233,7 +206,7 @@ const InvestmentFeed: React.FC<InvestmentFeedProps> = ({ title }) => {
               <div className="relative h-48 sm:h-56 overflow-hidden">
                 {post.image_url ? (
                   <img 
-                    src={post.image_url} 
+                    src={resolveFileUrl(post.image_url)}
                     alt={post.title}
                     className="w-full h-full object-cover"
                   />

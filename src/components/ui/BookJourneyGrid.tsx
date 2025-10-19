@@ -7,6 +7,7 @@ import Heading from './Heading';
 import Text from './Text';
 import Button from './Button';
 import BookJourneyCard from './BookJourneyCard';
+import { getApiBaseUrl, resolvePdfUrl } from '../../utils/apiConfig';
 
 interface BookJourney {
   id: number;
@@ -36,7 +37,7 @@ const BookJourneyGrid: React.FC<BookJourneyGridProps> = ({
   limit = 6
 }) => {
   const [books, setBooks] = useState<BookJourney[]>([]);
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+  const API_BASE = getApiBaseUrl();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const mobileTrackRef = useRef<HTMLDivElement | null>(null);
@@ -51,12 +52,12 @@ const BookJourneyGrid: React.FC<BookJourneyGridProps> = ({
       setLoading(true);
       setError(null);
 
-      let url = `${API_BASE}/api/v1/bookjourney`;
+      let url = `${API_BASE}/bookjourney`;
       
       if (showPopular) {
-        url = `${API_BASE}/api/v1/bookjourney/popular`;
+        url = `${API_BASE}/bookjourney/popular`;
       } else if (showLatest) {
-        url = `${API_BASE}/api/v1/bookjourney/latest`;
+        url = `${API_BASE}/bookjourney/latest`;
       }
 
       const response = await fetch(`${url}?limit=${limit}`);
@@ -92,18 +93,7 @@ const BookJourneyGrid: React.FC<BookJourneyGridProps> = ({
     }
     
     // Xử lý PDF URL
-    let pdfUrl = book.pdf_url;
-    
-    // Nếu URL bắt đầu với /uploads/, sử dụng API route
-    if (pdfUrl.startsWith('/uploads/')) {
-      pdfUrl = `/api${pdfUrl}`;
-    }
-    
-    // Nếu URL không có protocol, thêm domain
-    if (!pdfUrl.startsWith('http://') && !pdfUrl.startsWith('https://') && !pdfUrl.startsWith('/api/')) {
-      pdfUrl = `https://yt2future.com${pdfUrl}`;
-    }
-    
+    const pdfUrl = resolvePdfUrl(book.pdf_url);
     window.open(pdfUrl, '_blank', 'noopener,noreferrer');
   };
 

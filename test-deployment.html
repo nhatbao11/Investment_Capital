@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deployment Test - Y&T Group</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .loading { background-color: #fff3cd; border-color: #ffeaa7; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        .result { margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Y&T Group - Deployment Test</h1>
+    <p>Kiểm tra tất cả chức năng hoạt động trên local và VPS</p>
+
+    <div class="test-section loading" id="api-test">
+        <h3>📡 API Connection Test</h3>
+        <button onclick="testAPI()">Test API Connection</button>
+        <div class="result" id="api-result">Chưa test...</div>
+    </div>
+
+    <div class="test-section loading" id="image-test">
+        <h3>🖼️ Image Display Test</h3>
+        <button onclick="testImages()">Test Image URLs</button>
+        <div class="result" id="image-result">Chưa test...</div>
+    </div>
+
+    <div class="test-section loading" id="pdf-test">
+        <h3>📄 PDF Opening Test</h3>
+        <button onclick="testPDFs()">Test PDF URLs</button>
+        <div class="result" id="pdf-result">Chưa test...</div>
+    </div>
+
+    <div class="test-section loading" id="env-test">
+        <h3>🌍 Environment Detection Test</h3>
+        <button onclick="testEnvironment()">Test Environment Detection</button>
+        <div class="result" id="env-result">Chưa test...</div>
+    </div>
+
+    <script>
+        // Test API Connection
+        async function testAPI() {
+            const result = document.getElementById('api-result');
+            const section = document.getElementById('api-test');
+            
+            try {
+                // Test BookJourney API
+                const bookResponse = await fetch('/api/v1/bookjourney?limit=1');
+                const bookData = await bookResponse.json();
+                
+                // Test Investment Knowledge API
+                const invResponse = await fetch('/api/v1/investment-knowledge?status=published&page=1&limit=1');
+                const invData = await invResponse.json();
+                
+                if (bookData.success && invData.success) {
+                    result.innerHTML = '✅ API hoạt động tốt!<br>' +
+                        `📚 BookJourney: ${bookData.data?.length || 0} items<br>` +
+                        `💡 Investment: ${invData.data?.knowledge?.length || 0} items`;
+                    section.className = 'test-section success';
+                } else {
+                    throw new Error('API response not successful');
+                }
+            } catch (error) {
+                result.innerHTML = `❌ Lỗi API: ${error.message}`;
+                section.className = 'test-section error';
+            }
+        }
+
+        // Test Image URLs
+        function testImages() {
+            const result = document.getElementById('image-result');
+            const section = document.getElementById('image-test');
+            
+            const testUrls = [
+                '/api/uploads/bookjourney/test.jpg',
+                '/api/uploads/investment/test.jpg',
+                '/images/Logo01.jpg'
+            ];
+            
+            let successCount = 0;
+            let totalTests = testUrls.length;
+            
+            testUrls.forEach((url, index) => {
+                const img = new Image();
+                img.onload = () => {
+                    successCount++;
+                    if (successCount === totalTests) {
+                        result.innerHTML = '✅ Tất cả hình ảnh load được!';
+                        section.className = 'test-section success';
+                    }
+                };
+                img.onerror = () => {
+                    result.innerHTML = `❌ Lỗi load hình: ${url}`;
+                    section.className = 'test-section error';
+                };
+                img.src = url;
+            });
+        }
+
+        // Test PDF URLs
+        function testPDFs() {
+            const result = document.getElementById('pdf-result');
+            const section = document.getElementById('pdf-test');
+            
+            // Test PDF URL resolution
+            const testPdfUrl = '/uploads/test.pdf';
+            const resolvedUrl = testPdfUrl.startsWith('/uploads/') ? `/api${testPdfUrl}` : testPdfUrl;
+            
+            result.innerHTML = `✅ PDF URL resolution hoạt động!<br>` +
+                `Original: ${testPdfUrl}<br>` +
+                `Resolved: ${resolvedUrl}`;
+            section.className = 'test-section success';
+        }
+
+        // Test Environment Detection
+        function testEnvironment() {
+            const result = document.getElementById('env-result');
+            const section = document.getElementById('env-test');
+            
+            const hostname = window.location.hostname;
+            const protocol = window.location.protocol;
+            const port = window.location.port;
+            
+            let detectedEnv = 'Unknown';
+            let apiUrl = '';
+            
+            if (hostname === 'localhost' || hostname === '127.0.0.1') {
+                detectedEnv = 'Local Development';
+                apiUrl = 'http://localhost:5000/api/v1';
+            } else if (hostname === 'yt2future.com' || hostname === 'www.yt2future.com') {
+                detectedEnv = 'Production (yt2future.com)';
+                apiUrl = 'https://yt2future.com/api/v1';
+            } else {
+                detectedEnv = 'VPS/Other Domain';
+                apiUrl = `${protocol}//${hostname}/api/v1`;
+            }
+            
+            result.innerHTML = `✅ Environment Detection hoạt động!<br>` +
+                `🌍 Environment: ${detectedEnv}<br>` +
+                `🔗 Hostname: ${hostname}<br>` +
+                `🌐 Protocol: ${protocol}<br>` +
+                `🔌 Port: ${port || 'default'}<br>` +
+                `📡 API URL: ${apiUrl}`;
+            section.className = 'test-section success';
+        }
+
+        // Auto-run tests on load
+        window.onload = function() {
+            testEnvironment();
+        };
+    </script>
+</body>
+</html>

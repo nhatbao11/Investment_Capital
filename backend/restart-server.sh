@@ -18,3 +18,6 @@ echo "Test static files:"
 echo "curl http://localhost:5000/uploads/posts/"
 echo "curl http://localhost:5000/uploads/reports/banking_sector_2024.pdf"
 
+
+
+

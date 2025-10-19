@@ -8,6 +8,7 @@ import { usePosts } from "../../services/hooks/usePosts"
 import { postsApi } from "../../services/api/posts"
 import { useLanguage } from "../../contexts/LanguageContext"
 import { useDebounce } from "../../hooks/useDebounce"
+import { resolvePdfUrl } from "../../utils/apiConfig"
 
 interface PostFeedProps {
   category: 'nganh' | 'doanh_nghiep'
@@ -56,19 +57,7 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
       
       // Xử lý PDF
       if (post.pdf_url) {
-        let pdfUrl = post.pdf_url;
-        
-        // Nếu URL bắt đầu với /uploads/, sử dụng API route
-        if (pdfUrl.startsWith('/uploads/')) {
-          pdfUrl = `/api${pdfUrl}`;
-        }
-        
-        // Nếu URL không có protocol, thêm domain
-        if (!pdfUrl.startsWith('http://') && !pdfUrl.startsWith('https://') && !pdfUrl.startsWith('/api/')) {
-          pdfUrl = `https://yt2future.com${pdfUrl}`;
-        }
-        
-        // Mở PDF trong tab mới
+        const pdfUrl = resolvePdfUrl(post.pdf_url);
         window.open(pdfUrl, '_blank', 'noopener,noreferrer');
       } else {
         // Không có PDF, chuyển đến trang chi tiết
@@ -79,9 +68,7 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
       
       // Fallback: thử mở trực tiếp
       if (post.pdf_url) {
-        const fallbackUrl = post.pdf_url.startsWith('/uploads/') 
-          ? `/api${post.pdf_url}` 
-          : post.pdf_url;
+        const fallbackUrl = resolvePdfUrl(post.pdf_url);
         window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
       } else {
         window.location.href = `/posts/${post.id}`;
