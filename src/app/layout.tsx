@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     default: 'Y&T Group - Shaping Tomorrow Through Agile Innovation',
     template: '%s | Y&T Group'
   },
-  description: 'Y&T Group là đơn vị chia sẻ kiến thức đầu tư: phân tích ngành, doanh nghiệp, báo cáo và chiến lược đầu tư dài hạn. Không cung cấp dịch vụ tài chính.',
+  description: 'Y&T Group - Đơn vị chia sẻ kiến thức đầu tư chuyên nghiệp. Phân tích ngành, doanh nghiệp, báo cáo đầu tư và chiến lược dài hạn. Nền tảng kiến thức đầu tư uy tín.',
   keywords: [
     'đầu tư',
     'tài chính',
@@ -50,8 +50,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'vi_VN',
     url: 'https://yt2future.com',
-    title: 'Y&T Group - Shaping Tomorrow Through Agile Innovation',
-    description: 'Y&T Group là đơn vị chia sẻ kiến thức đầu tư: phân tích ngành, doanh nghiệp, báo cáo và chiến lược đầu tư.',
+    title: 'Y&T Group - Đơn vị chia sẻ kiến thức đầu tư chuyên nghiệp',
+    description: 'Y&T Group - Đơn vị chia sẻ kiến thức đầu tư chuyên nghiệp. Phân tích ngành, doanh nghiệp, báo cáo đầu tư và chiến lược dài hạn. Nền tảng kiến thức đầu tư uy tín.',
     siteName: 'Y&T Group',
     images: [
       {
@@ -103,7 +103,9 @@ export default function RootLayout({
         <link rel="preload" href="/images/Saigon.mp4" as="video" type="video/mp4" />
         
         {/* Favicon */}
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
         <link rel="icon" href="/images/Logo01.jpg" type="image/jpeg" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
@@ -125,7 +127,12 @@ export default function RootLayout({
                   '@type': 'Organization',
                   name: 'Y&T Group',
                   url: 'https://yt2future.com',
-                  logo: 'https://yt2future.com/favicon.svg',
+                  logo: 'https://yt2future.com/images/Logo01.jpg',
+                  description: 'Y&T Group - Đơn vị chia sẻ kiến thức đầu tư chuyên nghiệp. Phân tích ngành, doanh nghiệp, báo cáo đầu tư và chiến lược dài hạn.',
+                  sameAs: [
+                    'https://yt2future.com',
+                    'https://www.yt2future.com'
+                  ],
                 }),
               }}
             />
