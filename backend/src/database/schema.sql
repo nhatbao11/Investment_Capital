@@ -30,6 +30,8 @@ CREATE TABLE posts (
     title VARCHAR(500) NOT NULL,
     content TEXT NOT NULL,
     category ENUM('nganh', 'doanh_nghiep') NOT NULL,
+    -- Liên kết tới bảng post_categories (có thể null để tương thích dữ liệu cũ)
+    category_id INT NULL,
     thumbnail_url VARCHAR(500),
     author_id INT NOT NULL,
     status ENUM('draft', 'published', 'archived') DEFAULT 'draft',
@@ -38,6 +40,7 @@ CREATE TABLE posts (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE,
     INDEX idx_category (category),
+    INDEX idx_posts_category_id (category_id),
     INDEX idx_status (status),
     INDEX idx_author (author_id),
     INDEX idx_created_at (created_at)
@@ -61,6 +64,27 @@ CREATE TABLE feedbacks (
     INDEX idx_rating (rating),
     INDEX idx_created_at (created_at)
 );
+
+-- Bảng post_categories: Danh mục cho bài viết phân tích ngành/doanh nghiệp
+CREATE TABLE post_categories (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    color VARCHAR(7) DEFAULT '#3b82f6',
+    category_type ENUM('nganh', 'doanh_nghiep') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_name_per_type (name, category_type),
+    INDEX idx_post_categories_type (category_type)
+);
+
+-- Ràng buộc khóa ngoại từ posts.category_id tới post_categories.id
+ALTER TABLE posts
+    ADD CONSTRAINT fk_posts_category_id
+        FOREIGN KEY (category_id)
+        REFERENCES post_categories(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE;
 
 -- Bảng refresh_tokens: Quản lý refresh tokens
 CREATE TABLE refresh_tokens (

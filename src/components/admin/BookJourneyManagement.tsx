@@ -82,17 +82,6 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
     } catch (e) { console.error(e); }
   };
 
-  const remove = async (id: number) => {
-    if (!confirm('Xóa hành trình này?')) return;
-    try {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : '';
-      const resp = await fetch(`${API_BASE}/api/v1/bookjourney/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (resp.ok) fetchAll();
-    } catch (e) { console.error(e); }
-  };
 
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState<BookJourney | null>(null);
@@ -126,7 +115,7 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
 
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch(`${API_BASE}/bookjourney/${id}`, {
+      const response = await fetch(`${API_BASE}/api/v1/bookjourney/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
