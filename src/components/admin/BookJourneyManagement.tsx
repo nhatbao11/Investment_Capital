@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { FaEdit, FaTrash, FaEye, FaPlus, FaTimes, FaBook } from 'react-icons/fa';
-import { resolveFileUrl, resolvePdfUrl } from '../../utils/apiConfig';
+import { resolveFileUrl, resolvePdfUrl, getApiBaseUrl } from '../../utils/apiConfig';
 import { useNotification } from '../ui/Notification';
 
 type Status = 'draft' | 'published' | 'archived';
@@ -26,7 +26,7 @@ interface Props {
 
 const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
   const { addNotification } = useNotification()
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+  const API_BASE = getApiBaseUrl();
   const [items, setItems] = useState<BookJourney[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -115,7 +115,7 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
 
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch(`${API_BASE}/api/v1/bookjourney/${id}`, {
+      const response = await fetch(`${API_BASE}/bookjourney/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

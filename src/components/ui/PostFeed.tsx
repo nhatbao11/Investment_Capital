@@ -9,7 +9,7 @@ import { postsApi } from "../../services/api/posts"
 import { useLanguage } from "../../contexts/LanguageContext"
 import { useDebounce } from "../../hooks/useDebounce"
 import { resolvePdfUrl } from "../../utils/apiConfig"
-import { useCategories } from "../../services/hooks/useCategories"
+import { usePostCategories } from "../../services/hooks/usePostCategories"
 
 interface PostFeedProps {
   category: 'nganh' | 'doanh_nghiep'
@@ -20,7 +20,7 @@ interface PostFeedProps {
 const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', title }) => {
   const { t } = useLanguage()
   const { fetchPosts, posts, loading, pagination } = usePosts()
-  const { categories, fetchCategories } = useCategories()
+  const { categories: postCategories, fetchCategoriesByType } = usePostCategories()
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
@@ -31,10 +31,10 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
   // Debounce search để tránh gọi API quá nhiều
   const debouncedSearch = useDebounce(search, 500)
 
-  // Load categories on mount
+  // Load categories by type on mount
   useEffect(() => {
-    fetchCategories()
-  }, [])
+    fetchCategoriesByType(category)
+  }, [category])
 
   useEffect(() => {
     const load = async () => {
@@ -127,7 +127,7 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
             <span>Danh mục</span>
             {selectedCategoryId && (
               <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
-                {categories.find(c => c.id === selectedCategoryId)?.name || '1'}
+                {postCategories.find(c => c.id === selectedCategoryId)?.name || '1'}
               </span>
             )}
           </button>
@@ -151,7 +151,7 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
             >
               Tất cả danh mục
             </button>
-            {categories.map((cat) => (
+            {postCategories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => {
