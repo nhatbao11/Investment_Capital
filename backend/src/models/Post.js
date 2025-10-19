@@ -10,6 +10,7 @@ class Post {
     this.title = data.title;
     this.content = data.content;
     this.category = data.category;
+    this.category_id = data.category_id;
     this.thumbnail_url = data.thumbnail_url;
     this.pdf_url = data.pdf_url;
     this.author_id = data.author_id;
@@ -25,14 +26,14 @@ class Post {
    * @returns {Promise<Post>} Post object
    */
   static async create(postData) {
-    const { title, content, category, thumbnail_url, pdf_url, author_id, status = 'draft' } = postData;
+    const { title, content, category, category_id, thumbnail_url, pdf_url, author_id, status = 'draft' } = postData;
     
     const sql = `
-      INSERT INTO posts (title, content, category, thumbnail_url, pdf_url, author_id, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO posts (title, content, category, category_id, thumbnail_url, pdf_url, author_id, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
     
-    const result = await executeQuery(sql, [title, content, category, thumbnail_url || null, pdf_url || null, author_id, status]);
+    const result = await executeQuery(sql, [title, content, category, category_id || null, thumbnail_url || null, pdf_url || null, author_id, status]);
     
     return await Post.findById(result.insertId);
   }
@@ -44,9 +45,10 @@ class Post {
    */
   static async findById(id) {
     const sql = `
-      SELECT p.*, u.full_name as author_name, u.email as author_email
+      SELECT p.*, u.full_name as author_name, u.email as author_email, c.name as category_name, c.color as category_color
       FROM posts p
       LEFT JOIN users u ON p.author_id = u.id
+      LEFT JOIN categories c ON p.category_id = c.id
       WHERE p.id = ?
     `;
     const posts = await executeQuery(sql, [id]);
@@ -64,6 +66,7 @@ class Post {
       page = 1, 
       limit = 10, 
       category, 
+      category_id,
       status = 'published', 
       search,
       author_id 
@@ -73,9 +76,10 @@ class Post {
     const offset = (numericPage - 1) * numericLimit;
     
     let sql = `
-      SELECT p.*, u.full_name as author_name, u.email as author_email
+      SELECT p.*, u.full_name as author_name, u.email as author_email, c.name as category_name, c.color as category_color
       FROM posts p
       LEFT JOIN users u ON p.author_id = u.id
+      LEFT JOIN categories c ON p.category_id = c.id
       WHERE 1=1
     `;
     let countSql = 'SELECT COUNT(*) as total FROM posts p WHERE 1=1';
@@ -93,6 +97,13 @@ class Post {
       sql += ' AND p.category = ?';
       countSql += ' AND p.category = ?';
       params.push(category);
+    }
+    
+    // Filter by category_id
+    if (category_id) {
+      sql += ' AND p.category_id = ?';
+      countSql += ' AND p.category_id = ?';
+      params.push(category_id);
     }
     
     // Filter by author
@@ -136,7 +147,7 @@ class Post {
    * @returns {Promise<Post|null>} Post object hoặc null
    */
   static async update(id, updateData) {
-    const allowedFields = ['title', 'content', 'category', 'thumbnail_url', 'pdf_url', 'status'];
+    const allowedFields = ['title', 'content', 'category', 'category_id', 'thumbnail_url', 'pdf_url', 'status'];
     const updates = [];
     const params = [];
     

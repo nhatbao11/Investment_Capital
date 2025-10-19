@@ -111,14 +111,6 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
               </div>
             )}
           </div>
-          <select 
-            value={sort} 
-            onChange={(e)=>{ setPage(1); setSort(e.target.value as any) }} 
-            className="border rounded-lg px-3 py-2 sm:py-2.5 text-sm w-full sm:w-auto"
-          >
-            <option value="latest">{category === 'nganh' ? t('sector.filter.latest') : t('analysis.filter.latest')}</option>
-            <option value="popular">{category === 'nganh' ? t('sector.filter.popular') : t('analysis.filter.popular')}</option>
-          </select>
         </div>
       </div>
 

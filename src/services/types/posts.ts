@@ -4,6 +4,9 @@ export interface Post {
   summary?: string;
   content: string;
   category: 'nganh' | 'doanh_nghiep';
+  category_id?: number;
+  category_name?: string;
+  category_color?: string;
   thumbnail_url?: string;
   pdf_url?: string;
   author_id: number;
@@ -19,6 +22,7 @@ export interface CreatePostRequest {
   title: string;
   content: string;
   category: 'nganh' | 'doanh_nghiep';
+  category_id?: number;
   thumbnail_url?: string;
   pdf_url?: string;
   status?: 'draft' | 'published' | 'archived';
@@ -32,5 +36,6 @@ export interface GetPostsParams {
   category?: 'nganh' | 'doanh_nghiep';
   status?: 'draft' | 'published' | 'archived';
   search?: string;
+  category_id?: number;
 }
 

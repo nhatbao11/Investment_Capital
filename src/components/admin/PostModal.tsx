@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { FaTimes, FaSave } from 'react-icons/fa'
 import { Post, CreatePostRequest, UpdatePostRequest } from '../../services/types/posts'
 import { postsApi } from '../../services/api/posts'
+import { categoriesAPI, Category } from '../../services/api/categories'
 
 interface PostModalProps {
   isOpen: boolean
@@ -24,12 +25,28 @@ const PostModal: React.FC<PostModalProps> = ({
     title: '',
     content: '',
     category: 'nganh' as 'nganh' | 'doanh_nghiep',
+    category_id: undefined as number | undefined,
     status: 'draft' as 'draft' | 'published' | 'archived',
     thumbnail_url: '',
     pdf_url: ''
   })
   const [localBusy, setLocalBusy] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [categories, setCategories] = useState<Category[]>([])
+
+  // Fetch categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoriesData = await categoriesAPI.getAll();
+        setCategories(categoriesData);
+      } catch (err) {
+        console.error('Error fetching categories:', err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     if (post) {
@@ -37,6 +54,7 @@ const PostModal: React.FC<PostModalProps> = ({
         title: post.title,
         content: post.content,
         category: post.category,
+        category_id: post.category_id,
         status: post.status,
         thumbnail_url: post.thumbnail_url || '',
         pdf_url: post.pdf_url || ''
@@ -46,6 +64,7 @@ const PostModal: React.FC<PostModalProps> = ({
         title: '',
         content: '',
         category: 'nganh',
+        category_id: undefined,
         status: 'draft',
         thumbnail_url: '',
         pdf_url: ''
@@ -81,6 +100,7 @@ const PostModal: React.FC<PostModalProps> = ({
         title: formData.title,
         content: formData.content,
         category: formData.category,
+        category_id: formData.category_id,
         status: formData.status,
         thumbnail_url: formData.thumbnail_url || undefined,
         pdf_url: formData.pdf_url || undefined,
@@ -158,10 +178,10 @@ const PostModal: React.FC<PostModalProps> = ({
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
-                Danh mục *
+                Loại bài viết *
               </label>
               <select
                 id="category"
@@ -172,6 +192,32 @@ const PostModal: React.FC<PostModalProps> = ({
               >
                 <option value="nganh">Phân tích ngành</option>
                 <option value="doanh_nghiep">Phân tích doanh nghiệp</option>
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="category_id" className="block text-sm font-medium text-gray-700 mb-2">
+                Doanh mục
+              </label>
+              <select
+                id="category_id"
+                name="category_id"
+                value={formData.category_id || ''}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setFormData(prev => ({
+                    ...prev,
+                    category_id: value ? Number(value) : undefined
+                  }))
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Chọn doanh mục (tùy chọn)</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
               </select>
             </div>
 

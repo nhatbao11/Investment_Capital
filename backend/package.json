@@ -21,6 +21,7 @@
   "author": "Y&T Capital",
   "license": "MIT",
   "dependencies": {
+    "axios": "^1.12.2",
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
@@ -31,7 +32,6 @@
     "helmet": "^7.1.0",
     "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
-    "axios": "^1.7.7",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.6.5"
@@ -42,12 +42,3 @@
     "supertest": "^6.3.3"
   }
 }
-
-
-
-
-
-
-
-
-

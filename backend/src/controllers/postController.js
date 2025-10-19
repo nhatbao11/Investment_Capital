@@ -14,7 +14,7 @@ const { deleteMultipleFiles, getFilesToDelete } = require('../utils/fileUtils');
  */
 const getAllPosts = async (req, res) => {
   try {
-    const { page, limit, category, status = 'published', search } = req.query;
+    const { page, limit, category, category_id, status = 'published', search } = req.query;
     
     // Nếu không phải admin, chỉ cho xem published posts
     const filterStatus = req.user && req.user.role === 'admin' ? status : 'published';
@@ -23,6 +23,7 @@ const getAllPosts = async (req, res) => {
       page: parseInt(page) || 1,
       limit: parseInt(limit) || 10,
       category,
+      category_id: category_id ? parseInt(category_id) : undefined,
       status: filterStatus,
       search
     });
@@ -104,13 +105,14 @@ const getPostById = async (req, res) => {
  */
 const createPost = async (req, res) => {
   try {
-    const { title, content, category, thumbnail_url, pdf_url, status = 'draft' } = req.body;
+    const { title, content, category, category_id, thumbnail_url, pdf_url, status = 'draft' } = req.body;
     const author_id = req.user.id;
 
     const post = await Post.create({
       title,
       content,
       category,
+      category_id,
       thumbnail_url,
       pdf_url,
       author_id,

@@ -35,7 +35,11 @@ app.use(cors({
     'http://localhost:3000',
     'http://localhost:3001', 
     'http://127.0.0.1:3000',
-    'http://127.0.0.1:3001'
+    'http://127.0.0.1:3001',
+    'https://yt2future.com',
+    'https://www.yt2future.com',
+    'http://yt2future.com',
+    'http://www.yt2future.com'
   ],
   credentials: true
 }));
