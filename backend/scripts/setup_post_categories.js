@@ -1,71 +1,95 @@
-const { executeQuery } = require('../src/config/database');
+const mysql = require('mysql2/promise');
+const fs = require('fs');
+const path = require('path');
+
+// Đọc file SQL
+const sqlFile = path.join(__dirname, 'create_post_categories_table.sql');
+const sqlContent = fs.readFileSync(sqlFile, 'utf8');
+
+// Tách các câu lệnh SQL
+const statements = sqlContent
+  .split(';')
+  .map(stmt => stmt.trim())
+  .filter(stmt => stmt.length > 0);
 
 async function setupPostCategories() {
+  let connection;
+  
   try {
-    // Create table
-    await executeQuery(`
-      CREATE TABLE IF NOT EXISTS post_categories (
-        id INT PRIMARY KEY AUTO_INCREMENT,
-        name VARCHAR(255) NOT NULL,
-        description TEXT,
-        color VARCHAR(7) DEFAULT '#6B7280',
-        category_type ENUM('nganh', 'doanh_nghiep') NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        INDEX idx_category_type (category_type),
-        INDEX idx_name (name)
-      )
-    `);
-    console.log('✅ Table post_categories created');
+    // Kết nối database
+    connection = await mysql.createConnection({
+      host: process.env.DB_HOST || 'localhost',
+      user: process.env.DB_USER || 'root',
+      password: process.env.DB_PASSWORD || '',
+      database: process.env.DB_NAME || 'investment_capital'
+    });
 
-    // Insert sample categories for nganh (sectors)
-    const nganhCategories = [
-      ['Ngân hàng', 'Phân tích ngành ngân hàng và tài chính', '#3B82F6'],
-      ['Công nghiệp', 'Phân tích ngành công nghiệp và sản xuất', '#10B981'],
-      ['Bất động sản', 'Phân tích ngành bất động sản', '#F59E0B'],
-      ['Công nghệ', 'Phân tích ngành công nghệ thông tin', '#8B5CF6'],
-      ['Năng lượng', 'Phân tích ngành năng lượng', '#EF4444'],
-      ['Y tế', 'Phân tích ngành y tế và dược phẩm', '#06B6D4']
+    console.log('✅ Kết nối database thành công');
+
+    // Thực thi từng câu lệnh SQL
+    for (const statement of statements) {
+      if (statement.trim()) {
+        console.log(`📝 Thực thi: ${statement.substring(0, 50)}...`);
+        await connection.execute(statement);
+      }
+    }
+
+    console.log('✅ Tạo bảng post_categories thành công');
+
+    // Thêm một số danh mục mẫu
+    const sampleCategories = [
+      // Danh mục ngành
+      { name: 'Ngân hàng', description: 'Phân tích ngành ngân hàng', color: '#3b82f6', category_type: 'nganh' },
+      { name: 'Bất động sản', description: 'Phân tích ngành bất động sản', color: '#10b981', category_type: 'nganh' },
+      { name: 'Công nghệ', description: 'Phân tích ngành công nghệ', color: '#f59e0b', category_type: 'nganh' },
+      { name: 'Năng lượng', description: 'Phân tích ngành năng lượng', color: '#ef4444', category_type: 'nganh' },
+      
+      // Danh mục doanh nghiệp
+      { name: 'Ngân hàng thương mại', description: 'Phân tích các ngân hàng thương mại', color: '#3b82f6', category_type: 'doanh_nghiep' },
+      { name: 'Công ty bất động sản', description: 'Phân tích các công ty bất động sản', color: '#10b981', category_type: 'doanh_nghiep' },
+      { name: 'Công ty công nghệ', description: 'Phân tích các công ty công nghệ', color: '#f59e0b', category_type: 'doanh_nghiep' },
+      { name: 'Công ty năng lượng', description: 'Phân tích các công ty năng lượng', color: '#ef4444', category_type: 'doanh_nghiep' }
     ];
 
-    for (const [name, description, color] of nganhCategories) {
-      await executeQuery(
-        'INSERT IGNORE INTO post_categories (name, description, color, category_type) VALUES (?, ?, ?, ?)',
-        [name, description, color, 'nganh']
-      );
+    for (const category of sampleCategories) {
+      try {
+        await connection.execute(
+          'INSERT INTO post_categories (name, description, color, category_type) VALUES (?, ?, ?, ?)',
+          [category.name, category.description, category.color, category.category_type]
+        );
+        console.log(`✅ Thêm danh mục: ${category.name} (${category.category_type})`);
+      } catch (error) {
+        if (error.code === 'ER_DUP_ENTRY') {
+          console.log(`⚠️  Danh mục đã tồn tại: ${category.name}`);
+        } else {
+          console.error(`❌ Lỗi thêm danh mục ${category.name}:`, error.message);
+        }
+      }
     }
-    console.log('✅ Nganh categories inserted');
 
-    // Insert sample categories for doanh_nghiep (companies)
-    const doanhNghiepCategories = [
-      ['Ngân hàng', 'Phân tích các doanh nghiệp ngân hàng', '#3B82F6'],
-      ['Công nghiệp', 'Phân tích các doanh nghiệp công nghiệp', '#10B981'],
-      ['Bất động sản', 'Phân tích các doanh nghiệp bất động sản', '#F59E0B'],
-      ['Công nghệ', 'Phân tích các doanh nghiệp công nghệ', '#8B5CF6'],
-      ['Năng lượng', 'Phân tích các doanh nghiệp năng lượng', '#EF4444'],
-      ['Y tế', 'Phân tích các doanh nghiệp y tế', '#06B6D4']
-    ];
+    console.log('✅ Hoàn thành setup post_categories');
 
-    for (const [name, description, color] of doanhNghiepCategories) {
-      await executeQuery(
-        'INSERT IGNORE INTO post_categories (name, description, color, category_type) VALUES (?, ?, ?, ?)',
-        [name, description, color, 'doanh_nghiep']
-      );
-    }
-    console.log('✅ Doanh nghiep categories inserted');
-
-    console.log('🎉 Post categories setup completed!');
   } catch (error) {
-    console.error('❌ Error setting up post categories:', error);
+    console.error('❌ Lỗi setup post_categories:', error);
+    throw error;
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
   }
 }
 
-setupPostCategories();
+// Chạy script
+if (require.main === module) {
+  setupPostCategories()
+    .then(() => {
+      console.log('🎉 Setup post_categories hoàn thành!');
+      process.exit(0);
+    })
+    .catch((error) => {
+      console.error('💥 Setup post_categories thất bại:', error);
+      process.exit(1);
+    });
+}
 
-
-
-
-
-
-
-
+module.exports = { setupPostCategories };

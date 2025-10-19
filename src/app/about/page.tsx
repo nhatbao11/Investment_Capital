@@ -4,22 +4,22 @@ import NextLayout from '@/components/Layout/NextLayout'
 
 export const metadata: Metadata = {
   title: 'Về chúng tôi',
-  description: 'Tìm hiểu về Y&T Group - công ty đầu tư chuyên nghiệp với đội ngũ chuyên gia giàu kinh nghiệm và công nghệ phân tích tiên tiến.',
+  description: 'Tìm hiểu về Y&T Group - đơn vị chia sẻ kiến thức đầu tư với đội ngũ nghiên cứu giàu kinh nghiệm, tập trung vào phân tích ngành, doanh nghiệp và chiến lược đầu tư dài hạn.',
   keywords: [
     'về chúng tôi',
     'Y&T Group',
-    'đội ngũ chuyên gia',
-    'công ty đầu tư',
+    'đội ngũ nghiên cứu',
+    'đơn vị chia sẻ kiến thức',
     'sứ mệnh',
     'tầm nhìn',
     'giá trị cốt lõi',
     'about us',
-    'investment company',
-    'expert team'
+    'investment knowledge',
+    'research team'
   ],
   openGraph: {
     title: 'Về chúng tôi - Y&T Group',
-    description: 'Tìm hiểu về Y&T Group - công ty đầu tư chuyên nghiệp với đội ngũ chuyên gia giàu kinh nghiệm.',
+    description: 'Tìm hiểu về Y&T Group - đơn vị chia sẻ kiến thức đầu tư với đội ngũ nghiên cứu giàu kinh nghiệm.',
     images: ['/og-about.png'],
   },
   alternates: {

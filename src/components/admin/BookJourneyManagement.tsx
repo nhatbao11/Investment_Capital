@@ -119,6 +119,44 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
     setMessage(null);
   };
 
+  const remove = async (id: number) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa hành trình sách này?')) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await fetch(`${API_BASE}/bookjourney/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        addNotification({
+          type: 'success',
+          title: 'Thành công',
+          message: 'Xóa hành trình sách thành công'
+        });
+        setItems(items.filter(item => item.id !== id));
+      } else {
+        const error = await response.json();
+        addNotification({
+          type: 'error',
+          title: 'Lỗi',
+          message: error.message || 'Không thể xóa hành trình sách'
+        });
+      }
+    } catch (error) {
+      addNotification({
+        type: 'error',
+        title: 'Lỗi',
+        message: 'Không thể xóa hành trình sách'
+      });
+    }
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {

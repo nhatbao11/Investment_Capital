@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     default: 'Y&T Group - Shaping Tomorrow Through Agile Innovation',
     template: '%s | Y&T Group'
   },
-  description: 'Y&T Group là đơn vị đầu tư chuyên nghiệp, cung cấp giải pháp đầu tư toàn diện và bền vững. Khám phá cơ hội đầu tư cùng chúng tôi.',
+  description: 'Y&T Group là đơn vị chia sẻ kiến thức đầu tư: phân tích ngành, doanh nghiệp, báo cáo và chiến lược đầu tư dài hạn. Không cung cấp dịch vụ tài chính.',
   keywords: [
     'đầu tư',
     'tài chính',
@@ -29,9 +29,9 @@ export const metadata: Metadata = {
   creator: 'Y&T Group',
   publisher: 'Y&T Group',
   icons: {
-    icon: '/images/YT LOGO.png',
-    shortcut: '/images/YT LOGO.png',
-    apple: '/images/YT LOGO.png',
+    icon: '/images/Logo01.jpg',
+    shortcut: '/images/Logo01.jpg',
+    apple: '/images/Logo01.jpg',
   },
   formatDetection: {
     email: false,
@@ -51,22 +51,22 @@ export const metadata: Metadata = {
     locale: 'vi_VN',
     url: 'https://yt2future.com',
     title: 'Y&T Group - Shaping Tomorrow Through Agile Innovation',
-    description: 'Y&T Group là đơn vị đầu tư chuyên nghiệp, cung cấp giải pháp đầu tư toàn diện và bền vững.',
+    description: 'Y&T Group là đơn vị chia sẻ kiến thức đầu tư: phân tích ngành, doanh nghiệp, báo cáo và chiến lược đầu tư.',
     siteName: 'Y&T Group',
     images: [
       {
-        url: '/og-image.png',
+        url: '/images/Logo01.jpg',
         width: 1200,
         height: 630,
-        alt: 'Y&T Group - Investment Solutions',
+        alt: 'Y&T Group Logo',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Y&T Group - Shaping Tomorrow Through Agile Innovation',
-    description: 'Y&T Group là đơn vị đầu tư chuyên nghiệp, cung cấp giải pháp đầu tư toàn diện và bền vững.',
-    images: ['/og-image.png'],
+    description: 'Y&T Group là đơn vị chia sẻ kiến thức đầu tư: phân tích ngành, doanh nghiệp, báo cáo và chiến lược đầu tư.',
+    images: ['/images/Logo01.jpg'],
     creator: '@ytcapital',
   },
   robots: {
@@ -102,6 +102,9 @@ export default function RootLayout({
         <link rel="preload" href="/images/vechungtoi.jpg" as="image" type="image/jpeg" />
         <link rel="preload" href="/images/Saigon.mp4" as="video" type="video/mp4" />
         
+        {/* Favicon */}
+        <link rel="icon" href="/images/Logo01.jpg" type="image/jpeg" />
+        
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
@@ -113,6 +116,19 @@ export default function RootLayout({
       <body className={`${inter.className} bg-white`}>
         <Providers>
           <div className="min-h-screen flex flex-col bg-white text-gray-900">
+            {/* Organization structured data for logo in search */}
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  '@context': 'https://schema.org',
+                  '@type': 'Organization',
+                  name: 'Y&T Group',
+                  url: 'https://yt2future.com',
+                  logo: 'https://yt2future.com/favicon.svg',
+                }),
+              }}
+            />
             {children}
           </div>
         </Providers>

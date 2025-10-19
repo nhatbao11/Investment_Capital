@@ -9,6 +9,7 @@ import { feedbacksApi } from '../../services/api/feedbacks'
 import { useUsers } from '../../services/hooks/useUsers'
 import { useInvestmentKnowledge } from '../../services/hooks/useInvestmentKnowledge'
 import { useCategories } from '../../services/hooks/useCategories'
+import { usePostCategories } from '../../services/hooks/usePostCategories'
 import { authApi } from '../../services/api/auth'
 import { FaPlus, FaEdit, FaTrash, FaEye, FaCheck, FaTimes, FaChartBar, FaUsers, FaFileAlt, FaComments, FaSignOutAlt, FaHome, FaLightbulb, FaBook } from 'react-icons/fa'
 import PostModal from '../../components/admin/PostModal'
@@ -29,10 +30,18 @@ const AdminDashboard: React.FC = () => {
   const { users, loading: usersLoading, fetchUsers, updateUser, deleteUser, pagination: usersPagination } = useUsers()
   const { knowledge, loading: knowledgeLoading, fetchKnowledge, createKnowledge, updateKnowledge, deleteKnowledge, pagination: knowledgePagination } = useInvestmentKnowledge()
   const { categories, loading: categoriesLoading, fetchCategories, createCategory, updateCategory, deleteCategory } = useCategories()
+  const { 
+    categories: postCategories, 
+    loading: postCategoriesLoading, 
+    fetchCategoriesByType, 
+    createCategory: createPostCategory, 
+    updateCategory: updatePostCategory, 
+    deleteCategory: deletePostCategory 
+  } = usePostCategories()
   const [totalKnowledge, setTotalKnowledge] = useState<number>(0)
   const [totalBookJourney, setTotalBookJourney] = useState<number>(0)
   
-  const [activeTab, setActiveTab] = useState<'posts' | 'feedbacks' | 'users' | 'stats' | 'investment' | 'bookjourney' | 'categories'>('posts')
+  const [activeTab, setActiveTab] = useState<'posts' | 'feedbacks' | 'users' | 'stats' | 'investment' | 'bookjourney' | 'categories' | 'post-categories'>('posts')
   // users are loaded via hook
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [editingPost, setEditingPost] = useState<any>(null)
@@ -41,6 +50,10 @@ const AdminDashboard: React.FC = () => {
   const [showCategoryModal, setShowCategoryModal] = useState(false)
   const [editingCategory, setEditingCategory] = useState<any>(null)
   const [categoryForm, setCategoryForm] = useState({ name: '', description: '', color: '#3B82F6' })
+  const [showPostCategoryModal, setShowPostCategoryModal] = useState(false)
+  const [editingPostCategory, setEditingPostCategory] = useState<any>(null)
+  const [postCategoryForm, setPostCategoryForm] = useState({ name: '', description: '', color: '#3B82F6', category_type: 'nganh' as 'nganh' | 'doanh_nghiep' })
+  const [selectedPostCategoryType, setSelectedPostCategoryType] = useState<'nganh' | 'doanh_nghiep'>('nganh')
   const [postFilter, setPostFilter] = useState<{ status?: 'draft' | 'published' | 'archived' | 'all'; category?: 'nganh' | 'doanh_nghiep' | 'all' }>({ status: 'all', category: 'all' })
   const [postsPage, setPostsPage] = useState(1)
   const [postsLimit, setPostsLimit] = useState(10)
@@ -418,6 +431,91 @@ const AdminDashboard: React.FC = () => {
     setShowCategoryModal(true)
   }
 
+  // Post Category handlers
+  const handleSavePostCategory = async () => {
+    try {
+      if (editingPostCategory) {
+        const res = await updatePostCategory(editingPostCategory.id, postCategoryForm)
+        if (res) {
+          addNotification({
+            type: 'success',
+            title: 'Thành công',
+            message: 'Cập nhật danh mục thành công'
+          })
+        } else {
+          addNotification({
+            type: 'error',
+            title: 'Lỗi',
+            message: 'Không thể cập nhật danh mục'
+          })
+        }
+      } else {
+        const res = await createPostCategory(postCategoryForm)
+        if (res) {
+          addNotification({
+            type: 'success',
+            title: 'Thành công',
+            message: 'Tạo danh mục thành công'
+          })
+        } else {
+          addNotification({
+            type: 'error',
+            title: 'Lỗi',
+            message: 'Không thể tạo danh mục'
+          })
+        }
+      }
+    } catch (e: any) {
+      addNotification({
+        type: 'error',
+        title: 'Lỗi',
+        message: e?.response?.data?.message || 'Lưu danh mục thất bại'
+      })
+    } finally {
+      setEditingPostCategory(null)
+      setShowPostCategoryModal(false)
+      setPostCategoryForm({ name: '', description: '', color: '#3B82F6', category_type: 'nganh' })
+    }
+  }
+
+  const handleDeletePostCategory = async (id: number) => {
+    if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
+      const success = await deletePostCategory(id)
+      if (success) {
+        addNotification({
+          type: 'success',
+          title: 'Thành công',
+          message: 'Xóa danh mục thành công'
+        })
+      } else {
+        addNotification({
+          type: 'error',
+          title: 'Lỗi',
+          message: 'Không thể xóa danh mục (có thể còn bài viết)'
+        })
+      }
+    }
+  }
+
+  const openCreatePostCategory = (type: 'nganh' | 'doanh_nghiep') => {
+    setEditingPostCategory(null)
+    setPostCategoryForm({ name: '', description: '', color: '#3B82F6', category_type: type })
+    setSelectedPostCategoryType(type)
+    setShowPostCategoryModal(true)
+  }
+
+  const openEditPostCategory = (category: any) => {
+    setEditingPostCategory(category)
+    setPostCategoryForm({ 
+      name: category.name, 
+      description: category.description || '', 
+      color: category.color || '#3B82F6',
+      category_type: category.category_type
+    })
+    setSelectedPostCategoryType(category.category_type)
+    setShowPostCategoryModal(true)
+  }
+
   const handleSaveKnowledge = async (data: FormData) => {
     try {
       if (editingKnowledge) {
@@ -633,7 +731,8 @@ const AdminDashboard: React.FC = () => {
                 { id: 'posts', name: 'Quản lý bài viết', icon: FaFileAlt },
                 { id: 'investment', name: 'Kiến thức đầu tư', icon: FaLightbulb },
                 { id: 'bookjourney', name: 'Hành trình sách', icon: FaBook },
-                { id: 'categories', name: 'Quản lý danh mục', icon: FaChartBar },
+                { id: 'categories', name: 'Danh mục kiến thức', icon: FaChartBar },
+                { id: 'post-categories', name: 'Danh mục bài viết', icon: FaFileAlt },
                 { id: 'feedbacks', name: 'Quản lý phản hồi', icon: FaComments },
                 { id: 'users', name: 'Quản lý người dùng', icon: FaUsers },
                 { id: 'stats', name: 'Thống kê', icon: FaChartBar },
@@ -1007,6 +1106,116 @@ const AdminDashboard: React.FC = () => {
                           </button>
                           <button
                             onClick={() => handleDeleteCategory(category.id)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Xóa"
+                          >
+                            <FaTrash className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'post-categories' && (
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold text-gray-900">Quản lý danh mục bài viết</h2>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => openCreatePostCategory('nganh')}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                  >
+                    <FaPlus className="h-4 w-4 mr-2" />
+                    Thêm danh mục ngành
+                  </button>
+                  <button
+                    onClick={() => openCreatePostCategory('doanh_nghiep')}
+                    className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center"
+                  >
+                    <FaPlus className="h-4 w-4 mr-2" />
+                    Thêm danh mục doanh nghiệp
+                  </button>
+                </div>
+              </div>
+
+              {/* Tabs for category types */}
+              <div className="mb-6">
+                <div className="border-b border-gray-200">
+                  <nav className="-mb-px flex space-x-8">
+                    {[
+                      { id: 'nganh', name: 'Danh mục ngành', color: 'blue' },
+                      { id: 'doanh_nghiep', name: 'Danh mục doanh nghiệp', color: 'green' }
+                    ].map((tab) => (
+                      <button
+                        key={tab.id}
+                        onClick={() => {
+                          setSelectedPostCategoryType(tab.id as 'nganh' | 'doanh_nghiep')
+                          fetchCategoriesByType(tab.id as 'nganh' | 'doanh_nghiep')
+                        }}
+                        className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                          selectedPostCategoryType === tab.id
+                            ? `border-${tab.color}-500 text-${tab.color}-600`
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        }`}
+                      >
+                        {tab.name}
+                      </button>
+                    ))}
+                  </nav>
+                </div>
+              </div>
+
+              {postCategoriesLoading ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                  <p className="mt-2 text-gray-600">Đang tải...</p>
+                </div>
+              ) : postCategories.length === 0 ? (
+                <div className="text-center py-8">
+                  <FaFileAlt className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-500">Chưa có danh mục nào cho {selectedPostCategoryType === 'nganh' ? 'ngành' : 'doanh nghiệp'}</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {postCategories.map((category) => (
+                    <div key={category.id} className="bg-white border rounded-lg p-4 shadow-sm">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center mb-2">
+                            <div 
+                              className="w-4 h-4 rounded-full mr-3" 
+                              style={{ backgroundColor: category.color }}
+                            ></div>
+                            <h3 className="font-semibold text-gray-900">{category.name}</h3>
+                            <span className={`ml-2 px-2 py-1 text-xs rounded-full ${
+                              category.category_type === 'nganh' 
+                                ? 'bg-blue-100 text-blue-800' 
+                                : 'bg-green-100 text-green-800'
+                            }`}>
+                              {category.category_type === 'nganh' ? 'Ngành' : 'Doanh nghiệp'}
+                            </span>
+                          </div>
+                          {category.description && (
+                            <p className="text-sm text-gray-600 mb-2">{category.description}</p>
+                          )}
+                          <div className="text-xs text-gray-500">
+                            {category.post_count || 0} bài viết
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2 ml-4">
+                          <button
+                            onClick={() => openEditPostCategory(category)}
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            title="Sửa"
+                          >
+                            <FaEdit className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeletePostCategory(category.id)}
                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             title="Xóa"
                           >
@@ -1568,6 +1777,117 @@ const AdminDashboard: React.FC = () => {
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {categoriesLoading ? 'Đang lưu...' : (editingCategory ? 'Cập nhật' : 'Tạo mới')}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Post Category Modal */}
+      {showPostCategoryModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                {editingPostCategory ? 'Sửa danh mục' : 'Thêm danh mục mới'}
+              </h3>
+              <button
+                onClick={() => {
+                  setShowPostCategoryModal(false)
+                  setEditingPostCategory(null)
+                  setPostCategoryForm({ name: '', description: '', color: '#3B82F6', category_type: 'nganh' })
+                }}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <FaTimes className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={(e) => { e.preventDefault(); handleSavePostCategory(); }}>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Loại danh mục *
+                  </label>
+                  <select
+                    value={postCategoryForm.category_type}
+                    onChange={(e) => setPostCategoryForm({ ...postCategoryForm, category_type: e.target.value as 'nganh' | 'doanh_nghiep' })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    disabled={!!editingPostCategory}
+                  >
+                    <option value="nganh">Ngành</option>
+                    <option value="doanh_nghiep">Doanh nghiệp</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Tên danh mục *
+                  </label>
+                  <input
+                    type="text"
+                    value={postCategoryForm.name}
+                    onChange={(e) => setPostCategoryForm({ ...postCategoryForm, name: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Nhập tên danh mục"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Mô tả
+                  </label>
+                  <textarea
+                    value={postCategoryForm.description}
+                    onChange={(e) => setPostCategoryForm({ ...postCategoryForm, description: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Nhập mô tả danh mục"
+                    rows={3}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Màu sắc
+                  </label>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="color"
+                      value={postCategoryForm.color}
+                      onChange={(e) => setPostCategoryForm({ ...postCategoryForm, color: e.target.value })}
+                      className="w-12 h-10 border border-gray-300 rounded-lg cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={postCategoryForm.color}
+                      onChange={(e) => setPostCategoryForm({ ...postCategoryForm, color: e.target.value })}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="#3B82F6"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPostCategoryModal(false)
+                    setEditingPostCategory(null)
+                    setPostCategoryForm({ name: '', description: '', color: '#3B82F6', category_type: 'nganh' })
+                  }}
+                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  disabled={!postCategoryForm.name.trim() || postCategoriesLoading}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {postCategoriesLoading ? 'Đang lưu...' : (editingPostCategory ? 'Cập nhật' : 'Tạo mới')}
                 </button>
               </div>
             </form>

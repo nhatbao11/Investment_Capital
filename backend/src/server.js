@@ -11,6 +11,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const postRoutes = require('./routes/posts');
 const categoryRoutes = require('./routes/categories');
+const postCategoryRoutes = require('./routes/postCategories');
 const bookJourneyRoutes = require('./routes/bookJourney');
 const investmentKnowledgeRoutes = require('./routes/investmentKnowledge');
 const feedbackRoutes = require('./routes/feedbacks');
@@ -73,6 +74,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/posts', postRoutes);
 app.use('/api/v1/categories', categoryRoutes);
+app.use('/api/v1/post-categories', postCategoryRoutes);
 app.use('/api/v1/bookjourney', bookJourneyRoutes);
 app.use('/api/v1/investment-knowledge', investmentKnowledgeRoutes);
 app.use('/api/v1/feedbacks', feedbackRoutes);
@@ -89,6 +91,7 @@ app.get('/', (req, res) => {
       users: '/api/v1/users',
       posts: '/api/v1/posts',
       categories: '/api/v1/categories',
+      postCategories: '/api/v1/post-categories',
       bookjourney: '/api/v1/bookjourney',
       investmentKnowledge: '/api/v1/investment-knowledge',
       feedbacks: '/api/v1/feedbacks',
