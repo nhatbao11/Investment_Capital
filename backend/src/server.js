@@ -45,9 +45,8 @@ app.use(cors({
 }));
 
 /**
- * Static Files (Uploads)
+ * Static Files (Uploads) - Removed duplicate, handled below
  */
-app.use('/uploads', express.static(path.resolve(__dirname, '../uploads')));
 
 // Rate Limiting (disabled for testing)
 // const limiter = rateLimit({
@@ -89,6 +88,17 @@ app.get('/health', (req, res) => {
 });
 
 /**
+ * Static files for uploads (serve avatars) - MUST be before API routes
+ */
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads'), {
+  setHeaders: (res) => {
+    // Avatars can change at the same URL; force revalidation to always fetch latest
+    res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  }
+}));
+
+/**
  * API Routes
  */
 app.use('/api/v1/auth', authRoutes);
@@ -99,17 +109,6 @@ app.use('/api/v1/investment-knowledge', investmentKnowledgeRoutes);
 app.use('/api/v1/categories', require('./routes/categories'));
 app.use('/api/v1/bookjourney', bookJourneyRoutes);
 app.use('/api/v1/upload', uploadRoutes);
-
-/**
- * Static files for uploads (serve avatars)
- */
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads'), {
-  setHeaders: (res) => {
-    // Avatars can change at the same URL; force revalidation to always fetch latest
-    res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
-    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-  }
-}));
 
 /**
  * 404 Handler

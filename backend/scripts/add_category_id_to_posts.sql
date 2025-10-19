@@ -12,3 +12,5 @@ ADD INDEX idx_category_id (category_id);
 UPDATE posts SET category_id = 1 WHERE category = 'nganh';
 UPDATE posts SET category_id = 2 WHERE category = 'doanh_nghiep';
 
+
+

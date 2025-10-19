@@ -83,7 +83,7 @@ module.exports = {
       if (allowed.includes(file.mimetype)) cb(null, true); else cb(new Error('Invalid file type'))
     }
   }),
-  upload: multer({
+  uploadInvestment: multer({
     storage: multer.diskStorage({
       destination: function (req, file, cb) {
         // Determine destination based on field name

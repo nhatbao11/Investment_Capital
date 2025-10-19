@@ -11,7 +11,7 @@ const {
   incrementViewCount
 } = require('../controllers/investmentKnowledgeController');
 const { authenticate, requireAdmin } = require('../middleware/auth');
-const { upload } = require('../middleware/upload');
+const { uploadInvestment } = require('../middleware/upload');
 
 /**
  * Investment Knowledge Routes
@@ -29,11 +29,11 @@ router.post('/:id/view', incrementViewCount);
 router.use(authenticate);
 
 // Admin only routes
-router.post('/', requireAdmin, upload.fields([
+router.post('/', requireAdmin, uploadInvestment.fields([
   { name: 'image', maxCount: 1 },
   { name: 'pdf', maxCount: 1 }
 ]), createInvestmentKnowledge);
-router.put('/:id', requireAdmin, upload.fields([
+router.put('/:id', requireAdmin, uploadInvestment.fields([
   { name: 'image', maxCount: 1 },
   { name: 'pdf', maxCount: 1 }
 ]), updateInvestmentKnowledge);

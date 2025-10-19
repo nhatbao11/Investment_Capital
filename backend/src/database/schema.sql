@@ -82,6 +82,7 @@ CREATE TABLE investment_knowledge (
     image_url VARCHAR(500),
     images JSON,
     content LONGTEXT NOT NULL,
+    pdf_url VARCHAR(500),
     meaning TEXT,
     author_id INT NOT NULL,
     status ENUM('draft', 'published', 'archived') DEFAULT 'draft',

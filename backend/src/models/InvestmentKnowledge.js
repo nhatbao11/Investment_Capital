@@ -31,14 +31,14 @@ class InvestmentKnowledge {
    * @returns {Promise<InvestmentKnowledge>} InvestmentKnowledge object
    */
   static async create(knowledgeData) {
-    const { title, image_url, images, content, meaning, author_id, category_id, status = 'draft' } = knowledgeData;
+    const { title, image_url, images, content, pdf_url, meaning, author_id, category_id, status = 'draft' } = knowledgeData;
     
     const sql = `
-      INSERT INTO investment_knowledge (title, image_url, images, content, meaning, author_id, category_id, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO investment_knowledge (title, image_url, images, content, pdf_url, meaning, author_id, category_id, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     
-    const result = await executeQuery(sql, [title, image_url || null, JSON.stringify(images || []), content, meaning || null, author_id, category_id || null, status]);
+    const result = await executeQuery(sql, [title, image_url || null, JSON.stringify(images || []), content, pdf_url || null, meaning || null, author_id, category_id || null, status]);
     
     return await InvestmentKnowledge.findById(result.insertId);
   }
@@ -145,7 +145,7 @@ class InvestmentKnowledge {
    * @returns {Promise<InvestmentKnowledge|null>} InvestmentKnowledge object hoặc null
    */
   static async update(id, updateData) {
-    const allowedFields = ['title', 'image_url', 'images', 'content', 'meaning', 'status', 'category_id'];
+    const allowedFields = ['title', 'image_url', 'images', 'content', 'pdf_url', 'meaning', 'status', 'category_id'];
     const updates = [];
     const params = [];
     

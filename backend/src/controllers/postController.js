@@ -108,13 +108,26 @@ const createPost = async (req, res) => {
     const { title, content, category, category_id, thumbnail_url, pdf_url, status = 'draft' } = req.body;
     const author_id = req.user.id;
 
+    let finalPdfUrl = pdf_url;
+    let finalThumbnailUrl = thumbnail_url;
+
+    // Handle uploaded PDF file
+    if (req.files && req.files.pdf && req.files.pdf.length > 0) {
+      finalPdfUrl = `/uploads/posts/${req.files.pdf[0].filename}`;
+    }
+
+    // Handle uploaded thumbnail file
+    if (req.files && req.files.thumbnail && req.files.thumbnail.length > 0) {
+      finalThumbnailUrl = `/uploads/posts/${req.files.thumbnail[0].filename}`;
+    }
+
     const post = await Post.create({
       title,
       content,
       category,
       category_id,
-      thumbnail_url,
-      pdf_url,
+      thumbnail_url: finalThumbnailUrl,
+      pdf_url: finalPdfUrl,
       author_id,
       status
     });
@@ -155,6 +168,16 @@ const updatePost = async (req, res) => {
         message: 'Post not found',
         code: 'POST_NOT_FOUND'
       });
+    }
+
+    // Handle uploaded PDF file (takes priority)
+    if (req.files && req.files.pdf && req.files.pdf.length > 0) {
+      updateData.pdf_url = `/uploads/posts/${req.files.pdf[0].filename}`;
+    }
+
+    // Handle uploaded thumbnail file (takes priority)
+    if (req.files && req.files.thumbnail && req.files.thumbnail.length > 0) {
+      updateData.thumbnail_url = `/uploads/posts/${req.files.thumbnail[0].filename}`;
     }
 
     const updatedPost = await Post.update(id, updateData);

@@ -51,7 +51,10 @@ router.post('/:id/view', validateId, postController.incrementViewCount);
  * @desc    Tạo post mới (Admin only)
  * @access  Private (Admin)
  */
-router.post('/', authenticate, requireAdmin, validatePost, postController.createPost);
+router.post('/', authenticate, requireAdmin, uploadPostAsset.fields([
+  { name: 'thumbnail', maxCount: 1 },
+  { name: 'pdf', maxCount: 1 }
+]), validatePost, postController.createPost);
 /**
  * @route   POST /api/v1/posts/upload
  * @desc    Upload post asset (image/pdf)
@@ -67,7 +70,10 @@ router.post('/upload', authenticate, requireAdmin, uploadPostAsset.single('file'
  * @desc    Cập nhật post (Admin only)
  * @access  Private (Admin)
  */
-router.put('/:id', authenticate, requireAdmin, validateId, validatePost, postController.updatePost);
+router.put('/:id', authenticate, requireAdmin, uploadPostAsset.fields([
+  { name: 'thumbnail', maxCount: 1 },
+  { name: 'pdf', maxCount: 1 }
+]), validateId, validatePost, postController.updatePost);
 
 /**
  * @route   DELETE /api/v1/posts/:id

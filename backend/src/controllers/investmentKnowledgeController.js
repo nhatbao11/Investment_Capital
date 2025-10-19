@@ -125,19 +125,19 @@ const createInvestmentKnowledge = async (req, res) => {
       });
     }
 
-    let pdf_path = '';
+    let pdf_url = '';
 
     // Handle uploaded PDF file
     if (req.files && req.files.pdf && req.files.pdf.length > 0) {
-      pdf_path = `/uploads/investment/${req.files.pdf[0].filename}`;
+      pdf_url = `/uploads/investment/${req.files.pdf[0].filename}`;
     }
 
     // Fallback to URL if no file uploaded
-    if (!pdf_path && req.body.pdf_url) {
-      pdf_path = req.body.pdf_url;
+    if (!pdf_url && req.body.pdf_url) {
+      pdf_url = req.body.pdf_url;
     }
 
-    if (!pdf_path) {
+    if (!pdf_url) {
       return res.status(400).json({
         success: false,
         message: 'Vui lòng chọn file PDF hoặc nhập URL PDF',
@@ -148,7 +148,8 @@ const createInvestmentKnowledge = async (req, res) => {
     const knowledge = await InvestmentKnowledge.create({
       title,
       image_url,
-      content: pdf_path, // Store PDF path/URL in content field temporarily
+      content: '', // Keep content field empty for now
+      pdf_url: pdf_url, // Store PDF path/URL in pdf_url field
       meaning,
       author_id,
       category_id: category_id ? parseInt(category_id) : null,
@@ -195,12 +196,12 @@ const updateInvestmentKnowledge = async (req, res) => {
 
     // Handle uploaded PDF file (takes priority)
     if (req.files && req.files.pdf && req.files.pdf.length > 0) {
-      updateData.content = `/uploads/investment/${req.files.pdf[0].filename}`;
+      updateData.pdf_url = `/uploads/investment/${req.files.pdf[0].filename}`;
     } else if (req.body.pdf_url) {
       // Handle PDF URL (only if no new file uploaded)
-      updateData.content = req.body.pdf_url;
+      updateData.pdf_url = req.body.pdf_url;
     }
-    // If neither file nor URL provided, keep existing PDF (don't update content field)
+    // If neither file nor URL provided, keep existing PDF (don't update pdf_url field)
 
     const updatedKnowledge = await InvestmentKnowledge.update(id, updateData);
     

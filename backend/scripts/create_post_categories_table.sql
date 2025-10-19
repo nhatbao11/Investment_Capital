@@ -31,3 +31,5 @@ INSERT INTO post_categories (name, description, color, category_type) VALUES
 ('Năng lượng', 'Phân tích các doanh nghiệp năng lượng', '#EF4444', 'doanh_nghiep'),
 ('Y tế', 'Phân tích các doanh nghiệp y tế', '#06B6D4', 'doanh_nghiep');
 
+
+
