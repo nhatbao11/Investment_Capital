@@ -67,7 +67,10 @@ const InvestmentFeed: React.FC<InvestmentFeedProps> = ({ title }) => {
         const API_BASE = getApiBaseUrl();
         
         // Check if user is admin to show all statuses
-        const userRole = localStorage.getItem('userRole');
+        let userRole = null;
+        if (typeof window !== 'undefined') {
+          userRole = localStorage.getItem('userRole');
+        }
         const isAdmin = userRole === 'admin';
         const statusParam = isAdmin ? 'all' : 'published';
         
