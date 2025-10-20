@@ -15,6 +15,7 @@ interface InvestmentPost {
   image_url: string;
   images: string[];
   content: string;
+  pdf_url?: string;
   meaning: string;
   created_at: string;
   view_count: number;
@@ -132,8 +133,20 @@ const InvestmentFeed: React.FC<InvestmentFeedProps> = ({ title }) => {
 
   const handleViewReport = async (post: InvestmentPost) => {
     try {
-      // Xử lý PDF - sử dụng image_url vì đó là nơi chứa PDF
-      const pdfUrl = post.image_url || post.content;
+      // Tăng view count
+      try {
+        await fetch(`${getApiBaseUrl()}/investment-knowledge/${post.id}/view`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+      } catch (error) {
+        console.error('Error incrementing view count:', error);
+      }
+
+      // Xử lý PDF - sử dụng pdf_url field
+      const pdfUrl = post.pdf_url || post.content;
       
       if (pdfUrl) {
         const resolvedUrl = resolvePdfUrl(pdfUrl);
