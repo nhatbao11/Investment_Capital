@@ -119,12 +119,12 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
           {/* Filter Button */}
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-2 px-4 py-2 sm:py-2.5 border rounded-lg text-sm transition-colors ${
+            className={`flex items-center gap-2 px-4 py-2 sm:py-2.5 border rounded-lg text-sm transition-colors whitespace-nowrap ${
               selectedCategoryId ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-300 hover:border-gray-400'
             }`}
           >
             <FaFilter className="text-sm" />
-            <span>Danh mục</span>
+            <span>{t('common.categories')}</span>
             {selectedCategoryId && (
               <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
                 {postCategories.find(c => c.id === selectedCategoryId)?.name || '1'}
@@ -149,7 +149,7 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
                   : 'bg-white text-gray-700 hover:bg-gray-100 border'
               }`}
             >
-              Tất cả danh mục
+              {t('common.all_categories')}
             </button>
             {postCategories.map((cat) => (
               <button
@@ -211,7 +211,17 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
               <motion.div key={post.id} initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="bg-white rounded-xl shadow-lg overflow-hidden">
                 <PostImage src={post.thumbnail_url} alt={post.title} containerClassName="h-40 sm:h-40" />
                 <div className="p-3 sm:p-4">
-                  <span className={`inline-flex px-2 py-1 text-[10px] sm:text-xs font-semibold rounded-full ${TagBg}`}>{category==='nganh'?t('analysis.category.nganh.short'):t('analysis.category.doanh_nghiep.short')}</span>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className={`inline-flex px-2 py-1 text-[10px] sm:text-xs font-semibold rounded-full ${TagBg}`}>{category==='nganh'?t('analysis.category.nganh.short'):t('analysis.category.doanh_nghiep.short')}</span>
+                    {post.category_name && (
+                      <span 
+                        className="inline-flex px-2 py-1 text-[10px] sm:text-xs font-semibold rounded-full text-white"
+                        style={{ backgroundColor: post.category_color || '#6B7280' }}
+                      >
+                        {post.category_name}
+                      </span>
+                    )}
+                  </div>
                   <h4 className="text-sm sm:text-base md:text-lg font-semibold mt-2 mb-2 line-clamp-2 leading-tight">{post.title}</h4>
                   <p className="text-gray-600 mb-3 text-xs sm:text-sm line-clamp-3">{post.content}</p>
                   <div className="flex items-center justify-between text-[10px] sm:text-xs text-gray-500 mb-3 gap-2">
@@ -236,6 +246,17 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
             <motion.div key={post.id} initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
               <PostImage src={post.thumbnail_url} alt={post.title} containerClassName="h-40 sm:h-48" />
               <div className="p-4 sm:p-5">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className={`inline-flex px-2 py-1 text-[10px] sm:text-xs font-semibold rounded-full ${TagBg}`}>{category==='nganh'?t('analysis.category.nganh.short'):t('analysis.category.doanh_nghiep.short')}</span>
+                  {post.category_name && (
+                    <span 
+                      className="inline-flex px-2 py-1 text-[10px] sm:text-xs font-semibold rounded-full text-white"
+                      style={{ backgroundColor: post.category_color || '#6B7280' }}
+                    >
+                      {post.category_name}
+                    </span>
+                  )}
+                </div>
                 <h5 className="text-base sm:text-lg font-semibold mb-2 line-clamp-2 leading-tight">{post.title}</h5>
                 <p className="text-gray-600 mb-3 text-xs sm:text-sm line-clamp-3">{post.content}</p>
                 <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500 mb-3 gap-2">

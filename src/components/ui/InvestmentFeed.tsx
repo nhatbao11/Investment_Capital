@@ -171,7 +171,7 @@ const InvestmentFeed: React.FC<InvestmentFeedProps> = ({ title }) => {
             onChange={(e)=>{ setPage(1); setSelectedCategory(e.target.value ? parseInt(e.target.value) : null) }} 
             className="border rounded-lg px-3 py-2 sm:py-2.5 text-sm w-full sm:w-auto"
           >
-            <option value="">Tất cả danh mục</option>
+            <option value="">{t('common.all_categories')}</option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
@@ -243,6 +243,16 @@ const InvestmentFeed: React.FC<InvestmentFeedProps> = ({ title }) => {
 
               {/* Content */}
               <div className="p-4 sm:p-6">
+                {post.category_name && (
+                  <div className="mb-2">
+                    <span 
+                      className="inline-flex px-2 py-1 text-xs font-semibold rounded-full text-white"
+                      style={{ backgroundColor: post.category_color || '#6B7280' }}
+                    >
+                      {post.category_name}
+                    </span>
+                  </div>
+                )}
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
                   {post.title}
                 </h3>

@@ -6,6 +6,7 @@ import { FaTimes, FaImage, FaSave, FaSpinner } from 'react-icons/fa';
 import ImageUploader from './ImageUploader';
 import { categoriesAPI, Category } from '../../services/api/categories';
 import { useNotification } from '../ui/Notification';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface InvestmentKnowledgeForm {
   id?: number;
@@ -34,6 +35,7 @@ const InvestmentKnowledgeModal: React.FC<InvestmentKnowledgeModalProps> = ({
   loading = false
 }) => {
   const { addNotification } = useNotification()
+  const { t } = useLanguage()
   const [formData, setFormData] = useState<InvestmentKnowledgeForm>({
     title: '',
     image_url: '',
@@ -230,7 +232,7 @@ const InvestmentKnowledgeModal: React.FC<InvestmentKnowledgeModalProps> = ({
           {/* Category Selection */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Danh mục
+              {t('common.categories')}
             </label>
             <div className="space-y-3">
               <select

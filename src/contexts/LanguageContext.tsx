@@ -54,6 +54,10 @@ const translations = {
     "lang.english": "English",
     "lang.language": "Ngôn ngữ",
 
+    // Common
+    "common.categories": "Danh mục",
+    "common.all_categories": "Tất cả danh mục",
+
     // Home page
     "home.hero.title": "Y&T GROUP",
     "home.hero.subtitle": "Shaping Tomorrow Through Agile Innovation",
@@ -261,7 +265,7 @@ const translations = {
     
     // Team members
     "about.members.nhat.name": "Trần Minh Nhật",
-    "about.members.nhat.title": "CEO & Founder",
+    "about.members.nhat.title": "Founder",
     "about.members.nhat.description": "Anh Nhật là người sáng lập công ty, định hướng tầm nhìn và chiến lược tổng thể. Tập trung vào giải pháp đầu tư bền vững.",
     "about.members.nhat.experience": "5+ năm kinh nghiệm trong lĩnh vực tài chính và đầu tư",
     "about.members.nhat.strengths": "Lãnh đạo chiến lược, Phân tích tài chính, Quản lý rủi ro, Phát triển kinh doanh",
@@ -388,6 +392,10 @@ const translations = {
     "lang.vietnamese": "Vietnamese",
     "lang.english": "English",
     "lang.language": "Language",
+
+    // Common
+    "common.categories": "Categories",
+    "common.all_categories": "All Categories",
 
     // Home page
     "home.hero.title": "Y&T GROUP",
@@ -598,7 +606,7 @@ const translations = {
     
     // Team members
     "about.members.nhat.name": "Tran Minh Nhat",
-    "about.members.nhat.title": "CEO & Founder",
+    "about.members.nhat.title": "Founder",
     "about.members.nhat.description": "Mr. Nhat is the company founder, setting the vision and overall strategy. Focused on sustainable investment solutions.",
     "about.members.nhat.experience": "5+ years of experience in finance and investment",
     "about.members.nhat.strengths": "Strategic leadership, Financial analysis, Risk management, Business development",

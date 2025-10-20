@@ -8,6 +8,9 @@ export interface InvestmentKnowledge {
   content: string;
   meaning: string;
   author_id: number;
+  category_id?: number;
+  category_name?: string;
+  category_color?: string;
   status: 'draft' | 'published' | 'archived';
   view_count: number;
   created_at: string;

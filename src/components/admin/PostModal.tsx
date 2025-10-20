@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { FaTimes, FaSave } from 'react-icons/fa'
 import { Post, CreatePostRequest, UpdatePostRequest } from '../../services/types/posts'
 import { postsApi } from '../../services/api/posts'
-import { categoriesAPI, Category } from '../../services/api/categories'
+import { usePostCategories } from '../../services/hooks/usePostCategories'
 import { useNotification } from '../ui/Notification'
 
 interface PostModalProps {
@@ -23,6 +23,7 @@ const PostModal: React.FC<PostModalProps> = ({
   loading = false 
 }) => {
   const { addNotification } = useNotification()
+  const { categories: postCategories, fetchCategoriesByType } = usePostCategories()
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -34,21 +35,13 @@ const PostModal: React.FC<PostModalProps> = ({
   })
   const [localBusy, setLocalBusy] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [categories, setCategories] = useState<Category[]>([])
 
-  // Fetch categories
+  // Fetch categories when category type changes
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const categoriesData = await categoriesAPI.getAll();
-        setCategories(categoriesData);
-      } catch (err) {
-        console.error('Error fetching categories:', err);
-      }
-    };
-
-    fetchCategories();
-  }, []);
+    if (isOpen) {
+      fetchCategoriesByType(formData.category)
+    }
+  }, [formData.category, isOpen])
 
   useEffect(() => {
     if (post) {
@@ -126,7 +119,9 @@ const PostModal: React.FC<PostModalProps> = ({
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
+      // Reset category_id when category type changes
+      ...(name === 'category' ? { category_id: undefined } : {})
     }))
     
     // Clear error when user starts typing
@@ -203,7 +198,7 @@ const PostModal: React.FC<PostModalProps> = ({
 
             <div>
               <label htmlFor="category_id" className="block text-sm font-medium text-gray-700 mb-2">
-                Doanh mục
+                Danh mục {formData.category === 'nganh' ? 'ngành' : 'doanh nghiệp'}
               </label>
               <select
                 id="category_id"
@@ -218,8 +213,8 @@ const PostModal: React.FC<PostModalProps> = ({
                 }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value="">Chọn doanh mục (tùy chọn)</option>
-                {categories.map((cat) => (
+                <option value="">Chọn danh mục (tùy chọn)</option>
+                {postCategories.map((cat) => (
                   <option key={cat.id} value={cat.id}>
                     {cat.name}
                   </option>

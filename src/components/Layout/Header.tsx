@@ -356,7 +356,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute top-full right-0 mt-1 w-32 bg-white border border-gray-200 rounded-lg shadow-2xl z-[99999] overflow-hidden"
+                      className="absolute top-full right-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-2xl z-[99999] overflow-hidden"
                     >
                       <button
                         onClick={() => handleLanguageChange("vi")}
