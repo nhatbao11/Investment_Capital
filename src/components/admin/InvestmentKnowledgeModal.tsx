@@ -78,7 +78,7 @@ const InvestmentKnowledgeModal: React.FC<InvestmentKnowledgeModalProps> = ({
       });
       
       // Set PDF URL if exists (for editing)
-      setPdfUrl(knowledge.content || '');
+      setPdfUrl(knowledge.pdf_url || '');
       
       // Prefill selected images for preview when editing
       const initialImages: string[] = [];
@@ -140,12 +140,15 @@ const InvestmentKnowledgeModal: React.FC<InvestmentKnowledgeModalProps> = ({
       if (formData.meaning) fd.append('meaning', formData.meaning);
       fd.append('status', formData.status);
       if (formData.category_id) fd.append('category_id', formData.category_id.toString());
+      if (formData.images && formData.images.length > 0) {
+        fd.append('images', JSON.stringify(formData.images));
+      }
       
       // Handle PDF: new file upload takes priority, then URL (only if changed)
       if (pdfFile) {
         fd.append('pdf', pdfFile);
-      } else if (pdfUrl.trim() && pdfUrl.trim() !== (knowledge?.content || '')) {
-        // Only send pdf_url if it's different from existing content
+      } else if (pdfUrl.trim() && pdfUrl.trim() !== (knowledge?.pdf_url || '')) {
+        // Only send pdf_url if it's different from existing pdf_url
         fd.append('pdf_url', pdfUrl.trim());
       }
       // If editing and no new PDF provided, keep existing PDF (no need to send anything)

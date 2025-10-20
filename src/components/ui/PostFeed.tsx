@@ -213,14 +213,6 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
                 <div className="p-3 sm:p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <span className={`inline-flex px-2 py-1 text-[10px] sm:text-xs font-semibold rounded-full ${TagBg}`}>{category==='nganh'?t('analysis.category.nganh.short'):t('analysis.category.doanh_nghiep.short')}</span>
-                    {post.category_name && (
-                      <span 
-                        className="inline-flex px-2 py-1 text-[10px] sm:text-xs font-semibold rounded-full text-white"
-                        style={{ backgroundColor: post.category_color || '#6B7280' }}
-                      >
-                        {post.category_name}
-                      </span>
-                    )}
                   </div>
                   <h4 className="text-sm sm:text-base md:text-lg font-semibold mt-2 mb-2 line-clamp-2 leading-tight">{post.title}</h4>
                   <p className="text-gray-600 mb-3 text-xs sm:text-sm line-clamp-3">{post.content}</p>
@@ -248,14 +240,6 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
               <div className="p-4 sm:p-5">
                 <div className="flex items-center gap-2 mb-2">
                   <span className={`inline-flex px-2 py-1 text-[10px] sm:text-xs font-semibold rounded-full ${TagBg}`}>{category==='nganh'?t('analysis.category.nganh.short'):t('analysis.category.doanh_nghiep.short')}</span>
-                  {post.category_name && (
-                    <span 
-                      className="inline-flex px-2 py-1 text-[10px] sm:text-xs font-semibold rounded-full text-white"
-                      style={{ backgroundColor: post.category_color || '#6B7280' }}
-                    >
-                      {post.category_name}
-                    </span>
-                  )}
                 </div>
                 <h5 className="text-base sm:text-lg font-semibold mb-2 line-clamp-2 leading-tight">{post.title}</h5>
                 <p className="text-gray-600 mb-3 text-xs sm:text-sm line-clamp-3">{post.content}</p>

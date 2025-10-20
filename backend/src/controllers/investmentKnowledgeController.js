@@ -113,7 +113,7 @@ const getInvestmentKnowledgeById = async (req, res) => {
  */
 const createInvestmentKnowledge = async (req, res) => {
   try {
-    const { title, image_url, meaning, status = 'draft', category_id } = req.body;
+    const { title, image_url, meaning, status = 'draft', category_id, images } = req.body;
     const author_id = req.user.id;
 
     // Validate required fields
@@ -145,9 +145,21 @@ const createInvestmentKnowledge = async (req, res) => {
       });
     }
 
+    // Handle images array
+    let imagesArray = [];
+    if (images) {
+      try {
+        imagesArray = typeof images === 'string' ? JSON.parse(images) : images;
+      } catch (e) {
+        console.error('Error parsing images:', e);
+        imagesArray = [];
+      }
+    }
+
     const knowledge = await InvestmentKnowledge.create({
       title,
       image_url,
+      images: imagesArray,
       content: '', // Keep content field empty for now
       pdf_url: pdf_url, // Store PDF path/URL in pdf_url field
       meaning,
@@ -202,6 +214,17 @@ const updateInvestmentKnowledge = async (req, res) => {
       updateData.pdf_url = req.body.pdf_url;
     }
     // If neither file nor URL provided, keep existing PDF (don't update pdf_url field)
+
+    // Handle images array
+    if (updateData.images) {
+      try {
+        updateData.images = typeof updateData.images === 'string' ? JSON.parse(updateData.images) : updateData.images;
+      } catch (e) {
+        console.error('Error parsing images:', e);
+        // Keep existing images if parsing fails
+        delete updateData.images;
+      }
+    }
 
     const updatedKnowledge = await InvestmentKnowledge.update(id, updateData);
     
