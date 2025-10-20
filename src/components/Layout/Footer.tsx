@@ -103,7 +103,7 @@ const Footer: React.FC = () => {
                   <motion.div whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }} className="flex-shrink-0">
                     <MdPhone className="text-blue-900 mr-2 text-base sm:text-lg lg:text-xl" />
                   </motion.div>
-                  <span>0909 123 456</span>
+                  <span>0822 082 407</span>
                 </motion.div>
                 <motion.div
                   className="flex items-start text-gray-700 font-medium hover:text-blue-900 transition-all duration-300 hover:scale-105"
