@@ -47,7 +47,11 @@ const PostModal: React.FC<PostModalProps> = ({
       console.log('PostModal - Fetching categories for type:', formData.category)
       fetchCategoriesByType(formData.category).catch(err => {
         console.error('Error fetching categories:', err)
-        addNotification('Lỗi khi tải danh mục', 'error')
+        addNotification({
+          type: 'error',
+          title: 'Lỗi',
+          message: 'Lỗi khi tải danh mục'
+        })
       })
     }
   }, [formData.category, isOpen, fetchCategoriesByType, addNotification])
