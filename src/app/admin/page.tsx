@@ -41,19 +41,25 @@ const AdminDashboard: React.FC = () => {
   const [totalKnowledge, setTotalKnowledge] = useState<number>(0)
   const [totalBookJourney, setTotalBookJourney] = useState<number>(0)
   
-  const [activeTab, setActiveTab] = useState<'posts' | 'feedbacks' | 'users' | 'stats' | 'investment' | 'bookjourney' | 'categories' | 'post-categories'>('posts')
+  // Investment knowledge filters
+  const [investmentFilter, setInvestmentFilter] = useState({
+    status: 'all',
+    category_id: 'all'
+  })
+  
+  const [activeTab, setActiveTab] = useState<'posts' | 'feedbacks' | 'users' | 'stats' | 'investment' | 'bookjourney' | 'categories' | 'post-categories' | 'investment-categories'>('posts')
   // users are loaded via hook
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [editingPost, setEditingPost] = useState<any>(null)
   const [showKnowledgeModal, setShowKnowledgeModal] = useState(false)
   const [editingKnowledge, setEditingKnowledge] = useState<any>(null)
-  const [showCategoryModal, setShowCategoryModal] = useState(false)
-  const [editingCategory, setEditingCategory] = useState<any>(null)
-  const [categoryForm, setCategoryForm] = useState({ name: '', description: '', color: '#3B82F6' })
   const [showPostCategoryModal, setShowPostCategoryModal] = useState(false)
   const [editingPostCategory, setEditingPostCategory] = useState<any>(null)
   const [postCategoryForm, setPostCategoryForm] = useState({ name: '', description: '', color: '#3B82F6', category_type: 'nganh' as 'nganh' | 'doanh_nghiep' })
   const [selectedPostCategoryType, setSelectedPostCategoryType] = useState<'nganh' | 'doanh_nghiep'>('nganh')
+  const [showInvestmentCategoryModal, setShowInvestmentCategoryModal] = useState(false)
+  const [editingInvestmentCategory, setEditingInvestmentCategory] = useState<any>(null)
+  const [investmentCategoryForm, setInvestmentCategoryForm] = useState({ name: '', description: '', color: '#3B82F6' })
   const [postFilter, setPostFilter] = useState<{ status?: 'draft' | 'published' | 'archived' | 'all'; category?: 'nganh' | 'doanh_nghiep' | 'all' }>({ status: 'all', category: 'all' })
   const [postsPage, setPostsPage] = useState(1)
   const [postsLimit, setPostsLimit] = useState(10)
@@ -108,7 +114,12 @@ const AdminDashboard: React.FC = () => {
     setInvestmentLimit(autoLimit)
     ;(async () => {
       try {
-        if (activeTab === 'posts') await fetchPosts({ page: postsPage, limit: autoLimit })
+        if (activeTab === 'posts') await fetchPosts({ 
+          page: postsPage, 
+          limit: autoLimit,
+          status: postFilter.status !== 'all' ? postFilter.status : undefined,
+          category: postFilter.category && postFilter.category !== 'all' ? postFilter.category : undefined,
+        })
         if (activeTab === 'investment') await fetchKnowledge({ page: investmentPage, limit: autoLimit })
         if (activeTab === 'feedbacks') await fetchFeedbacks({ page: feedbacksPage, limit: autoLimit, status: 'pending' })
         if (activeTab === 'users') await fetchUsers({ page: usersPage, limit: autoLimit })
@@ -118,14 +129,27 @@ const AdminDashboard: React.FC = () => {
 
   const loadInitialData = async () => {
     try {
-      await Promise.all([
-        fetchPosts({ page: postsPage, limit: postsLimit }),
+      const results = await Promise.all([
+        fetchPosts({ 
+          page: postsPage, 
+          limit: postsLimit,
+          status: postFilter.status !== 'all' ? postFilter.status : undefined,
+          category: postFilter.category && postFilter.category !== 'all' ? postFilter.category : undefined,
+        }),
         fetchUsers({ page: usersPage, limit: usersLimit }),
         fetchKnowledge({ page: investmentPage, limit: investmentLimit }),
         fetchFeedbacks({ page: feedbacksPage, limit: feedbacksLimit, status: 'pending' }),
-        fetchFeedbackStats()
+        fetchFeedbackStats(),
+        fetchCategories() // Fetch categories for investment knowledge
       ])
-      setTotalKnowledge(knowledgePagination?.total || knowledge.length || 0)
+      
+      // Set total knowledge from the fetchKnowledge result
+      const knowledgeResult = results[2] // fetchKnowledge is the 3rd promise
+      if (knowledgeResult && knowledgeResult.pagination) {
+        setTotalKnowledge(knowledgeResult.pagination.total)
+      } else {
+        setTotalKnowledge(knowledge.length || 0)
+      }
       try {
         const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : ''
         const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1'
@@ -153,6 +177,30 @@ const AdminDashboard: React.FC = () => {
       })()
     }
   }, [activeTab, feedbacksPage, feedbacksLimit])
+
+  // Khi chuyển sang tab investment, nạp lại với filter
+  useEffect(() => {
+    if (activeTab === 'investment') {
+      (async () => {
+        try {
+          await fetchKnowledge({ 
+            page: investmentPage, 
+            limit: investmentLimit,
+            status: investmentFilter.status !== 'all' ? investmentFilter.status : undefined
+          })
+        } catch (error) {
+          console.error('Error loading investment knowledge:', error)
+        }
+      })()
+    }
+  }, [activeTab, investmentPage, investmentLimit, investmentFilter])
+
+  // Khi chuyển sang tab investment-categories, fetch categories
+  useEffect(() => {
+    if (activeTab === 'investment-categories') {
+      fetchCategories()
+    }
+  }, [activeTab, fetchCategories])
 
   const refreshUsers = async () => {
     try {
@@ -313,7 +361,7 @@ const AdminDashboard: React.FC = () => {
     await fetchPosts({
       page: postsPage,
       limit: postsLimit,
-      status: next.status && next.status !== 'all' ? next.status : undefined,
+      status: next.status,
       category: next.category && next.category !== 'all' ? next.category : undefined,
     } as any)
   }
@@ -349,87 +397,8 @@ const AdminDashboard: React.FC = () => {
     }
   }
 
-  // Category handlers
-  const handleSaveCategory = async () => {
-    try {
-      if (editingCategory) {
-        const res = await updateCategory(editingCategory.id, categoryForm)
-        if (res) {
-          addNotification({
-            type: 'success',
-            title: 'Thành công',
-            message: 'Cập nhật danh mục thành công'
-          })
-        } else {
-          addNotification({
-            type: 'error',
-            title: 'Lỗi',
-            message: 'Không thể cập nhật danh mục'
-          })
-        }
-      } else {
-        const res = await createCategory(categoryForm)
-        if (res) {
-          addNotification({
-            type: 'success',
-            title: 'Thành công',
-            message: 'Tạo danh mục thành công'
-          })
-        } else {
-          addNotification({
-            type: 'error',
-            title: 'Lỗi',
-            message: 'Không thể tạo danh mục'
-          })
-        }
-      }
-    } catch (e: any) {
-      addNotification({
-        type: 'error',
-        title: 'Lỗi',
-        message: e?.response?.data?.message || 'Lưu danh mục thất bại'
-      })
-    } finally {
-      setEditingCategory(null)
-      setShowCategoryModal(false)
-      setCategoryForm({ name: '', description: '', color: '#3B82F6' })
-    }
-  }
 
-  const handleDeleteCategory = async (id: number) => {
-    if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
-      const success = await deleteCategory(id)
-      if (success) {
-        addNotification({
-          type: 'success',
-          title: 'Thành công',
-          message: 'Xóa danh mục thành công'
-        })
-      } else {
-        addNotification({
-          type: 'error',
-          title: 'Lỗi',
-          message: 'Không thể xóa danh mục'
-        })
-      }
-    }
-  }
 
-  const openCreateCategory = () => {
-    setEditingCategory(null)
-    setCategoryForm({ name: '', description: '', color: '#3B82F6' })
-    setShowCategoryModal(true)
-  }
-
-  const openEditCategory = (category: any) => {
-    setEditingCategory(category)
-    setCategoryForm({ 
-      name: category.name, 
-      description: category.description || '', 
-      color: category.color || '#3B82F6' 
-    })
-    setShowCategoryModal(true)
-  }
 
   // Post Category handlers
   const handleSavePostCategory = async () => {
@@ -497,6 +466,68 @@ const AdminDashboard: React.FC = () => {
     }
   }
 
+  const handleDeleteInvestmentCategory = async (id: number) => {
+    if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
+      try {
+        console.log('Attempting to delete category:', id)
+        const success = await deleteCategory(id)
+        console.log('Delete result:', success)
+        if (success) {
+          addNotification({
+            type: 'success',
+            title: 'Thành công',
+            message: 'Xóa danh mục thành công'
+          })
+          // Refresh categories after deletion
+          fetchCategories()
+        } else {
+          addNotification({
+            type: 'error',
+            title: 'Lỗi',
+            message: 'Không thể xóa danh mục (có thể còn kiến thức)'
+          })
+        }
+      } catch (error: any) {
+        console.error('Error deleting category:', error)
+        addNotification({
+          type: 'error',
+          title: 'Lỗi',
+          message: error.message || 'Không thể xóa danh mục'
+        })
+      }
+    }
+  }
+
+  const handleSaveInvestmentCategory = async () => {
+    try {
+      if (editingInvestmentCategory) {
+        await updateCategory(editingInvestmentCategory.id, investmentCategoryForm)
+        addNotification({
+          type: 'success',
+          title: 'Thành công',
+          message: 'Cập nhật danh mục thành công'
+        })
+      } else {
+        await createCategory(investmentCategoryForm)
+        addNotification({
+          type: 'success',
+          title: 'Thành công',
+          message: 'Tạo danh mục thành công'
+        })
+      }
+    } catch (e: any) {
+      addNotification({
+        type: 'error',
+        title: 'Lỗi',
+        message: e?.response?.data?.message || 'Lưu danh mục thất bại'
+      })
+    } finally {
+      setEditingInvestmentCategory(null)
+      setShowInvestmentCategoryModal(false)
+      setInvestmentCategoryForm({ name: '', description: '', color: '#3B82F6' })
+    }
+  }
+
   const openCreatePostCategory = (type: 'nganh' | 'doanh_nghiep') => {
     setEditingPostCategory(null)
     setPostCategoryForm({ name: '', description: '', color: '#3B82F6', category_type: type })
@@ -514,6 +545,16 @@ const AdminDashboard: React.FC = () => {
     })
     setSelectedPostCategoryType(category.category_type)
     setShowPostCategoryModal(true)
+  }
+
+  const openEditInvestmentCategory = (category: any) => {
+    setEditingInvestmentCategory(category)
+    setInvestmentCategoryForm({ 
+      name: category.name, 
+      description: category.description || '', 
+      color: category.color || '#3B82F6'
+    })
+    setShowInvestmentCategoryModal(true)
   }
 
   const handleSaveKnowledge = async (data: FormData) => {
@@ -729,10 +770,10 @@ const AdminDashboard: React.FC = () => {
             <nav className="-mb-px flex space-x-8 px-6">
               {[
                 { id: 'posts', name: 'Quản lý bài viết', icon: FaFileAlt },
-                { id: 'investment', name: 'Kiến thức đầu tư', icon: FaLightbulb },
-                { id: 'bookjourney', name: 'Hành trình sách', icon: FaBook },
-                { id: 'categories', name: 'Danh mục kiến thức', icon: FaChartBar },
                 { id: 'post-categories', name: 'Danh mục bài viết', icon: FaFileAlt },
+                { id: 'investment', name: 'Kiến thức đầu tư', icon: FaLightbulb },
+                { id: 'investment-categories', name: 'Danh mục kiến thức đầu tư', icon: FaLightbulb },
+                { id: 'bookjourney', name: 'Hành trình sách', icon: FaBook },
                 { id: 'feedbacks', name: 'Quản lý phản hồi', icon: FaComments },
                 { id: 'users', name: 'Quản lý người dùng', icon: FaUsers },
                 { id: 'stats', name: 'Thống kê', icon: FaChartBar },
@@ -898,7 +939,17 @@ const AdminDashboard: React.FC = () => {
               {/* Pagination - Posts */}
               <div className="flex items-center justify-between mt-4">
                 <button
-                  onClick={async () => { if (postsPage > 1) { setPostsPage(postsPage - 1); await fetchPosts({ page: postsPage - 1, limit: postsLimit }) } }}
+                  onClick={async () => { 
+                    if (postsPage > 1) { 
+                      setPostsPage(postsPage - 1); 
+                      await fetchPosts({ 
+                        page: postsPage - 1, 
+                        limit: postsLimit,
+                        status: postFilter.status !== 'all' ? postFilter.status : undefined,
+                        category: postFilter.category && postFilter.category !== 'all' ? postFilter.category : undefined,
+                      }) 
+                    } 
+                  }}
                   disabled={postsPage <= 1}
                   className="px-3 py-2 border rounded disabled:opacity-50"
                 >
@@ -906,7 +957,15 @@ const AdminDashboard: React.FC = () => {
                 </button>
                 <div className="text-sm text-gray-600">Trang {postsPagination?.page ?? postsPage}{postsPagination?.pages ? ` / ${postsPagination.pages}` : ''}</div>
                 <button
-                  onClick={async () => { setPostsPage(postsPage + 1); await fetchPosts({ page: postsPage + 1, limit: postsLimit }) }}
+                  onClick={async () => { 
+                    setPostsPage(postsPage + 1); 
+                    await fetchPosts({ 
+                      page: postsPage + 1, 
+                      limit: postsLimit,
+                      status: postFilter.status !== 'all' ? postFilter.status : undefined,
+                      category: postFilter.category && postFilter.category !== 'all' ? postFilter.category : undefined,
+                    }) 
+                  }}
                   className="px-3 py-2 border rounded"
                 >
                   Trang sau
@@ -928,6 +987,41 @@ const AdminDashboard: React.FC = () => {
                 </button>
               </div>
 
+              {/* Filter Section */}
+              <div className="flex gap-4 mb-6">
+                {/* Status Filter */}
+                <div className="flex items-center gap-2">
+                  <label className="text-sm font-medium text-gray-700">Trạng thái:</label>
+                  <select
+                    value={investmentFilter.status}
+                    onChange={(e) => setInvestmentFilter(prev => ({ ...prev, status: e.target.value }))}
+                    className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  >
+                    <option value="all">Tất cả</option>
+                    <option value="draft">Bản nháp</option>
+                    <option value="published">Đã xuất bản</option>
+                    <option value="archived">Đã lưu trữ</option>
+                  </select>
+                </div>
+
+                {/* Category Filter */}
+                <div className="flex items-center gap-2">
+                  <label className="text-sm font-medium text-gray-700">Danh mục:</label>
+                  <select
+                    value={investmentFilter.category_id}
+                    onChange={(e) => setInvestmentFilter(prev => ({ ...prev, category_id: e.target.value }))}
+                    className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  >
+                    <option value="all">Tất cả danh mục</option>
+                    {categories.map(category => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
               {knowledgeLoading ? (
                 <div className="text-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
@@ -943,19 +1037,22 @@ const AdminDashboard: React.FC = () => {
                   <table className="w-full table-fixed divide-y divide-gray-200">
                     <thead className="bg-gray-50 sticky top-0">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/5">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
                           Tiêu đề
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">
                           Ảnh
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">
+                          Danh mục
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">
                           Trạng thái
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[8%]">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[6%]">
                           Lượt xem
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[8%]">
                           Ngày tạo
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[8%]">
@@ -966,12 +1063,12 @@ const AdminDashboard: React.FC = () => {
                     <tbody className="bg-white divide-y divide-gray-200">
                       {knowledge.map((item) => (
                         <tr key={item.id}>
-                          <td className="px-6 py-4 w-2/5">
+                          <td className="px-6 py-4 w-1/4">
                             <div className="text-sm font-medium text-gray-900 truncate max-w-xs">
                               {item.title}
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap w-1/6">
+                          <td className="px-6 py-4 whitespace-nowrap w-1/8">
                             {item.image_url ? (
                               <img
                                 src={item.image_url}
@@ -984,7 +1081,19 @@ const AdminDashboard: React.FC = () => {
                               </div>
                             )}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap w-1/6">
+                          <td className="px-6 py-4 whitespace-nowrap w-1/8">
+                            {item.category_name ? (
+                              <span 
+                                className="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                                style={{ backgroundColor: item.category_color + '20', color: item.category_color }}
+                              >
+                                {item.category_name}
+                              </span>
+                            ) : (
+                              <span className="text-gray-400 text-sm">Chưa phân loại</span>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap w-1/8">
                             <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                               item.status === 'published' 
                                 ? 'bg-green-100 text-green-800'
@@ -996,10 +1105,10 @@ const AdminDashboard: React.FC = () => {
                                item.status === 'draft' ? 'Bản nháp' : 'Lưu trữ'}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 w-[8%]">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 w-[6%]">
                             {item.view_count || 0}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-[10%]">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-[8%]">
                             {new Date(item.created_at).toLocaleDateString('vi-VN')}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[8%]">
@@ -1053,93 +1162,18 @@ const AdminDashboard: React.FC = () => {
             </div>
           )}
 
-          {activeTab === 'categories' && (
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold text-gray-900">Quản lý danh mục</h2>
-                <button
-                  onClick={openCreateCategory}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
-                >
-                  <FaPlus className="h-4 w-4 mr-2" />
-                  Thêm danh mục
-                </button>
-              </div>
-
-              {categoriesLoading ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-                  <p className="mt-2 text-gray-600">Đang tải...</p>
-                </div>
-              ) : categories.length === 0 ? (
-                <div className="text-center py-8">
-                  <FaChartBar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-500">Chưa có danh mục nào</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {categories.map((category) => (
-                    <div key={category.id} className="bg-white border rounded-lg p-4 shadow-sm">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center mb-2">
-                            <div 
-                              className="w-4 h-4 rounded-full mr-3" 
-                              style={{ backgroundColor: category.color }}
-                            ></div>
-                            <h3 className="font-semibold text-gray-900">{category.name}</h3>
-                          </div>
-                          {category.description && (
-                            <p className="text-sm text-gray-600 mb-2">{category.description}</p>
-                          )}
-                          <div className="text-xs text-gray-500">
-                            {category.knowledge_count || 0} bài viết
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2 ml-4">
-                          <button
-                            onClick={() => openEditCategory(category)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                            title="Sửa"
-                          >
-                            <FaEdit className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteCategory(category.id)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                            title="Xóa"
-                          >
-                            <FaTrash className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
 
           {activeTab === 'post-categories' && (
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold text-gray-900">Quản lý danh mục bài viết</h2>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => openCreatePostCategory('nganh')}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
-                  >
-                    <FaPlus className="h-4 w-4 mr-2" />
-                    Thêm danh mục ngành
-                  </button>
-                  <button
-                    onClick={() => openCreatePostCategory('doanh_nghiep')}
-                    className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center"
-                  >
-                    <FaPlus className="h-4 w-4 mr-2" />
-                    Thêm danh mục doanh nghiệp
-                  </button>
-                </div>
+                <button
+                  onClick={() => openCreatePostCategory('nganh')}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                >
+                  <FaPlus className="h-4 w-4 mr-2" />
+                  Thêm danh mục
+                </button>
               </div>
 
               {/* Tabs for category types */}
@@ -1216,6 +1250,73 @@ const AdminDashboard: React.FC = () => {
                           </button>
                           <button
                             onClick={() => handleDeletePostCategory(category.id)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Xóa"
+                          >
+                            <FaTrash className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'investment-categories' && (
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold text-gray-900">Quản lý danh mục kiến thức đầu tư</h2>
+                <button
+                  onClick={() => setShowInvestmentCategoryModal(true)}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                >
+                  <FaPlus className="h-4 w-4 mr-2" />
+                  Thêm danh mục
+                </button>
+              </div>
+
+              {categoriesLoading ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                  <p className="mt-2 text-gray-600">Đang tải...</p>
+                </div>
+              ) : categories.length === 0 ? (
+                <div className="text-center py-8">
+                  <FaChartBar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-500">Chưa có danh mục nào</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {categories.map((category) => (
+                    <div key={category.id} className="bg-white border rounded-lg p-4 shadow-sm">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center mb-2">
+                            <div 
+                              className="w-4 h-4 rounded-full mr-3" 
+                              style={{ backgroundColor: category.color }}
+                            ></div>
+                            <h3 className="font-semibold text-gray-900">{category.name}</h3>
+                          </div>
+                          {category.description && (
+                            <p className="text-sm text-gray-600 mb-2">{category.description}</p>
+                          )}
+                          <div className="text-xs text-gray-500">
+                            {category.knowledge_count || 0} kiến thức
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2 ml-4">
+                          <button
+                            onClick={() => openEditInvestmentCategory(category)}
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            title="Sửa"
+                          >
+                            <FaEdit className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteInvestmentCategory(category.id)}
                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             title="Xóa"
                           >
@@ -1688,105 +1789,19 @@ const AdminDashboard: React.FC = () => {
         loading={knowledgeLoading}
       />
 
-      {/* Category Modal */}
-      {showCategoryModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">
-                {editingCategory ? 'Sửa danh mục' : 'Thêm danh mục mới'}
-              </h3>
-              <button
-                onClick={() => {
-                  setShowCategoryModal(false)
-                  setEditingCategory(null)
-                  setCategoryForm({ name: '', description: '', color: '#3B82F6' })
-                }}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <FaTimes className="h-5 w-5" />
-              </button>
-            </div>
-
-            <form onSubmit={(e) => { e.preventDefault(); handleSaveCategory(); }}>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Tên danh mục *
-                  </label>
-                  <input
-                    type="text"
-                    value={categoryForm.name}
-                    onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Nhập tên danh mục"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Mô tả
-                  </label>
-                  <textarea
-                    value={categoryForm.description}
-                    onChange={(e) => setCategoryForm({ ...categoryForm, description: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Nhập mô tả danh mục"
-                    rows={3}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Màu sắc
-                  </label>
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="color"
-                      value={categoryForm.color}
-                      onChange={(e) => setCategoryForm({ ...categoryForm, color: e.target.value })}
-                      className="w-12 h-10 border border-gray-300 rounded-lg cursor-pointer"
-                    />
-                    <input
-                      type="text"
-                      value={categoryForm.color}
-                      onChange={(e) => setCategoryForm({ ...categoryForm, color: e.target.value })}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="#3B82F6"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowCategoryModal(false)
-                    setEditingCategory(null)
-                    setCategoryForm({ name: '', description: '', color: '#3B82F6' })
-                  }}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                >
-                  Hủy
-                </button>
-                <button
-                  type="submit"
-                  disabled={!categoryForm.name.trim() || categoriesLoading}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {categoriesLoading ? 'Đang lưu...' : (editingCategory ? 'Cập nhật' : 'Tạo mới')}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* Post Category Modal */}
       {showPostCategoryModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowPostCategoryModal(false)
+              setEditingPostCategory(null)
+              setPostCategoryForm({ name: '', description: '', color: '#3B82F6', category_type: 'nganh' })
+            }
+          }}
+        >
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-900">
@@ -1806,19 +1821,33 @@ const AdminDashboard: React.FC = () => {
 
             <form onSubmit={(e) => { e.preventDefault(); handleSavePostCategory(); }}>
               <div className="space-y-4">
+                {/* Category Type Selection */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Loại danh mục *
-                  </label>
-                  <select
-                    value={postCategoryForm.category_type}
-                    onChange={(e) => setPostCategoryForm({ ...postCategoryForm, category_type: e.target.value as 'nganh' | 'doanh_nghiep' })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    disabled={!!editingPostCategory}
-                  >
-                    <option value="nganh">Ngành</option>
-                    <option value="doanh_nghiep">Doanh nghiệp</option>
-                  </select>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Loại danh mục</label>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="category_type"
+                        value="nganh"
+                        checked={postCategoryForm.category_type === 'nganh'}
+                        onChange={(e) => setPostCategoryForm(prev => ({ ...prev, category_type: e.target.value as 'nganh' | 'doanh_nghiep' }))}
+                        className="mr-2"
+                      />
+                      <span className="text-sm text-gray-700">Ngành</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="category_type"
+                        value="doanh_nghiep"
+                        checked={postCategoryForm.category_type === 'doanh_nghiep'}
+                        onChange={(e) => setPostCategoryForm(prev => ({ ...prev, category_type: e.target.value as 'nganh' | 'doanh_nghiep' }))}
+                        className="mr-2"
+                      />
+                      <span className="text-sm text-gray-700">Doanh nghiệp</span>
+                    </label>
+                  </div>
                 </div>
 
                 <div>
@@ -1888,6 +1917,111 @@ const AdminDashboard: React.FC = () => {
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {postCategoriesLoading ? 'Đang lưu...' : (editingPostCategory ? 'Cập nhật' : 'Tạo mới')}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Investment Category Modal */}
+      {showInvestmentCategoryModal && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowInvestmentCategoryModal(false)
+              setEditingInvestmentCategory(null)
+              setInvestmentCategoryForm({ name: '', description: '', color: '#3B82F6' })
+            }
+          }}
+        >
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                {editingInvestmentCategory ? 'Sửa danh mục' : 'Thêm danh mục mới'}
+              </h3>
+              <button
+                onClick={() => {
+                  setShowInvestmentCategoryModal(false)
+                  setEditingInvestmentCategory(null)
+                  setInvestmentCategoryForm({ name: '', description: '', color: '#3B82F6' })
+                }}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <FaTimes className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={(e) => { e.preventDefault(); handleSaveInvestmentCategory(); }}>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Tên danh mục *
+                  </label>
+                  <input
+                    type="text"
+                    value={investmentCategoryForm.name}
+                    onChange={(e) => setInvestmentCategoryForm({ ...investmentCategoryForm, name: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Nhập tên danh mục"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Mô tả
+                  </label>
+                  <textarea
+                    value={investmentCategoryForm.description}
+                    onChange={(e) => setInvestmentCategoryForm({ ...investmentCategoryForm, description: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Nhập mô tả danh mục"
+                    rows={3}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Màu sắc
+                  </label>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="color"
+                      value={investmentCategoryForm.color}
+                      onChange={(e) => setInvestmentCategoryForm({ ...investmentCategoryForm, color: e.target.value })}
+                      className="w-12 h-10 border border-gray-300 rounded-lg cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={investmentCategoryForm.color}
+                      onChange={(e) => setInvestmentCategoryForm({ ...investmentCategoryForm, color: e.target.value })}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="#3B82F6"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowInvestmentCategoryModal(false)
+                    setEditingInvestmentCategory(null)
+                    setInvestmentCategoryForm({ name: '', description: '', color: '#3B82F6' })
+                  }}
+                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  disabled={!investmentCategoryForm.name.trim() || categoriesLoading}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {categoriesLoading ? 'Đang lưu...' : (editingInvestmentCategory ? 'Cập nhật' : 'Tạo mới')}
                 </button>
               </div>
             </form>

@@ -67,6 +67,14 @@ class Category {
   }
 
   static async delete(id) {
+    // Check if category has any investment knowledge (only check non-NULL category_id)
+    const checkSql = 'SELECT COUNT(*) as count FROM investment_knowledge WHERE category_id = ? AND category_id IS NOT NULL';
+    const result = await executeQuery(checkSql, [id]);
+    
+    if (result[0].count > 0) {
+      throw new Error('Cannot delete category: it has associated investment knowledge');
+    }
+    
     const sql = 'DELETE FROM categories WHERE id = ?';
     await executeQuery(sql, [id]);
     return true;
@@ -91,6 +99,8 @@ class Category {
 }
 
 module.exports = Category;
+
+
 
 
 

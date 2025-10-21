@@ -17,7 +17,13 @@ const getAllPosts = async (req, res) => {
     const { page, limit, category, category_id, status = 'published', search } = req.query;
     
     // Nếu không phải admin, chỉ cho xem published posts
-    const filterStatus = req.user && req.user.role === 'admin' ? status : 'published';
+    // Nếu status là 'all' và user là admin, không filter theo status
+    let filterStatus;
+    if (req.user && req.user.role === 'admin') {
+      filterStatus = status === 'all' ? null : status;
+    } else {
+      filterStatus = 'published';
+    }
     
     const result = await Post.findAll({
       page: parseInt(page) || 1,
@@ -107,9 +113,13 @@ const createPost = async (req, res) => {
   try {
     const { title, content, category, category_id, thumbnail_url, pdf_url, status = 'draft' } = req.body;
     const author_id = req.user.id;
+    
+    console.log('Create post request body:', req.body);
+    console.log('Category:', category, 'Category ID:', category_id);
 
     let finalPdfUrl = pdf_url;
     let finalThumbnailUrl = thumbnail_url;
+    let finalCategoryId = category_id;
 
     // Handle uploaded PDF file
     if (req.files && req.files.pdf && req.files.pdf.length > 0) {
@@ -121,11 +131,18 @@ const createPost = async (req, res) => {
       finalThumbnailUrl = `/uploads/posts/${req.files.thumbnail[0].filename}`;
     }
 
+    // Handle category_id: convert to null if empty/undefined
+    if (finalCategoryId === undefined || finalCategoryId === '' || finalCategoryId === null) {
+      finalCategoryId = null;
+    } else {
+      finalCategoryId = parseInt(finalCategoryId);
+    }
+
     const post = await Post.create({
       title,
       content,
       category,
-      category_id,
+      category_id: finalCategoryId,
       thumbnail_url: finalThumbnailUrl,
       pdf_url: finalPdfUrl,
       author_id,
@@ -142,10 +159,18 @@ const createPost = async (req, res) => {
 
   } catch (error) {
     console.error('Create post error:', error);
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      errno: error.errno,
+      sqlState: error.sqlState,
+      sqlMessage: error.sqlMessage
+    });
     res.status(500).json({
       success: false,
       message: 'Failed to create post',
-      code: 'CREATE_POST_ERROR'
+      code: 'CREATE_POST_ERROR',
+      details: error.message
     });
   }
 };
@@ -178,6 +203,13 @@ const updatePost = async (req, res) => {
     // Handle uploaded thumbnail file (takes priority)
     if (req.files && req.files.thumbnail && req.files.thumbnail.length > 0) {
       updateData.thumbnail_url = `/uploads/posts/${req.files.thumbnail[0].filename}`;
+    }
+
+    // Handle category_id: convert to null if empty/undefined
+    if (updateData.category_id === undefined || updateData.category_id === '' || updateData.category_id === null) {
+      updateData.category_id = null;
+    } else {
+      updateData.category_id = parseInt(updateData.category_id);
     }
 
     const updatedPost = await Post.update(id, updateData);

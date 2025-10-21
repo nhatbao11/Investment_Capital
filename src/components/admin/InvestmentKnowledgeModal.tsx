@@ -48,8 +48,6 @@ const InvestmentKnowledgeModal: React.FC<InvestmentKnowledgeModalProps> = ({
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string>('');
   const [categories, setCategories] = useState<Category[]>([]);
-  const [newCategoryName, setNewCategoryName] = useState('');
-  const [showNewCategory, setShowNewCategory] = useState(false);
 
   // Fetch categories
   useEffect(() => {
@@ -242,13 +240,7 @@ const InvestmentKnowledgeModal: React.FC<InvestmentKnowledgeModalProps> = ({
                 value={formData.category_id || ''}
                 onChange={(e) => {
                   const value = e.target.value;
-                  if (value === 'new') {
-                    setShowNewCategory(true);
-                    setFormData(prev => ({ ...prev, category_id: undefined }));
-                  } else {
-                    setShowNewCategory(false);
-                    setFormData(prev => ({ ...prev, category_id: value ? parseInt(value) : undefined }));
-                  }
+                  setFormData(prev => ({ ...prev, category_id: value ? parseInt(value) : undefined }));
                 }}
                 disabled={saving}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -259,48 +251,8 @@ const InvestmentKnowledgeModal: React.FC<InvestmentKnowledgeModalProps> = ({
                     {category.name}
                   </option>
                 ))}
-                <option value="new">+ Tạo danh mục mới</option>
               </select>
 
-              {showNewCategory && (
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newCategoryName}
-                    onChange={(e) => setNewCategoryName(e.target.value)}
-                    placeholder="Tên danh mục mới"
-                    disabled={saving}
-                    className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      if (newCategoryName.trim()) {
-                        try {
-                          const newCategory = await categoriesAPI.create({
-                            name: newCategoryName.trim(),
-                            color: '#3b82f6'
-                          });
-                          setCategories(prev => [...prev, newCategory]);
-                          setFormData(prev => ({ ...prev, category_id: newCategory.id }));
-                          setNewCategoryName('');
-                          setShowNewCategory(false);
-                        } catch (error) {
-                          addNotification({
-                            type: 'error',
-                            title: 'Lỗi',
-                            message: 'Lỗi tạo danh mục: ' + (error as Error).message
-                          });
-                        }
-                      }
-                    }}
-                    disabled={saving || !newCategoryName.trim()}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
-                  >
-                    Tạo
-                  </button>
-                </div>
-              )}
             </div>
           </div>
 

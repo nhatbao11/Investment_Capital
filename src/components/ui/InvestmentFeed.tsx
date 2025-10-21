@@ -246,14 +246,6 @@ const InvestmentFeed: React.FC<InvestmentFeedProps> = ({ title }) => {
                       Lưu trữ
                     </span>
                   )}
-                  {post.category_name && (
-                    <span 
-                      className="px-2 py-1 text-white text-xs font-medium rounded-full"
-                      style={{ backgroundColor: post.category_color || '#3b82f6' }}
-                    >
-                      {post.category_name}
-                    </span>
-                  )}
                 </div>
               </div>
 

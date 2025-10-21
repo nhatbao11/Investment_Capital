@@ -127,9 +127,11 @@ const updateCategory = async (req, res) => {
 const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log('Delete category request for ID:', id);
     
     const category = await Category.findById(id);
     if (!category) {
+      console.log('Category not found:', id);
       return res.status(404).json({
         success: false,
         message: 'Category not found',
@@ -137,7 +139,9 @@ const deleteCategory = async (req, res) => {
       });
     }
     
+    console.log('Category found, attempting deletion:', category);
     await Category.delete(id);
+    console.log('Category deleted successfully:', id);
     
     res.json({
       success: true,
@@ -145,9 +149,14 @@ const deleteCategory = async (req, res) => {
     });
   } catch (error) {
     console.error('Delete category error:', error);
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      errno: error.errno
+    });
     res.status(500).json({
       success: false,
-      message: 'Failed to delete category',
+      message: error.message || 'Failed to delete category',
       code: 'DELETE_CATEGORY_ERROR'
     });
   }
@@ -159,6 +168,8 @@ module.exports = {
   updateCategory,
   deleteCategory
 };
+
+
 
 
 

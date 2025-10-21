@@ -48,7 +48,7 @@ class Post {
       SELECT p.*, u.full_name as author_name, u.email as author_email, c.name as category_name, c.color as category_color
       FROM posts p
       LEFT JOIN users u ON p.author_id = u.id
-      LEFT JOIN categories c ON p.category_id = c.id
+      LEFT JOIN post_categories c ON p.category_id = c.id
       WHERE p.id = ?
     `;
     const posts = await executeQuery(sql, [id]);
@@ -79,14 +79,14 @@ class Post {
       SELECT p.*, u.full_name as author_name, u.email as author_email, c.name as category_name, c.color as category_color
       FROM posts p
       LEFT JOIN users u ON p.author_id = u.id
-      LEFT JOIN categories c ON p.category_id = c.id
+      LEFT JOIN post_categories c ON p.category_id = c.id
       WHERE 1=1
     `;
     let countSql = 'SELECT COUNT(*) as total FROM posts p WHERE 1=1';
     const params = [];
     
-    // Filter by status
-    if (status) {
+    // Filter by status (chỉ filter khi status không phải null hoặc 'all')
+    if (status && status !== 'all') {
       sql += ' AND p.status = ?';
       countSql += ' AND p.status = ?';
       params.push(status);

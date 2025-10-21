@@ -15,23 +15,39 @@ export const metadata: Metadata = {
     'đầu tư',
     'tài chính',
     'Y&T Group',
+    'yt2future',
     'phân tích doanh nghiệp',
     'phân tích ngành',
     'quản lý rủi ro',
     'đầu tư bền vững',
+    'báo cáo đầu tư',
+    'chiến lược đầu tư',
+    'kiến thức đầu tư',
+    'đầu tư chứng khoán',
+    'phân tích cổ phiếu',
+    'đầu tư dài hạn',
     'investment',
     'finance',
     'business analysis',
     'sector analysis',
-    'risk management'
+    'risk management',
+    'stock analysis',
+    'investment strategy',
+    'financial planning',
+    'vietnam investment',
+    'đầu tư việt nam'
   ],
   authors: [{ name: 'Y&T Group' }],
   creator: 'Y&T Group',
   publisher: 'Y&T Group',
   icons: {
-    icon: '/images/Logo01.jpg',
-    shortcut: '/images/Logo01.jpg',
-    apple: '/images/Logo01.jpg',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
   },
   formatDetection: {
     email: false,
@@ -102,10 +118,17 @@ export default function RootLayout({
         <link rel="preload" href="/images/vechungtoi.jpg" as="image" type="image/jpeg" />
         <link rel="preload" href="/images/Saigon.mp4" as="video" type="video/mp4" />
         
-        {/* Favicon */}
+        {/* Favicon - Multiple sizes for better Google indexing */}
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-        <link rel="icon" href="/images/Logo01.jpg" type="image/jpeg" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
+        <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
         <link rel="shortcut icon" href="/favicon.ico" />
+        
+        {/* Additional favicon formats for better browser support */}
+        <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
         
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />

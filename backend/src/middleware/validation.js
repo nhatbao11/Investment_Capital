@@ -15,6 +15,8 @@ const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   
   if (!errors.isEmpty()) {
+    console.error('Validation errors:', errors.array());
+    console.error('Request body:', req.body);
     return res.status(400).json({
       success: false,
       message: 'Validation failed',
@@ -82,8 +84,8 @@ const validateUserLogin = [
 const validatePost = [
   body('title')
     .trim()
-    .isLength({ min: 5, max: 500 })
-    .withMessage('Title must be between 5 and 500 characters'),
+    .isLength({ min: 2, max: 500 })
+    .withMessage('Title must be between 2 and 500 characters'),
   body('content')
     .trim()
     .isLength({ min: 10 })
@@ -117,6 +119,21 @@ const validatePost = [
     .optional()
     .isIn(['draft', 'published', 'archived'])
     .withMessage('Status must be draft, published, or archived'),
+  body('category_id')
+    .optional()
+    .custom((value) => {
+      // Allow undefined, null, empty string
+      if (value === undefined || value === null || value === '') return true
+      if (typeof value === 'string' && value.trim() === '') return true
+      
+      // Just check if it's a valid number
+      const numValue = Number(value)
+      if (isNaN(numValue)) {
+        throw new Error('Category ID must be a valid number')
+      }
+      
+      return true
+    }),
   handleValidationErrors
 ];
 

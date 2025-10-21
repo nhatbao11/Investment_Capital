@@ -35,12 +35,23 @@ export const postsApi = {
   uploadAsset: async (file: File): Promise<{ url: string }> => {
     const form = new FormData();
     form.append('file', file);
-    const res = await fetch(`${(apiClient as any).client.defaults.baseURL}/posts/upload`, {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : '';
+    const baseURL = (apiClient as any).client.defaults.baseURL;
+    
+    console.log('Upload asset - Base URL:', baseURL);
+    console.log('Upload asset - Token:', token ? 'Present' : 'Missing');
+    console.log('Upload asset - File:', file.name, file.type, file.size);
+    
+    const res = await fetch(`${baseURL}/posts/upload`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${typeof window !== 'undefined' ? localStorage.getItem('access_token') : ''}` },
+      headers: { Authorization: `Bearer ${token}` },
       body: form
     });
+    
+    console.log('Upload asset - Response status:', res.status);
     const json = await res.json();
+    console.log('Upload asset - Response data:', json);
+    
     if (!res.ok) throw new Error(json?.message || 'Upload failed');
     return json.data as { url: string };
   },

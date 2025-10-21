@@ -33,20 +33,34 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
 
   // Load categories by type on mount
   useEffect(() => {
+    console.log('PostFeed - Loading categories for type:', category)
     fetchCategoriesByType(category)
   }, [category])
 
   useEffect(() => {
     const load = async () => {
-      setIsSearching(search !== debouncedSearch)
-      await fetchPosts({ 
+      console.log('PostFeed - Loading posts with params:', {
         category, 
         status: 'published', 
         page, 
         limit: 12, 
         search: debouncedSearch,
         category_id: selectedCategoryId || undefined 
-      }) as any
+      })
+      setIsSearching(search !== debouncedSearch)
+      try {
+        await fetchPosts({ 
+          category, 
+          status: 'published', 
+          page, 
+          limit: 12, 
+          search: debouncedSearch,
+          category_id: selectedCategoryId || undefined 
+        }) as any
+        console.log('PostFeed - Posts loaded:', posts)
+      } catch (err) {
+        console.error('PostFeed - Error loading posts:', err)
+      }
       setIsSearching(false)
     }
     load()
@@ -127,7 +141,7 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
             <span>{t('common.categories')}</span>
             {selectedCategoryId && (
               <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
-                {postCategories.find(c => c.id === selectedCategoryId)?.name || '1'}
+                {postCategories.find(c => c.id === selectedCategoryId)?.name || '...'}
               </span>
             )}
           </button>
@@ -151,7 +165,14 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
             >
               {t('common.all_categories')}
             </button>
-            {postCategories.map((cat) => (
+            {(() => {
+              console.log('PostFeed - Rendering categories:', postCategories, 'for category:', category)
+              return null
+            })()}
+            {postCategories.length === 0 ? (
+              <div className="text-gray-500 text-sm">Đang tải danh mục...</div>
+            ) : (
+              postCategories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => {
@@ -170,7 +191,8 @@ const PostFeed: React.FC<PostFeedProps> = ({ category, accentColor = 'blue', tit
               >
                 {cat.name}
               </button>
-            ))}
+              ))
+            )}
           </div>
         </div>
       )}

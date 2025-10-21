@@ -37,7 +37,17 @@ class CategoriesAPI {
   }
 
   async create(categoryData: CreateCategoryData): Promise<Category> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access_token');
+    console.log('Create category - Token:', token ? 'Present' : 'Missing');
+    console.log('Create category - Data:', categoryData);
+    
+    // Clear any malformed token and get fresh one
+    if (!token || token === 'null' || token === 'undefined') {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user');
+      throw new Error('No valid token found. Please login again.');
+    }
+    
     const response = await fetch(this.baseUrl, {
       method: 'POST',
       headers: {
@@ -47,8 +57,11 @@ class CategoriesAPI {
       body: JSON.stringify(categoryData)
     });
 
+    console.log('Create category - Response status:', response.status);
+    
     if (!response.ok) {
       const error = await response.json();
+      console.log('Create category - Error:', error);
       throw new Error(error.message || 'Failed to create category');
     }
 
@@ -57,7 +70,10 @@ class CategoriesAPI {
   }
 
   async update(id: number, categoryData: UpdateCategoryData): Promise<Category> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access_token');
+    console.log('Update category - Token:', token ? 'Present' : 'Missing');
+    console.log('Update category - ID:', id, 'Data:', categoryData);
+    
     const response = await fetch(`${this.baseUrl}/${id}`, {
       method: 'PUT',
       headers: {
@@ -67,8 +83,11 @@ class CategoriesAPI {
       body: JSON.stringify(categoryData)
     });
 
+    console.log('Update category - Response status:', response.status);
+    
     if (!response.ok) {
       const error = await response.json();
+      console.log('Update category - Error:', error);
       throw new Error(error.message || 'Failed to update category');
     }
 
@@ -77,7 +96,10 @@ class CategoriesAPI {
   }
 
   async delete(id: number): Promise<void> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access_token');
+    console.log('Delete category - Token:', token ? 'Present' : 'Missing');
+    console.log('Delete category - URL:', `${this.baseUrl}/${id}`);
+    
     const response = await fetch(`${this.baseUrl}/${id}`, {
       method: 'DELETE',
       headers: {
@@ -85,8 +107,11 @@ class CategoriesAPI {
       }
     });
 
+    console.log('Delete category - Response status:', response.status);
+    
     if (!response.ok) {
       const error = await response.json();
+      console.log('Delete category - Error:', error);
       throw new Error(error.message || 'Failed to delete category');
     }
   }

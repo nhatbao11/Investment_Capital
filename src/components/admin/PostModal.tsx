@@ -23,7 +23,7 @@ const PostModal: React.FC<PostModalProps> = ({
   loading = false 
 }) => {
   const { addNotification } = useNotification()
-  const { categories: postCategories, fetchCategoriesByType } = usePostCategories()
+  const { categories: postCategories, fetchCategoriesByType, loading: categoriesLoading } = usePostCategories()
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -36,37 +36,57 @@ const PostModal: React.FC<PostModalProps> = ({
   const [localBusy, setLocalBusy] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  // Fetch categories when category type changes
+  // Debug categories changes
   useEffect(() => {
-    if (isOpen) {
-      fetchCategoriesByType(formData.category)
+    console.log('PostModal - Categories changed:', postCategories)
+  }, [postCategories])
+
+  // Fetch categories when category type changes (for both new and existing posts)
+  useEffect(() => {
+    if (isOpen && formData.category) {
+      console.log('PostModal - Fetching categories for type:', formData.category)
+      fetchCategoriesByType(formData.category).catch(err => {
+        console.error('Error fetching categories:', err)
+        addNotification('Lỗi khi tải danh mục', 'error')
+      })
     }
-  }, [formData.category, isOpen])
+  }, [formData.category, isOpen, fetchCategoriesByType, addNotification])
 
   useEffect(() => {
-    if (post) {
-      setFormData({
-        title: post.title,
-        content: post.content,
-        category: post.category,
-        category_id: post.category_id,
-        status: post.status,
-        thumbnail_url: post.thumbnail_url || '',
-        pdf_url: post.pdf_url || ''
-      })
-    } else {
-      setFormData({
-        title: '',
-        content: '',
-        category: 'nganh',
-        category_id: undefined,
-        status: 'draft',
-        thumbnail_url: '',
-        pdf_url: ''
-      })
+    if (isOpen) {
+      if (post) {
+        console.log('PostModal - Setting form data from post:', post)
+        setFormData({
+          title: post.title,
+          content: post.content,
+          category: post.category,
+          category_id: post.category_id || undefined,
+          status: post.status,
+          thumbnail_url: post.thumbnail_url || '',
+          pdf_url: post.pdf_url || ''
+        })
+      } else {
+        console.log('PostModal - Setting default form data')
+        setFormData({
+          title: '',
+          content: '',
+          category: 'nganh',
+          category_id: undefined,
+          status: 'draft',
+          thumbnail_url: '',
+          pdf_url: ''
+        })
+      }
+      setErrors({})
     }
-    setErrors({})
   }, [post, isOpen])
+
+  // Debug log for form data changes
+  useEffect(() => {
+    console.log('PostModal - Form data changed:', formData)
+    console.log('PostModal - Current thumbnail_url:', formData.thumbnail_url)
+    console.log('PostModal - Current pdf_url:', formData.pdf_url)
+  }, [formData])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -95,28 +115,32 @@ const PostModal: React.FC<PostModalProps> = ({
         title: formData.title,
         content: formData.content,
         category: formData.category,
-        category_id: formData.category_id,
+        category_id: formData.category_id || null,
         status: formData.status,
-        thumbnail_url: formData.thumbnail_url || undefined,
-        pdf_url: formData.pdf_url || undefined,
+        thumbnail_url: formData.thumbnail_url || null,
+        pdf_url: formData.pdf_url || null,
       }
       await onSave(payload)
-      try {
-        addNotification({
-          type: 'success',
-          title: 'Thành công',
-          message: post ? 'Cập nhật bài viết thành công' : 'Tạo bài viết thành công'
-        })
-      } catch {}
       onClose()
     } catch (error: any) {
-      const msg = error?.response?.data?.message || error?.message || 'Lưu bài viết thất bại'
-      setErrors(prev => ({ ...prev, _server: msg }))
+      console.error('Save post error:', error)
+      if (error?.response?.data?.errors) {
+        // Handle validation errors
+        const validationErrors: Record<string, string> = {}
+        error.response.data.errors.forEach((err: any) => {
+          validationErrors[err.path] = err.msg
+        })
+        setErrors(validationErrors)
+      } else {
+        const msg = error?.response?.data?.message || error?.message || 'Lưu bài viết thất bại'
+        setErrors(prev => ({ ...prev, _server: msg }))
+      }
     } finally { setLocalBusy(false) }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
+    
     setFormData(prev => ({
       ...prev,
       [name]: value,
@@ -206,6 +230,7 @@ const PostModal: React.FC<PostModalProps> = ({
                 value={formData.category_id || ''}
                 onChange={(e) => {
                   const value = e.target.value;
+                  console.log('PostModal - Category ID changed to:', value)
                   setFormData(prev => ({
                     ...prev,
                     category_id: value ? Number(value) : undefined
@@ -214,11 +239,21 @@ const PostModal: React.FC<PostModalProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="">Chọn danh mục (tùy chọn)</option>
-                {postCategories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
+                {(() => {
+                  console.log('PostModal - Rendering categories:', postCategories, 'for category type:', formData.category)
+                  return null
+                })()}
+                {categoriesLoading || postCategories.length === 0 ? (
+                  <option value="" disabled>
+                    {categoriesLoading ? 'Đang tải danh mục...' : 'Không có danh mục'}
                   </option>
-                ))}
+                ) : (
+                  postCategories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))
+                )}
               </select>
             </div>
 
@@ -261,14 +296,49 @@ const PostModal: React.FC<PostModalProps> = ({
                   if (!file) return
                   try {
                     setLocalBusy(true)
+                    console.log('Uploading image...')
                     const res = await postsApi.uploadAsset(file)
-                    setFormData(prev => ({ ...prev, thumbnail_url: res.url }))
+                    console.log('Image upload result:', res)
+                    setFormData(prev => {
+                      console.log('Setting thumbnail_url to:', res.url)
+                      return { ...prev, thumbnail_url: res.url }
+                    })
                   } catch (err) {
-                    console.error(err)
+                    console.error('Image upload error:', err)
                   } finally { setLocalBusy(false) }
                 }} />
               </label>
             </div>
+            
+            {/* Preview uploaded image */}
+            {formData.thumbnail_url && (
+              <div className="mt-3">
+                <div className="flex items-center justify-between p-2 bg-gray-50 rounded border">
+                  <div className="flex items-center gap-3">
+                    <img 
+                      src={formData.thumbnail_url.startsWith('http') ? formData.thumbnail_url : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${formData.thumbnail_url}`} 
+                      alt="Preview" 
+                      className="h-16 w-16 object-cover rounded"
+                      onError={(e) => {
+                        console.error('Image load error:', formData.thumbnail_url);
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">Ảnh đã chọn</p>
+                      <p className="text-xs text-gray-500">{formData.thumbnail_url}</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, thumbnail_url: '' }))}
+                    className="text-red-600 hover:text-red-800 text-sm"
+                  >
+                    Xóa
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           <div>
@@ -292,14 +362,43 @@ const PostModal: React.FC<PostModalProps> = ({
                   if (!file) return
                   try {
                     setLocalBusy(true)
+                    console.log('Uploading PDF...')
                     const res = await postsApi.uploadAsset(file)
-                    setFormData(prev => ({ ...prev, pdf_url: res.url }))
+                    console.log('PDF upload result:', res)
+                    setFormData(prev => {
+                      console.log('Setting pdf_url to:', res.url)
+                      return { ...prev, pdf_url: res.url }
+                    })
                   } catch (err) {
-                    console.error(err)
+                    console.error('PDF upload error:', err)
                   } finally { setLocalBusy(false) }
                 }} />
               </label>
             </div>
+            
+            {/* Preview uploaded PDF */}
+            {formData.pdf_url && (
+              <div className="mt-3">
+                <div className="flex items-center justify-between p-2 bg-gray-50 rounded border">
+                  <div className="flex items-center gap-3">
+                    <div className="h-16 w-16 bg-red-100 rounded flex items-center justify-center">
+                      <span className="text-red-600 text-2xl">📄</span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">PDF đã chọn</p>
+                      <p className="text-xs text-gray-500">{formData.pdf_url}</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, pdf_url: '' }))}
+                    className="text-red-600 hover:text-red-800 text-sm"
+                  >
+                    Xóa
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           <div>
@@ -325,13 +424,19 @@ const PostModal: React.FC<PostModalProps> = ({
             </p>
           </div>
 
+          {errors._server && (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-600">{errors._server}</p>
+            </div>
+          )}
+
           <div className="flex justify-end space-x-3 pt-6 border-t">
             <button
               type="button"
               onClick={onClose}
               className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Hủy
+              {post ? 'Đóng' : 'Hủy'}
             </button>
             <button
               type="submit"

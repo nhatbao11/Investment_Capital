@@ -32,12 +32,14 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState(0);
+  const [statusFilter, setStatusFilter] = useState<'all' | 'draft' | 'published' | 'archived'>('all');
 
   const fetchAll = async () => {
     try {
       setLoading(true);
       const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : '';
-      const resp = await fetch(`${API_BASE}/bookjourney/admin/all?page=${page}&limit=${limit}`, {
+      const statusParam = statusFilter !== 'all' ? `&status=${statusFilter}` : '';
+      const resp = await fetch(`${API_BASE}/bookjourney/admin/all?page=${page}&limit=${limit}${statusParam}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!resp.ok) throw new Error('Fetch failed');
@@ -53,7 +55,7 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
     }
   };
 
-  useEffect(() => { fetchAll(); }, [page, limit]);
+  useEffect(() => { fetchAll(); }, [page, limit, statusFilter]);
 
   // Auto fill table height with rows
   useEffect(() => {
@@ -183,21 +185,47 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
         body: fd
       });
       if (resp.ok) {
+        const result = await resp.json();
         setMessage({ type: 'success', text: editing ? 'Cập nhật hành trình sách thành công' : 'Tạo hành trình sách thành công' });
         addNotification({
           type: 'success',
           title: 'Thành công',
           message: editing ? 'Cập nhật hành trình sách thành công' : 'Tạo hành trình sách thành công'
         })
+        
+        // Update form with returned URLs if available
+        if (result.data) {
+          if (result.data.image_url) {
+            setForm(prev => ({ ...prev, image_url: result.data.image_url }));
+            addNotification({
+              type: 'success',
+              title: 'URL ảnh',
+              message: `Ảnh đã upload: ${result.data.image_url}`
+            });
+          }
+          if (result.data.pdf_url) {
+            setForm(prev => ({ ...prev, pdf_url: result.data.pdf_url }));
+            addNotification({
+              type: 'success',
+              title: 'URL PDF',
+              message: `PDF đã upload: ${result.data.pdf_url}`
+            });
+          }
+        }
+        
+        // Clear file selections and show URLs
+        setImageFiles([]);
+        setPdfFile(null);
+        
+        // Refresh the list
+        await fetchAll();
+        
         // Đóng sau một chút để người dùng thấy thông báo
         setTimeout(() => {
           setShowModal(false);
           setEditing(null);
           setMessage(null);
-        }, 900);
-        setImageFiles([]);
-        setPdfFile(null);
-        await fetchAll();
+        }, 1500);
       } else {
         const t = await resp.text();
         setMessage({ type: 'error', text: t || 'Lưu thất bại' });
@@ -216,6 +244,23 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
           <FaPlus className="h-4 w-4 mr-2" />
           Thêm hành trình mới
         </button>
+      </div>
+
+      {/* Filter Section */}
+      <div className="flex gap-4 mb-6">
+        <div className="flex items-center gap-2">
+          <label className="text-sm font-medium text-gray-700">Trạng thái:</label>
+          <select
+            value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as 'all' | 'draft' | 'published' | 'archived')}
+              className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            >
+              <option value="all">Tất cả</option>
+              <option value="draft">Bản nháp</option>
+              <option value="published">Đã xuất bản</option>
+              <option value="archived">Đã lưu trữ</option>
+            </select>
+        </div>
       </div>
 
       {loading ? (
@@ -260,9 +305,18 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap w-[10%]">
                       {b.image_url ? (
-                        <img src={b.image_url ? resolveFileUrl(b.image_url) : '/images/Logo01.jpg'} alt={b.title} className="h-12 w-12 object-cover rounded" />
-                      ) : (
-                        <div className="h-12 w-12 bg-gray-200 rounded flex items-center justify-center">
+                        <img 
+                          src={resolveFileUrl(b.image_url)} 
+                          alt={b.title} 
+                          className="h-16 w-16 object-cover rounded border border-gray-200" 
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                          }}
+                        />
+                      ) : null}
+                      {!b.image_url && (
+                        <div className="h-16 w-16 bg-gray-100 rounded border border-gray-200 flex items-center justify-center">
                           <FaBook className="h-6 w-6 text-gray-400" />
                         </div>
                       )}
@@ -362,16 +416,51 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
                   onChange={(e) => setForm({ ...form, image_url: e.target.value })}
                 />
                 <button type="button" className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200" onClick={() => imageInputRef.current?.click()}>Tải ảnh từ máy</button>
-                <input ref={imageInputRef} type="file" accept="image/*" multiple className="hidden" onChange={(e) => setImageFiles(Array.from(e.target.files || []))} />
+                <input ref={imageInputRef} type="file" accept="image/*" multiple className="hidden" onChange={(e) => {
+                  const files = Array.from(e.target.files || []);
+                  setImageFiles(files);
+                  // Clear URL input when files are selected
+                  if (files.length > 0) {
+                    setForm(prev => ({ ...prev, image_url: '' }));
+                  }
+                }} />
                 {(imageFiles.length > 0 || editing?.image_url) && (
-                  <div className="grid grid-cols-3 gap-2 mt-3">
-                    {imageFiles.length > 0
-                      ? imageFiles.map((f, idx) => (
-                          <img key={idx} src={URL.createObjectURL(f)} alt={f.name} className="h-24 w-full object-cover rounded" />
-                        ))
-                      : (
-                          <img src={editing!.image_url!.startsWith('http') ? editing!.image_url! : `${API_BASE}${editing!.image_url!}` } alt={editing?.title} className="h-24 w-20 object-cover rounded" />
-                        )}
+                  <div className="mt-3">
+                    <div className="grid grid-cols-3 gap-2">
+                      {imageFiles.length > 0
+                        ? imageFiles.map((f, idx) => (
+                            <div key={idx} className="relative">
+                              <img src={URL.createObjectURL(f)} alt={f.name} className="h-24 w-full object-cover rounded" />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setImageFiles([]);
+                                  if (imageInputRef.current) imageInputRef.current.value = '';
+                                }}
+                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))
+                        : (
+                            <img src={editing!.image_url!.startsWith('http') ? editing!.image_url! : `${API_BASE}${editing!.image_url!}` } alt={editing?.title} className="h-24 w-20 object-cover rounded" />
+                          )}
+                    </div>
+                    {imageFiles.length > 0 && (
+                      <div className="mt-2 text-sm text-gray-600">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setImageFiles([]);
+                            if (imageInputRef.current) imageInputRef.current.value = '';
+                          }}
+                          className="text-red-600 hover:underline"
+                        >
+                          Xóa ảnh đã chọn
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
             </div>
@@ -385,7 +474,31 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
                   onChange={(e) => setForm({ ...form, pdf_url: e.target.value })}
                 />
                 <button type="button" className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200" onClick={() => pdfInputRef.current?.click()}>Tải PDF từ máy</button>
-                <input ref={pdfInputRef} type="file" accept="application/pdf" className="hidden" onChange={(e) => setPdfFile(e.target.files?.[0] || null)} />
+                <input ref={pdfInputRef} type="file" accept="application/pdf" className="hidden" onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  setPdfFile(file);
+                  // Clear URL input when file is selected
+                  if (file) {
+                    setForm(prev => ({ ...prev, pdf_url: '' }));
+                  }
+                }} />
+                {pdfFile && (
+                  <div className="mt-2 p-2 bg-gray-50 rounded border">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-700">📄 {pdfFile.name}</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setPdfFile(null);
+                          if (pdfInputRef.current) pdfInputRef.current.value = '';
+                        }}
+                        className="text-red-600 hover:underline text-sm"
+                      >
+                        Xóa
+                      </button>
+                    </div>
+                  </div>
+                )}
                 {!pdfFile && editing?.pdf_url && (
                   <div className="mt-2 text-sm">
                     <button type="button" className="text-blue-600 hover:underline" onClick={() => window.open(editing.pdf_url.startsWith('http') ? editing.pdf_url : `${API_BASE}${editing.pdf_url}`, '_blank')}>Xem PDF hiện tại</button>
