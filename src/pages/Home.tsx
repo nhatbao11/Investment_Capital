@@ -297,7 +297,7 @@ const Home: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center -mb-10">
               <Link
-                href="/contactcontact"
+                href="/contact#contact-form"
                 className="px-6 py-2 text-base font-semibold rounded-md text-white bg-blue-900 relative overflow-hidden before:absolute before:top-0 before:left-[-100%] before:h-full before:w-full before:bg-yellow-500 before:transition-all before:duration-500 hover:before:left-0 shadow-md transition-colors duration-300">
                 <span className="relative z-10">{t("home.cta.contact")}</span>
               </Link>
