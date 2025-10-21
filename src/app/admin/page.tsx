@@ -11,7 +11,7 @@ import { useInvestmentKnowledge } from '../../services/hooks/useInvestmentKnowle
 import { useCategories } from '../../services/hooks/useCategories'
 import { usePostCategories } from '../../services/hooks/usePostCategories'
 import { authApi } from '../../services/api/auth'
-import { FaPlus, FaEdit, FaTrash, FaEye, FaCheck, FaTimes, FaChartBar, FaUsers, FaFileAlt, FaComments, FaSignOutAlt, FaHome, FaLightbulb, FaBook } from 'react-icons/fa'
+import { FaPlus, FaEdit, FaTrash, FaEye, FaCheck, FaTimes, FaChartBar, FaUsers, FaFileAlt, FaComments, FaSignOutAlt, FaHome, FaLightbulb, FaBook, FaChartLine } from 'react-icons/fa'
 import PostModal from '../../components/admin/PostModal'
 import InvestmentKnowledgeModal from '../../components/admin/InvestmentKnowledgeModal'
 import BookJourneyManagement from '../../components/admin/BookJourneyManagement'
@@ -44,8 +44,12 @@ const AdminDashboard: React.FC = () => {
   // Investment knowledge filters
   const [investmentFilter, setInvestmentFilter] = useState({
     status: 'all',
-    category_id: 'all'
+    category_id: 'all',
+    search: ''
   })
+  
+  // Posts filters
+  const [postFilter, setPostFilter] = useState<{ status?: 'draft' | 'published' | 'archived' | 'all'; category?: 'nganh' | 'doanh_nghiep' | 'all'; search?: string }>({ status: 'all', category: 'all', search: '' })
   
   const [activeTab, setActiveTab] = useState<'posts' | 'feedbacks' | 'users' | 'stats' | 'investment' | 'bookjourney' | 'categories' | 'post-categories' | 'investment-categories'>('posts')
   // users are loaded via hook
@@ -60,7 +64,6 @@ const AdminDashboard: React.FC = () => {
   const [showInvestmentCategoryModal, setShowInvestmentCategoryModal] = useState(false)
   const [editingInvestmentCategory, setEditingInvestmentCategory] = useState<any>(null)
   const [investmentCategoryForm, setInvestmentCategoryForm] = useState({ name: '', description: '', color: '#3B82F6' })
-  const [postFilter, setPostFilter] = useState<{ status?: 'draft' | 'published' | 'archived' | 'all'; category?: 'nganh' | 'doanh_nghiep' | 'all' }>({ status: 'all', category: 'all' })
   const [postsPage, setPostsPage] = useState(1)
   const [postsLimit, setPostsLimit] = useState(10)
   const [feedbacksPage, setFeedbacksPage] = useState(1)
@@ -69,7 +72,6 @@ const AdminDashboard: React.FC = () => {
   const [usersLimit, setUsersLimit] = useState(10)
   const [investmentPage, setInvestmentPage] = useState(1)
   const [investmentLimit, setInvestmentLimit] = useState(10)
-  const [autoLimit, setAutoLimit] = useState(10)
   const [showUserModal, setShowUserModal] = useState(false)
   const [editingUserData, setEditingUserData] = useState<any | null>(null)
   const [userForm, setUserForm] = useState<{ email: string; full_name: string; password: string; role: 'client' | 'admin'; is_active: boolean }>({ email: '', full_name: '', password: '', role: 'client', is_active: true })
@@ -91,41 +93,6 @@ const AdminDashboard: React.FC = () => {
     }
   }, [user, authLoading])
 
-  // Auto-calc page size to better fill the table container height
-  useEffect(() => {
-    const calculateLimit = () => {
-      if (typeof window === 'undefined') return
-      const headerAndChrome = 360 // approximate px for header, tabs, paddings
-      const rowHeight = 56 // table row height ~ 56px
-      const available = Math.max(300, window.innerHeight - headerAndChrome)
-      const rows = Math.max(6, Math.floor(available / rowHeight))
-      setAutoLimit(rows)
-    }
-    calculateLimit()
-    window.addEventListener('resize', calculateLimit)
-    return () => window.removeEventListener('resize', calculateLimit)
-  }, [])
-
-  // Apply auto limit across lists and refetch current tab
-  useEffect(() => {
-    setPostsLimit(autoLimit)
-    setFeedbacksLimit(autoLimit)
-    setUsersLimit(autoLimit)
-    setInvestmentLimit(autoLimit)
-    ;(async () => {
-      try {
-        if (activeTab === 'posts') await fetchPosts({ 
-          page: postsPage, 
-          limit: autoLimit,
-          status: postFilter.status !== 'all' ? postFilter.status : undefined,
-          category: postFilter.category && postFilter.category !== 'all' ? postFilter.category : undefined,
-        })
-        if (activeTab === 'investment') await fetchKnowledge({ page: investmentPage, limit: autoLimit })
-        if (activeTab === 'feedbacks') await fetchFeedbacks({ page: feedbacksPage, limit: autoLimit, status: 'pending' })
-        if (activeTab === 'users') await fetchUsers({ page: usersPage, limit: autoLimit })
-      } catch {}
-    })()
-  }, [autoLimit])
 
   const loadInitialData = async () => {
     try {
@@ -135,9 +102,14 @@ const AdminDashboard: React.FC = () => {
           limit: postsLimit,
           status: postFilter.status !== 'all' ? postFilter.status : undefined,
           category: postFilter.category && postFilter.category !== 'all' ? postFilter.category : undefined,
+          search: postFilter.search || undefined,
         }),
         fetchUsers({ page: usersPage, limit: usersLimit }),
-        fetchKnowledge({ page: investmentPage, limit: investmentLimit }),
+        fetchKnowledge({ 
+          page: investmentPage, 
+          limit: investmentLimit,
+          search: investmentFilter.search || undefined
+        }),
         fetchFeedbacks({ page: feedbacksPage, limit: feedbacksLimit, status: 'pending' }),
         fetchFeedbackStats(),
         fetchCategories() // Fetch categories for investment knowledge
@@ -183,10 +155,17 @@ const AdminDashboard: React.FC = () => {
     if (activeTab === 'investment') {
       (async () => {
         try {
+          // Fetch categories first if not loaded
+          if (categories.length === 0) {
+            await fetchCategories()
+          }
+          // Then fetch knowledge with filters
           await fetchKnowledge({ 
             page: investmentPage, 
             limit: investmentLimit,
-            status: investmentFilter.status !== 'all' ? investmentFilter.status : undefined
+            status: investmentFilter.status,
+            category_id: investmentFilter.category_id !== 'all' ? parseInt(investmentFilter.category_id) : undefined,
+            search: investmentFilter.search || undefined
           })
         } catch (error) {
           console.error('Error loading investment knowledge:', error)
@@ -194,6 +173,54 @@ const AdminDashboard: React.FC = () => {
       })()
     }
   }, [activeTab, investmentPage, investmentLimit, investmentFilter])
+
+  // Reset page to 1 when filters change
+  useEffect(() => {
+    if (activeTab === 'investment' && investmentPage > 1) {
+      setInvestmentPage(1)
+    }
+  }, [investmentFilter, activeTab])
+
+  // Debounced search for investment knowledge
+  useEffect(() => {
+    if (activeTab === 'investment') {
+      const timeoutId = setTimeout(() => {
+        fetchKnowledge({ 
+          page: investmentPage, 
+          limit: investmentLimit,
+          status: investmentFilter.status,
+          category_id: investmentFilter.category_id !== 'all' ? parseInt(investmentFilter.category_id) : undefined,
+          search: investmentFilter.search || undefined
+        })
+      }, 500) // 500ms debounce
+
+      return () => clearTimeout(timeoutId)
+    }
+  }, [investmentFilter.search, activeTab])
+
+  // Debounced search for posts
+  useEffect(() => {
+    if (activeTab === 'posts') {
+      const timeoutId = setTimeout(() => {
+        fetchPosts({
+          page: postsPage,
+          limit: postsLimit,
+          status: postFilter.status !== 'all' ? postFilter.status : undefined,
+          category: postFilter.category && postFilter.category !== 'all' ? postFilter.category : undefined,
+          search: postFilter.search || undefined,
+        } as any)
+      }, 500) // 500ms debounce
+
+      return () => clearTimeout(timeoutId)
+    }
+  }, [postFilter.search, activeTab])
+
+  // Reset page to 1 when posts filters change
+  useEffect(() => {
+    if (activeTab === 'posts' && postsPage > 1) {
+      setPostsPage(1)
+    }
+  }, [postFilter.status, postFilter.category, activeTab])
 
   // Khi chuyển sang tab investment-categories, fetch categories
   useEffect(() => {
@@ -361,8 +388,9 @@ const AdminDashboard: React.FC = () => {
     await fetchPosts({
       page: postsPage,
       limit: postsLimit,
-      status: next.status,
+      status: next.status !== 'all' ? next.status : undefined,
       category: next.category && next.category !== 'all' ? next.category : undefined,
+      search: next.search || undefined,
     } as any)
   }
 
@@ -675,6 +703,13 @@ const AdminDashboard: React.FC = () => {
                 Trang chủ
               </button>
               <button
+                onClick={() => router.push('/admin/statistics')}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center mr-2"
+              >
+                <FaChartLine className="h-4 w-4 mr-2" />
+                Thống kê
+              </button>
+              <button
                 onClick={handleLogout}
                 className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center"
               >
@@ -839,6 +874,16 @@ const AdminDashboard: React.FC = () => {
                     <option value="doanh_nghiep">Doanh nghiệp</option>
                   </select>
                 </div>
+                <div className="flex-1">
+                  <label className="block text-sm text-gray-600 mb-1">Tìm kiếm theo tiêu đề</label>
+                  <input
+                    type="text"
+                    placeholder="Nhập tiêu đề bài viết..."
+                    className="w-full border px-3 py-2 rounded"
+                    value={postFilter.search}
+                    onChange={(e) => handleFilterPosts({ ...postFilter, search: e.target.value })}
+                  />
+                </div>
               </div>
 
               {postsLoading ? (
@@ -947,6 +992,7 @@ const AdminDashboard: React.FC = () => {
                         limit: postsLimit,
                         status: postFilter.status !== 'all' ? postFilter.status : undefined,
                         category: postFilter.category && postFilter.category !== 'all' ? postFilter.category : undefined,
+                        search: postFilter.search || undefined,
                       }) 
                     } 
                   }}
@@ -964,6 +1010,7 @@ const AdminDashboard: React.FC = () => {
                       limit: postsLimit,
                       status: postFilter.status !== 'all' ? postFilter.status : undefined,
                       category: postFilter.category && postFilter.category !== 'all' ? postFilter.category : undefined,
+                      search: postFilter.search || undefined,
                     }) 
                   }}
                   className="px-3 py-2 border rounded"
@@ -1019,6 +1066,18 @@ const AdminDashboard: React.FC = () => {
                       </option>
                     ))}
                   </select>
+                </div>
+
+                {/* Search Filter */}
+                <div className="flex items-center gap-2 flex-1">
+                  <label className="text-sm font-medium text-gray-700">Tìm kiếm:</label>
+                  <input
+                    type="text"
+                    placeholder="Nhập tiêu đề kiến thức đầu tư..."
+                    value={investmentFilter.search}
+                    onChange={(e) => setInvestmentFilter(prev => ({ ...prev, search: e.target.value }))}
+                    className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  />
                 </div>
               </div>
 
@@ -1139,7 +1198,7 @@ const AdminDashboard: React.FC = () => {
               {/* Pagination - Investment */}
               <div className="flex items-center justify-between mt-4">
                 <button
-                  onClick={async () => { if (investmentPage > 1) { setInvestmentPage(investmentPage - 1); await fetchKnowledge({ page: investmentPage - 1, limit: investmentLimit }) } }}
+                  onClick={async () => { if (investmentPage > 1) { setInvestmentPage(investmentPage - 1); await fetchKnowledge({ page: investmentPage - 1, limit: investmentLimit, status: investmentFilter.status, category_id: investmentFilter.category_id !== 'all' ? parseInt(investmentFilter.category_id) : undefined, search: investmentFilter.search || undefined }) } }}
                   disabled={knowledgePagination ? investmentPage <= 1 : true}
                   className="px-3 py-2 border rounded disabled:opacity-50"
                 >
@@ -1147,7 +1206,7 @@ const AdminDashboard: React.FC = () => {
                 </button>
                 <div className="text-sm text-gray-600">Trang {knowledgePagination?.page ?? investmentPage}{knowledgePagination?.pages ? ` / ${knowledgePagination.pages}` : ''}</div>
                 <button
-                  onClick={async () => { setInvestmentPage(investmentPage + 1); await fetchKnowledge({ page: investmentPage + 1, limit: investmentLimit }) }}
+                  onClick={async () => { setInvestmentPage(investmentPage + 1); await fetchKnowledge({ page: investmentPage + 1, limit: investmentLimit, status: investmentFilter.status, category_id: investmentFilter.category_id !== 'all' ? parseInt(investmentFilter.category_id) : undefined, search: investmentFilter.search || undefined }) }}
                   className="px-3 py-2 border rounded"
                 >
                   Trang sau

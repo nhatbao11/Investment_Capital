@@ -8,6 +8,7 @@ export const investmentKnowledgeApi = {
     limit?: number;
     status?: string;
     search?: string;
+    category_id?: number;
   }) => {
     const response = await apiClient.get('/investment-knowledge', { params });
     return response.data;

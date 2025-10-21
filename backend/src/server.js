@@ -16,6 +16,7 @@ const bookJourneyRoutes = require('./routes/bookJourney');
 const investmentKnowledgeRoutes = require('./routes/investmentKnowledge');
 const feedbackRoutes = require('./routes/feedbacks');
 const uploadRoutes = require('./routes/upload');
+const viewTrackingRoutes = require('./routes/viewTracking');
 
 const app = express();
 
@@ -48,8 +49,8 @@ app.use(cors({
 app.use(morgan('combined'));
 
 // Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '25mb' }));
+app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 
 // Static file serving for uploads
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads'), {
@@ -76,6 +77,8 @@ app.use('/api/v1/posts', postRoutes);
 app.use('/api/v1/categories', categoryRoutes);
 app.use('/api/v1/post-categories', postCategoryRoutes);
 app.use('/api/v1/bookjourney', bookJourneyRoutes);
+app.use('/api/v1/view-tracking', require('./routes/viewTracking'));
+app.use('/api/v1/statistics', require('./routes/statistics'));
 app.use('/api/v1/investment-knowledge', investmentKnowledgeRoutes);
 app.use('/api/v1/feedbacks', feedbackRoutes);
 app.use('/api/v1/upload', uploadRoutes);
@@ -96,6 +99,7 @@ app.get('/', (req, res) => {
       investmentKnowledge: '/api/v1/investment-knowledge',
       feedbacks: '/api/v1/feedbacks',
       upload: '/api/v1/upload',
+      viewTracking: '/api/v1/view-tracking',
       health: '/health'
     }
   });

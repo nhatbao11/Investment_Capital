@@ -376,10 +376,25 @@ const getLatestInvestmentKnowledge = async (req, res) => {
 const incrementViewCount = async (req, res) => {
   try {
     const { id } = req.params;
-    
-    const success = await InvestmentKnowledge.incrementViewCount(id);
-    
-    if (!success) {
+    const user_id = req.user?.id || null;
+    const ip_address = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+    const user_agent = req.get('User-Agent') || '';
+
+    // Import ViewTracking model
+    const ViewTracking = require('../models/ViewTracking');
+
+    // Track view với logic chống buff
+    const tracked = await ViewTracking.trackView({
+      user_id,
+      ip_address,
+      user_agent,
+      resource_id: parseInt(id),
+      resource_type: 'investment_knowledge'
+    });
+
+    // Kiểm tra investment knowledge có tồn tại không
+    const knowledge = await InvestmentKnowledge.findById(id);
+    if (!knowledge) {
       return res.status(404).json({
         success: false,
         message: 'Investment knowledge not found',
@@ -389,7 +404,12 @@ const incrementViewCount = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'View count incremented successfully'
+      message: tracked ? 'View tracked successfully' : 'View already tracked today',
+      data: {
+        tracked,
+        knowledge_id: parseInt(id),
+        current_view_count: knowledge.view_count
+      }
     });
 
   } catch (error) {

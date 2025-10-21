@@ -14,13 +14,13 @@ const { deleteMultipleFiles, getFilesToDelete } = require('../utils/fileUtils');
  */
 const getAllPosts = async (req, res) => {
   try {
-    const { page, limit, category, category_id, status = 'published', search } = req.query;
+    const { page, limit, category, category_id, status, search } = req.query;
     
     // Nếu không phải admin, chỉ cho xem published posts
-    // Nếu status là 'all' và user là admin, không filter theo status
+    // Nếu status là 'all' hoặc undefined và user là admin, không filter theo status
     let filterStatus;
     if (req.user && req.user.role === 'admin') {
-      filterStatus = status === 'all' ? null : status;
+      filterStatus = (status === 'all' || status === undefined) ? null : status;
     } else {
       filterStatus = 'published';
     }
@@ -362,10 +362,25 @@ const getLatestPosts = async (req, res) => {
 const incrementViewCount = async (req, res) => {
   try {
     const { id } = req.params;
-    
-    const success = await Post.incrementViewCount(id);
-    
-    if (!success) {
+    const user_id = req.user?.id || null;
+    const ip_address = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+    const user_agent = req.get('User-Agent') || '';
+
+    // Import ViewTracking model
+    const ViewTracking = require('../models/ViewTracking');
+
+    // Track view với logic chống buff
+    const tracked = await ViewTracking.trackView({
+      user_id,
+      ip_address,
+      user_agent,
+      resource_id: parseInt(id),
+      resource_type: 'post'
+    });
+
+    // Kiểm tra post có tồn tại không
+    const post = await Post.findById(id);
+    if (!post) {
       return res.status(404).json({
         success: false,
         message: 'Post not found',
@@ -375,7 +390,12 @@ const incrementViewCount = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'View count incremented successfully'
+      message: tracked ? 'View tracked successfully' : 'View already tracked today',
+      data: {
+        tracked,
+        post_id: parseInt(id),
+        current_view_count: post.view_count
+      }
     });
 
   } catch (error) {

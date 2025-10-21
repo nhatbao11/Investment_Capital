@@ -10,7 +10,7 @@ const {
   getLatestInvestmentKnowledge,
   incrementViewCount
 } = require('../controllers/investmentKnowledgeController');
-const { authenticate, requireAdmin } = require('../middleware/auth');
+const { authenticate, requireAdmin, optionalAuth } = require('../middleware/auth');
 const { uploadInvestment } = require('../middleware/upload');
 
 /**
@@ -19,7 +19,7 @@ const { uploadInvestment } = require('../middleware/upload');
  */
 
 // Public routes - không cần authentication
-router.get('/', getAllInvestmentKnowledge);
+router.get('/', optionalAuth, getAllInvestmentKnowledge);
 router.get('/popular', getPopularInvestmentKnowledge);
 router.get('/latest', getLatestInvestmentKnowledge);
 router.get('/:id', getInvestmentKnowledgeById);

@@ -44,7 +44,7 @@ function fileFilter(req, file, cb) {
 const uploadAvatar = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+  limits: { fileSize: 20 * 1024 * 1024 } // 20MB
 });
 
 module.exports = {
@@ -77,7 +77,7 @@ module.exports = {
         cb(null, safeName);
       }
     }),
-    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB for PDFs
+    limits: { fileSize: 20 * 1024 * 1024 }, // 20MB for PDFs and images
     fileFilter(req, file, cb) {
       const allowed = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
       if (allowed.includes(file.mimetype)) cb(null, true); else cb(new Error('Invalid file type'))
@@ -101,7 +101,7 @@ module.exports = {
         cb(null, safeName);
       }
     }),
-    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB for PDFs
+    limits: { fileSize: 20 * 1024 * 1024 }, // 20MB for PDFs and images
     fileFilter(req, file, cb) {
       const allowed = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
       if (allowed.includes(file.mimetype)) cb(null, true); else cb(new Error('Invalid file type'))

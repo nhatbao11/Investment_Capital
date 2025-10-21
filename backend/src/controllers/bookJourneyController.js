@@ -62,8 +62,19 @@ class BookJourneyController {
         });
       }
 
-      // Tăng view count
-      await book.incrementViewCount();
+      // Track view với logic chống buff
+      const ViewTracking = require('../models/ViewTracking');
+      const user_id = req.user?.id || null;
+      const ip_address = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+      const user_agent = req.get('User-Agent') || '';
+
+      await ViewTracking.trackView({
+        user_id,
+        ip_address,
+        user_agent,
+        resource_id: parseInt(id),
+        resource_type: 'bookjourney'
+      });
 
       res.json({
         success: true,
@@ -91,7 +102,19 @@ class BookJourneyController {
         });
       }
 
-      await book.incrementViewCount();
+      // Track view với logic chống buff
+      const ViewTracking = require('../models/ViewTracking');
+      const user_id = req.user?.id || null;
+      const ip_address = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+      const user_agent = req.get('User-Agent') || '';
+
+      await ViewTracking.trackView({
+        user_id,
+        ip_address,
+        user_agent,
+        resource_id: parseInt(id),
+        resource_type: 'bookjourney'
+      });
 
       res.json({
         success: true,

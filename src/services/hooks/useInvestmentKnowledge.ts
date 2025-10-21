@@ -37,6 +37,7 @@ export const useInvestmentKnowledge = () => {
     limit?: number;
     status?: string;
     search?: string;
+    category_id?: number;
   }) => {
     try {
       setLoading(true);

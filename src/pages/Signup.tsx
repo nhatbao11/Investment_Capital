@@ -23,14 +23,30 @@ const Signup: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [formError, setFormError] = useState("")
   const [termsAccepted, setTermsAccepted] = useState(false)
+  const [emailError, setEmailError] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setFormError("")
+    setEmailError("")
     
     // Validate required fields
     if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
       setFormError("Vui lòng điền đầy đủ thông tin")
+      return
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(formData.email)) {
+      setFormError("Email không đúng định dạng")
+      setEmailError("Email không đúng định dạng")
+      return
+    }
+    
+    // Check if email has error
+    if (emailError) {
+      setFormError("Vui lòng sửa lỗi email trước khi đăng ký")
       return
     }
     
@@ -101,10 +117,21 @@ const Signup: React.FC = () => {
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     })
+    
+    // Validate email in real-time
+    if (name === 'email') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (value && !emailRegex.test(value)) {
+        setEmailError("Email không đúng định dạng")
+      } else {
+        setEmailError("")
+      }
+    }
   }
 
   const handleGoogleSignup = () => {
@@ -174,8 +201,13 @@ const Signup: React.FC = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder={t("signup.email.placeholder")}
-                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 text-slate-900 placeholder-slate-400"
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 text-slate-900 placeholder-slate-400 ${
+                  emailError ? 'border-red-500' : 'border-slate-300'
+                }`}
               />
+              {emailError && (
+                <p className="mt-1 text-sm text-red-600">{emailError}</p>
+              )}
             </div>
 
             <div>
