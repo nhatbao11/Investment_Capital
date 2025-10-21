@@ -30,7 +30,7 @@ const NextLayout: React.FC<NextLayoutProps> = ({ children, className }) => {
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
       <Header className="mb-0" />
-      <main className="flex-1">
+      <main className="flex-1 pt-20">
         {children}
       </main>
       <Footer />

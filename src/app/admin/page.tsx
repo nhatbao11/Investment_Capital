@@ -916,7 +916,7 @@ const AdminDashboard: React.FC = () => {
                               <button
                                 onClick={() => setEditingPost(post)}
                                 className="text-blue-600 hover:text-blue-900"
-                                title="Chỉnh sửa"
+                                title={t('admin.edit')}
                               >
                                 <FaEdit className="h-4 w-4" />
                               </button>
@@ -1116,7 +1116,7 @@ const AdminDashboard: React.FC = () => {
                               <button
                                 onClick={() => setEditingKnowledge(item)}
                                 className="text-blue-600 hover:text-blue-900"
-                                title="Chỉnh sửa"
+                                title={t('admin.edit')}
                               >
                                 <FaEdit className="h-4 w-4" />
                               </button>
@@ -1597,7 +1597,7 @@ const AdminDashboard: React.FC = () => {
                               <button
                                 onClick={() => openEditUser(user)}
                                 className="text-blue-600 hover:text-blue-900"
-                                title="Chỉnh sửa"
+                                title={t('admin.edit')}
                               >
                                 <FaEdit className="h-4 w-4" />
                               </button>

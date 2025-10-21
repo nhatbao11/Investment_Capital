@@ -113,7 +113,7 @@ const Login: React.FC = () => {
           className="bg-white rounded-2xl shadow-2xl p-8"
         >
           <div className="text-center mb-4">
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900">Đăng nhập</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900">{t("login.title")}</h2>
           </div>
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
@@ -185,7 +185,7 @@ const Login: React.FC = () => {
               disabled={loading}
               className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-2 px-3 sm:py-3 sm:px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:transform-none text-sm sm:text-base"
             >
-              {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+              {loading ? t("login.loading") : t("login.submit")}
             </button>
 
             {/* Google login UI removed per requirement */}

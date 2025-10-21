@@ -266,7 +266,7 @@ const Contact: React.FC = () => {
                         : "bg-slate-900 hover:bg-slate-800 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                     }`}
                   >
-                    {sending ? "Đang gửi..." : t("contact.form.submit")}
+                    {sending ? t("contact.form.sending") : t("contact.form.submit")}
                   </button>
 
                   {status === "ok" && (

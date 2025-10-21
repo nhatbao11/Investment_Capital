@@ -328,13 +328,13 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
                   href="/login"
                   className="text-blue-900 px-3 py-1 rounded-lg text-sm font-medium hover:bg-blue-50 transition-colors border border-blue-200"
                 >
-                  Đăng nhập
+                  {t("header.login")}
                 </a>
                 <a
                   href="/signup"
                   className="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
                 >
-                  Đăng ký
+                  {t("header.signup")}
                 </a>
               </div>
             )}
