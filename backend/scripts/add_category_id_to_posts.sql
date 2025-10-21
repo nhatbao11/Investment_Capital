@@ -23,3 +23,5 @@ UPDATE posts SET category_id = 2 WHERE category = 'doanh_nghiep';
 
 
 
+
+

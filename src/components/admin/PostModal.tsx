@@ -119,10 +119,10 @@ const PostModal: React.FC<PostModalProps> = ({
         title: formData.title,
         content: formData.content,
         category: formData.category,
-        category_id: formData.category_id || null,
+        category_id: formData.category_id || undefined,
         status: formData.status,
-        thumbnail_url: formData.thumbnail_url || null,
-        pdf_url: formData.pdf_url || null,
+        thumbnail_url: formData.thumbnail_url || undefined,
+        pdf_url: formData.pdf_url || undefined,
       }
       await onSave(payload)
       onClose()

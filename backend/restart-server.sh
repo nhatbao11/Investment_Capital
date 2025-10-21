@@ -26,3 +26,5 @@ echo "curl http://localhost:5000/uploads/reports/banking_sector_2024.pdf"
 
 
 
+
+
