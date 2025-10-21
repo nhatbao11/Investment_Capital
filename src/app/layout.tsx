@@ -140,7 +140,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} bg-white`}>
         <Providers>
-          <div className="min-h-screen flex flex-col bg-white text-gray-900">
+          <div className="min-h-screen flex flex-col bg-white text-gray-900 pt-20">
             {/* Organization structured data for logo in search */}
             <script
               type="application/ld+json"

@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { FaLinkedin, FaFacebook, FaTiktok } from "react-icons/fa"
+import { FaInstagram, FaFacebook, FaTiktok } from "react-icons/fa"
 import { MdLocationOn, MdEmail, MdAccessTime, MdPhone } from "react-icons/md"
 import { motion } from "framer-motion"
 // Removed import for Next.js compatibility
@@ -173,18 +173,18 @@ const Footer: React.FC = () => {
             >
               {[
                 {
-                  icon: <FaLinkedin className="text-base sm:text-lg lg:text-xl" />,
-                  link: "https://www.linkedin.com/",
-                  color: "hover:bg-blue-700",
+                  icon: <FaInstagram className="text-base sm:text-lg lg:text-xl" />,
+                  link: "https://www.instagram.com/yt2future/",
+                  color: "hover:bg-pink-600",
                 },
                 {
                   icon: <FaFacebook className="text-base sm:text-lg lg:text-xl" />,
-                  link: "https://www.facebook.com/",
+                  link: "https://www.facebook.com/share/179oeaTcwM/?mibextid=wwXIfr",
                   color: "hover:bg-blue-600",
                 },
                 {
                   icon: <FaTiktok className="text-base sm:text-lg lg:text-xl" />,
-                  link: "https://www.tiktok.com/",
+                  link: "https://www.tiktok.com/@yt2future?is_from_webapp=1&sender_device=pc",
                   color: "hover:bg-black",
                 },
               ].map((item, idx) => (

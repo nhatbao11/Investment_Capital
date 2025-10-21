@@ -5,7 +5,7 @@ import { useRef, useState, useEffect } from "react"
 // Removed useLocation for Next.js compatibility
 import { motion } from "framer-motion"
 import { HiMail, HiPhone, HiLocationMarker, HiClock } from "react-icons/hi"
-import { FaLinkedin, FaFacebook, FaTiktok } from "react-icons/fa"
+import { FaInstagram, FaFacebook, FaTiktok } from "react-icons/fa"
 import emailjs from "@emailjs/browser"
 import { useLanguage } from "../contexts/LanguageContext"
 import Image from "next/image"
@@ -167,7 +167,7 @@ const Contact: React.FC = () => {
                 <h3 className="text-lg font-medium text-slate-900 mb-4">Kết nối với chúng tôi</h3>
                 <div className="flex space-x-4">
                   <a
-                    href="https://facebook.com/Y&TGroup"
+                    href="https://www.facebook.com/share/179oeaTcwM/?mibextid=wwXIfr"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center justify-center transition-colors"
@@ -175,15 +175,15 @@ const Contact: React.FC = () => {
                     <FaFacebook className="text-lg" />
                   </a>
                   <a
-                    href="https://linkedin.com/company/Y&TGroup"
+                    href="https://www.instagram.com/yt2future/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 bg-blue-700 hover:bg-blue-800 text-white rounded-lg flex items-center justify-center transition-colors"
+                    className="w-10 h-10 bg-pink-600 hover:bg-pink-700 text-white rounded-lg flex items-center justify-center transition-colors"
                   >
-                    <FaLinkedin className="text-lg" />
+                    <FaInstagram className="text-lg" />
                   </a>
                   <a
-                    href="https://tiktok.com/@Y&TGroup"
+                    href="https://www.tiktok.com/@yt2future?is_from_webapp=1&sender_device=pc"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 bg-slate-900 hover:bg-slate-800 text-white rounded-lg flex items-center justify-center transition-colors"

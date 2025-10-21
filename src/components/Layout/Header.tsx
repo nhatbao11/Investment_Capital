@@ -83,6 +83,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
       requestAnimationFrame(() => {
         const y = window.scrollY
 
+        // Only change background style when scrolling, keep header always visible
         if (!isScrolled && y > SCROLL_DOWN_THRESHOLD) {
           setIsScrolled(true)
           setLangOpen(false)
@@ -175,11 +176,11 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={`
-        sticky top-0 z-50
+        fixed top-0 left-0 right-0 z-50
         transition-all duration-500 ease-in-out
         ${
           isScrolled
-            ? "px-3 sm:px-5 py-2 bg-white/80 backdrop-blur-md shadow-lg border-b border-blue-100"
+            ? "px-3 sm:px-5 py-2 bg-white/95 backdrop-blur-md shadow-lg border-b border-blue-100"
             : "px-4 sm:px-6 py-3 bg-gradient-to-r from-white/95 to-blue-50/95 backdrop-blur-sm shadow-md"
         }
         font-sans ${className || ""}
@@ -223,7 +224,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
               >
                 Y&T Group
               </motion.h1>
-              {/* Slogan: hiển thị trên desktop, ẩn trên mobile; ẩn khi scroll */}
+              {/* Slogan: hiển thị trên desktop, ẩn trên mobile; thu nhỏ khi scroll */}
               <motion.p
                 className={`hidden lg:block text-xs font-bold transition-all duration-500 ease-in-out text-blue-900 whitespace-nowrap ${
                   isScrolled
