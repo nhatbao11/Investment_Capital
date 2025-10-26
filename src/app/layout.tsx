@@ -43,8 +43,10 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
       { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
     ],
     shortcut: '/favicon.ico',
     apple: '/apple-touch-icon.png',
@@ -123,6 +125,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
         <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+        <link rel="icon" href="/favicon-96x96.png" type="image/png" sizes="96x96" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
         <link rel="shortcut icon" href="/favicon.ico" />
         
@@ -150,7 +153,6 @@ export default function RootLayout({
                   '@type': 'Organization',
                   name: 'Y&T Group',
                   url: 'https://yt2future.com',
-                  logo: 'https://yt2future.com/images/Logo01.jpg',
                   description: 'Y&T Group - Đơn vị chia sẻ kiến thức đầu tư chuyên nghiệp. Phân tích ngành, doanh nghiệp, báo cáo đầu tư và chiến lược dài hạn.',
                   sameAs: [
                     'https://yt2future.com',
