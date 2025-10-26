@@ -1,8 +1,6 @@
 const Post = require('../models/Post');
 const { mockPosts } = require('../data/mockData');
 const { deleteMultipleFiles, getFilesToDelete } = require('../utils/fileUtils');
-const { PostQueries } = require('../utils/optimizedQueries');
-const { cacheMiddleware, invalidateCache } = require('../middleware/cache');
 
 /**
  * Post Controller
@@ -26,14 +24,13 @@ const getAllPosts = async (req, res) => {
       filterStatus = 'published';
     }
     
-    const result = await PostQueries.findAll({
+    const result = await Post.findAll({
       page: parseInt(page) || 1,
       limit: parseInt(limit) || 10,
       category,
       category_id: category_id ? parseInt(category_id) : undefined,
       status: filterStatus,
-      search,
-      useCache: !req.user || req.user.role !== 'admin' // Cache cho public, không cache cho admin
+      search
     });
 
     res.json({
@@ -160,8 +157,8 @@ const createPost = async (req, res) => {
     });
     
     // Invalidate cache sau khi tạo post mới
-    invalidateCache('posts');
-    invalidateCache('GET:/api/v1/posts');
+    // invalidateCache('posts');
+    // invalidateCache('GET:/api/v1/posts');
 
   } catch (error) {
     console.error('Create post error:', error);

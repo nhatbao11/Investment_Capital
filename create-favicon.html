@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Favicon from Logo</title>
+</head>
+<body>
+    <h1>Favicon Generator</h1>
+    <canvas id="canvas" width="32" height="32" style="border: 1px solid #ccc;"></canvas>
+    <br><br>
+    <button onclick="createFavicon()">Create Favicon</button>
+    <br><br>
+    <a id="download" style="display:none;">Download favicon.ico</a>
+
+    <script>
+        function createFavicon() {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Tạo favicon đơn giản với chữ Y&T
+            ctx.fillStyle = '#1e3a8a'; // Màu xanh
+            ctx.fillRect(0, 0, 32, 32);
+            
+            ctx.fillStyle = '#ffffff'; // Màu trắng
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Y&T', 16, 16);
+            
+            // Convert canvas to favicon
+            const link = document.getElementById('download');
+            link.href = canvas.toDataURL('image/x-icon');
+            link.download = 'favicon.ico';
+            link.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
