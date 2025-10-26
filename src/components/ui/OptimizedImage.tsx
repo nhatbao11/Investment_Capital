@@ -22,12 +22,10 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
   quality = 80,
 }) => {
-  // Kiểm tra xem có phiên bản optimized không
+  // Fallback về hình ảnh gốc nếu không có phiên bản optimized
   const getOptimizedSrc = (originalSrc: string) => {
-    if (originalSrc.includes('/images/')) {
-      const fileName = originalSrc.split('/').pop()?.split('.')[0];
-      return `/images/optimized/${fileName}_lg.webp`;
-    }
+    // Chỉ sử dụng optimized images nếu chúng tồn tại
+    // Hiện tại fallback về hình ảnh gốc để đảm bảo không bị lỗi
     return originalSrc;
   };
 
