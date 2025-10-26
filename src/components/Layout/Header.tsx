@@ -206,6 +206,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
                 loading="eager"
                 fetchPriority="high"
                 decoding="sync"
+                sizes="(max-width: 640px) 32px, (max-width: 768px) 40px, 48px"
               />
               <motion.div
                 className="absolute -top-1 -right-1"

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense, lazy } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../../services/hooks/useAuth'
 import { usePosts } from '../../services/hooks/usePosts'
@@ -12,11 +12,13 @@ import { useCategories } from '../../services/hooks/useCategories'
 import { usePostCategories } from '../../services/hooks/usePostCategories'
 import { authApi } from '../../services/api/auth'
 import { FaPlus, FaEdit, FaTrash, FaEye, FaCheck, FaTimes, FaChartBar, FaUsers, FaFileAlt, FaComments, FaSignOutAlt, FaHome, FaLightbulb, FaBook, FaChartLine } from 'react-icons/fa'
-import PostModal from '../../components/admin/PostModal'
-import InvestmentKnowledgeModal from '../../components/admin/InvestmentKnowledgeModal'
-import BookJourneyManagement from '../../components/admin/BookJourneyManagement'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useNotification } from '../../components/ui/Notification'
+
+// Lazy load heavy components
+const PostModal = lazy(() => import('../../components/admin/PostModal'))
+const InvestmentKnowledgeModal = lazy(() => import('../../components/admin/InvestmentKnowledgeModal'))
+const BookJourneyManagement = lazy(() => import('../../components/admin/BookJourneyManagement'))
 
 const AdminDashboard: React.FC = () => {
   const router = useRouter()
@@ -1217,7 +1219,9 @@ const AdminDashboard: React.FC = () => {
 
           {activeTab === 'bookjourney' && (
             <div className="p-6">
-              <BookJourneyManagement onClose={() => setActiveTab('posts')} />
+              <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg" />}>
+                <BookJourneyManagement onClose={() => setActiveTab('posts')} />
+              </Suspense>
             </div>
           )}
 
@@ -1825,28 +1829,32 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Post Modal */}
-      <PostModal
-        isOpen={showCreateModal || !!editingPost}
-        onClose={() => {
-          setShowCreateModal(false)
-          setEditingPost(null)
-        }}
-        onSave={handleSavePost}
-        post={editingPost}
-        loading={postsLoading}
-      />
+      <Suspense fallback={<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"><div className="bg-white p-6 rounded-lg animate-pulse">Loading...</div></div>}>
+        <PostModal
+          isOpen={showCreateModal || !!editingPost}
+          onClose={() => {
+            setShowCreateModal(false)
+            setEditingPost(null)
+          }}
+          onSave={handleSavePost}
+          post={editingPost}
+          loading={postsLoading}
+        />
+      </Suspense>
 
       {/* Investment Knowledge Modal */}
-      <InvestmentKnowledgeModal
-        isOpen={showKnowledgeModal || !!editingKnowledge}
-        onClose={() => {
-          setShowKnowledgeModal(false)
-          setEditingKnowledge(null)
-        }}
-        onSave={handleSaveKnowledge}
-        knowledge={editingKnowledge}
-        loading={knowledgeLoading}
-      />
+      <Suspense fallback={<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"><div className="bg-white p-6 rounded-lg animate-pulse">Loading...</div></div>}>
+        <InvestmentKnowledgeModal
+          isOpen={showKnowledgeModal || !!editingKnowledge}
+          onClose={() => {
+            setShowKnowledgeModal(false)
+            setEditingKnowledge(null)
+          }}
+          onSave={handleSaveKnowledge}
+          knowledge={editingKnowledge}
+          loading={knowledgeLoading}
+        />
+      </Suspense>
 
 
       {/* Post Category Modal */}

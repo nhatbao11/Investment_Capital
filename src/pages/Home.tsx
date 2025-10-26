@@ -4,18 +4,18 @@ import type React from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { HiOutlineChevronDoubleDown, HiTrendingUp, HiShieldCheck, HiLightBulb, HiUsers } from "react-icons/hi"
-import Slide from "../components/Layout/Slide"
-import Image from "next/image"
 import { useLanguage } from "../contexts/LanguageContext"
 import HeroSection from "../components/sections/HeroSection"
-// import FeaturesSection from "../components/sections/FeaturesSection"
-import ServicesSection from "../components/sections/ServicesSection"
-import FeedbackSection from "../components/sections/FeedbackSection"
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense, lazy } from "react"
 import { usePosts } from "../services/hooks/usePosts"
 import { Post } from "../services/types/posts"
 import PostImage from "../components/ui/PostImage"
 import { postsApi } from "../services/api/posts"
+
+// Lazy load non-critical components
+const Slide = lazy(() => import("../components/Layout/Slide"))
+const ServicesSection = lazy(() => import("../components/sections/ServicesSection"))
+const FeedbackSection = lazy(() => import("../components/sections/FeedbackSection"))
 
 const Home: React.FC = () => {
   const { t } = useLanguage()
@@ -78,7 +78,9 @@ const Home: React.FC = () => {
   return (
     <div className="bg-background overflow-x-hidden">
       <div className="relative">
-        <Slide className="-mt-px" />
+        <Suspense fallback={<div className="h-96 bg-gray-200 animate-pulse" />}>
+          <Slide className="-mt-px" />
+        </Suspense>
         <div className="absolute inset-0 flex items-end md:items-start justify-start bg-gradient-to-b from-slate-900/70 via-slate-900/30 to-transparent md:bg-gradient-to-br md:from-slate-900/60 md:via-slate-800/50 md:to-slate-900/60 pb-1 sm:pb-0">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -281,7 +283,9 @@ const Home: React.FC = () => {
         </div>
       </section>
       {/* Feedback Section */}
-      <FeedbackSection />
+      <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse" />}>
+        <FeedbackSection />
+      </Suspense>
 
       <section className="py-24 bg-gradient-to-br from-slate-900 to-slate-800">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center -mt-10">

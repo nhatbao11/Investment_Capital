@@ -9,6 +9,7 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "optimize-images": "node scripts/optimize-images.js",
+    "optimize": "npm run optimize-images && npm run build",
     "deploy": "bash scripts/deploy.sh",
     "deploy:quick": "bash scripts/quick-deploy.sh",
     "setup:vps": "bash scripts/setup-vps.sh",

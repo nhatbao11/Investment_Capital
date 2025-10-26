@@ -115,23 +115,8 @@ export default function RootLayout({
         <meta name="theme-color" content="#1e3a8a" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        {/* Preload critical resources */}
+        {/* Preload only critical resources */}
         <link rel="preload" href="/images/Logo01.jpg" as="image" type="image/jpeg" />
-        <link rel="preload" href="/images/vechungtoi.jpg" as="image" type="image/jpeg" />
-        <link rel="preload" href="/images/Saigon.mp4" as="video" type="video/mp4" />
-        
-        {/* Favicon - Multiple sizes for better Google indexing */}
-        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
-        <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
-        <link rel="icon" href="/favicon-96x96.png" type="image/png" sizes="96x96" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        
-        {/* Additional favicon formats for better browser support */}
-        <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
         
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
