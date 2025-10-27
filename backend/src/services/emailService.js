@@ -440,7 +440,7 @@ const sendBookJourneyNotification = async (recipients, book) => {
   let pdfUrl;
   if (book.pdf_url) {
     const apiUrl = process.env.API_URL || 'http://localhost:5000';
-    pdfUrl = `${apiUrl}/api/v1/bookjourney/${book.id}/pdf`;
+    pdfUrl = `${apiUrl}/api/v1/bookjourney/${book.id}/download`;
   } else {
     pdfUrl = `${frontendUrl}/investment`;
   }

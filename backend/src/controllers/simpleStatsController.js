@@ -12,26 +12,32 @@ const { executeQuery } = require('../config/database');
  */
 const getSimpleStats = async (req, res) => {
   try {
-    const { period = 'today' } = req.query;
+    const { period = 'today', date } = req.query;
 
     let dateCondition = '';
     let params = [];
 
-    switch (period) {
-      case 'today':
-        dateCondition = 'DATE(view_date) = CURDATE()';
-        break;
-      case 'week':
-        dateCondition = 'view_date >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)';
-        break;
-      case 'month':
-        dateCondition = 'YEAR(view_date) = YEAR(CURDATE()) AND MONTH(view_date) = MONTH(CURDATE())';
-        break;
-      case 'year':
-        dateCondition = 'YEAR(view_date) = YEAR(CURDATE())';
-        break;
-      default:
-        dateCondition = 'DATE(view_date) = CURDATE()';
+    if (period === 'custom' && date) {
+      // Chọn ngày cụ thể
+      dateCondition = 'DATE(view_date) = ?';
+      params = [date];
+    } else {
+      switch (period) {
+        case 'today':
+          dateCondition = 'DATE(view_date) = CURDATE()';
+          break;
+        case 'week':
+          dateCondition = 'view_date >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)';
+          break;
+        case 'month':
+          dateCondition = 'YEAR(view_date) = YEAR(CURDATE()) AND MONTH(view_date) = MONTH(CURDATE())';
+          break;
+        case 'year':
+          dateCondition = 'YEAR(view_date) = YEAR(CURDATE())';
+          break;
+        default:
+          dateCondition = 'DATE(view_date) = CURDATE()';
+      }
     }
 
     // Thống kê tổng lượt truy cập theo IP
