@@ -173,8 +173,12 @@ class BookJourneyController {
       await book.incrementDownloadCount();
 
       // Serve PDF file trực tiếp từ server
-      const pdfPath = path.join(__dirname, '../../', book.pdf_url);
+      // Sử dụng process.cwd() để lấy root của backend project
+      const normalizedPath = book.pdf_url.startsWith('/uploads/') ? book.pdf_url.substring(1) : book.pdf_url;
+      const pdfPath = path.join(process.cwd(), normalizedPath);
       const fileName = path.basename(book.pdf_url);
+      
+      console.log('Attempting to serve PDF:', pdfPath);
       
       // Check if file exists
       if (!fs.existsSync(pdfPath)) {

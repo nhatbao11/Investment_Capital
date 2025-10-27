@@ -42,8 +42,12 @@ const downloadPdf = async (req, res) => {
     });
 
     // Serve PDF file trực tiếp từ server
-    const pdfPath = path.join(__dirname, '../../', knowledge.pdf_url);
+    // Sử dụng process.cwd() để lấy root của backend project
+    const normalizedPath = knowledge.pdf_url.startsWith('/uploads/') ? knowledge.pdf_url.substring(1) : knowledge.pdf_url;
+    const pdfPath = path.join(process.cwd(), normalizedPath);
     const fileName = path.basename(knowledge.pdf_url);
+    
+    console.log('Attempting to serve PDF:', pdfPath);
     
     // Check if file exists
     if (!fs.existsSync(pdfPath)) {
