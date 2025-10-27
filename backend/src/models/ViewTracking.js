@@ -70,8 +70,8 @@ class ViewTracking {
 
       await executeQuery(insertSql, insertParams);
 
-      // Tăng view_count trong bảng gốc
-      await ViewTracking.incrementResourceViewCount(resource_id, resource_type);
+      // Không tăng view_count ở đây vì controller sẽ tự tăng
+      // await ViewTracking.incrementResourceViewCount(resource_id, resource_type);
 
       return true;
 
