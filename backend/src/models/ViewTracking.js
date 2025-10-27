@@ -46,12 +46,12 @@ class ViewTracking {
         `;
         checkParams = [user_id, resource_id, resource_type, today];
       } else {
-        // User chưa đăng nhập: check theo IP + User-Agent
+        // User chưa đăng nhập: check theo IP (không check User-Agent để tránh người dùng khác nhau từ cùng IP)
         checkSql = `
           SELECT id FROM view_tracking 
-          WHERE ip_address = ? AND user_agent = ? AND resource_id = ? AND resource_type = ? AND view_date = ?
+          WHERE ip_address = ? AND resource_id = ? AND resource_type = ? AND view_date = ?
         `;
-        checkParams = [ip_address, user_agent, resource_id, resource_type, today];
+        checkParams = [ip_address, resource_id, resource_type, today];
       }
 
       const existing = await executeQuery(checkSql, checkParams);
