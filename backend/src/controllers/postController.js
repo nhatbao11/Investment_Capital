@@ -388,6 +388,7 @@ const incrementViewCount = async (req, res) => {
     const ViewTracking = require('../models/ViewTracking');
 
     // Track view với logic chống buff
+    console.log('Tracking view with:', { user_id, ip_address, user_agent, resource_id: parseInt(id), resource_type: 'post' })
     const tracked = await ViewTracking.trackView({
       user_id,
       ip_address,
@@ -395,6 +396,7 @@ const incrementViewCount = async (req, res) => {
       resource_id: parseInt(id),
       resource_type: 'post'
     });
+    console.log('Tracked result:', tracked)
 
     // Kiểm tra post có tồn tại không
     const post = await Post.findById(id);

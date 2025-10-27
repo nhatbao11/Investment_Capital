@@ -40,7 +40,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           }
           const userAgent = req.headers['user-agent'] || ''
           
-          await fetch(endpoint, { 
+          console.log('Tracking view for:', { track_id, track_type, ip, userAgent })
+          
+          const response = await fetch(endpoint, { 
             method: 'POST',
             headers: {
               'X-Forwarded-For': ip,
@@ -48,6 +50,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               'Content-Type': 'application/json'
             }
           })
+          
+          console.log('Tracking response:', response.status, await response.text())
         }
       } catch (error) {
         console.error('Error tracking view:', error)
