@@ -66,7 +66,7 @@ const sendNewsletter = async (req, res) => {
 
     // Lấy thông tin post từ database
     const postQuery = `
-      SELECT id, title, content, thumbnail_url, category, created_at
+      SELECT id, title, content, thumbnail_url, pdf_url, category, created_at
       FROM posts
       WHERE id = ?
     `;
