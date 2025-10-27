@@ -59,12 +59,10 @@ const downloadPdf = async (req, res) => {
       });
     }
 
-    // Set headers and send file
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="${fileName}"`);
-    
-    const fileStream = fs.createReadStream(pdfPath);
-    fileStream.pipe(res);
+    // Redirect to actual PDF file on frontend
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    const redirectUrl = `${frontendUrl}${post.pdf_url}`;
+    res.redirect(redirectUrl);
   } catch (error) {
     console.error('Download PDF error:', error);
     res.status(500).json({
