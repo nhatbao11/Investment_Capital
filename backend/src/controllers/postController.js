@@ -397,13 +397,20 @@ const incrementViewCount = async (req, res) => {
       });
     }
 
+    // Cập nhật view_count nếu chưa track (IP mới)
+    let updated_view_count = post.view_count;
+    if (tracked) {
+      updated_view_count = post.view_count + 1;
+      await Post.incrementViewCount(id);
+    }
+
     res.json({
       success: true,
       message: tracked ? 'View tracked successfully' : 'View already tracked today',
       data: {
         tracked,
         post_id: parseInt(id),
-        current_view_count: post.view_count
+        current_view_count: updated_view_count
       }
     });
 

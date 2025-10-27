@@ -110,7 +110,7 @@ class BookJourneyController {
       const ip_address = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
       const user_agent = req.get('User-Agent') || '';
 
-      await ViewTracking.trackView({
+      const tracked = await ViewTracking.trackView({
         user_id,
         ip_address,
         user_agent,
@@ -118,9 +118,14 @@ class BookJourneyController {
         resource_type: 'bookjourney'
       });
 
+      // Cập nhật view_count nếu chưa track (IP mới)
+      if (tracked) {
+        await book.incrementViewCount();
+      }
+
       res.json({
         success: true,
-        message: 'Đã tăng lượt xem'
+        message: tracked ? 'Đã tăng lượt xem' : 'Đã xem rồi hôm nay'
       });
     } catch (error) {
       console.error('Error incrementing view:', error);
