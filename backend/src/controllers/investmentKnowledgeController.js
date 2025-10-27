@@ -375,12 +375,21 @@ const getLatestInvestmentKnowledge = async (req, res) => {
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
-const incrementViewCount = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const user_id = req.user?.id || null;
-    const ip_address = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
-    const user_agent = req.get('User-Agent') || '';
+  const incrementViewCount = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const user_id = req.user?.id || null;
+      // Lấy IP từ X-Forwarded-For header (từ Next.js API) hoặc từ req.ip
+      let ip_address = req.get('X-Forwarded-For') || req.ip;
+      // Nếu X-Forwarded-For có nhiều IP (trong trường hợp proxy chain), lấy IP đầu tiên
+      if (ip_address && ip_address.includes(',')) {
+        ip_address = ip_address.split(',')[0].trim();
+      }
+      // Fallback
+      if (!ip_address) {
+        ip_address = req.connection.remoteAddress || req.socket.remoteAddress;
+      }
+      const user_agent = req.get('User-Agent') || '';
 
     // Import ViewTracking model
     const ViewTracking = require('../models/ViewTracking');

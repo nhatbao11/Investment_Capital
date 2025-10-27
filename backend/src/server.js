@@ -24,6 +24,9 @@ const investmentKnowledgePdfRoutes = require('./routes/investmentKnowledgePdf');
 
 const app = express();
 
+// Trust proxy để lấy đúng IP thật
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }

@@ -67,7 +67,16 @@ class BookJourneyController {
       // Track view với logic chống buff
       const ViewTracking = require('../models/ViewTracking');
       const user_id = req.user?.id || null;
-      const ip_address = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+      // Lấy IP từ X-Forwarded-For header (từ Next.js API) hoặc từ req.ip
+      let ip_address = req.get('X-Forwarded-For') || req.ip;
+      // Nếu X-Forwarded-For có nhiều IP (trong trường hợp proxy chain), lấy IP đầu tiên
+      if (ip_address && ip_address.includes(',')) {
+        ip_address = ip_address.split(',')[0].trim();
+      }
+      // Fallback
+      if (!ip_address) {
+        ip_address = req.connection.remoteAddress || req.socket.remoteAddress;
+      }
       const user_agent = req.get('User-Agent') || '';
 
       await ViewTracking.trackView({
@@ -107,7 +116,16 @@ class BookJourneyController {
       // Track view với logic chống buff
       const ViewTracking = require('../models/ViewTracking');
       const user_id = req.user?.id || null;
-      const ip_address = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+      // Lấy IP từ X-Forwarded-For header (từ Next.js API) hoặc từ req.ip
+      let ip_address = req.get('X-Forwarded-For') || req.ip;
+      // Nếu X-Forwarded-For có nhiều IP (trong trường hợp proxy chain), lấy IP đầu tiên
+      if (ip_address && ip_address.includes(',')) {
+        ip_address = ip_address.split(',')[0].trim();
+      }
+      // Fallback
+      if (!ip_address) {
+        ip_address = req.connection.remoteAddress || req.socket.remoteAddress;
+      }
       const user_agent = req.get('User-Agent') || '';
 
       const tracked = await ViewTracking.trackView({
@@ -163,7 +181,16 @@ class BookJourneyController {
       // Track view khi mở PDF (theo IP)
       const ViewTracking = require('../models/ViewTracking');
       const user_id = req.user?.id || null;
-      const ip_address = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+      // Lấy IP từ X-Forwarded-For header (từ Next.js API) hoặc từ req.ip
+      let ip_address = req.get('X-Forwarded-For') || req.ip;
+      // Nếu X-Forwarded-For có nhiều IP (trong trường hợp proxy chain), lấy IP đầu tiên
+      if (ip_address && ip_address.includes(',')) {
+        ip_address = ip_address.split(',')[0].trim();
+      }
+      // Fallback
+      if (!ip_address) {
+        ip_address = req.connection.remoteAddress || req.socket.remoteAddress;
+      }
       const user_agent = req.get('User-Agent') || '';
 
       await ViewTracking.trackView({
