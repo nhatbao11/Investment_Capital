@@ -30,7 +30,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (endpoint) {
           // Forward IP và User-Agent để track đúng
           const forwardedFor = req.headers['x-forwarded-for'] || req.socket.remoteAddress || ''
-          const ip = typeof forwardedFor === 'string' ? forwardedFor.split(',')[0].trim() : forwardedFor
+          let ip = ''
+          if (typeof forwardedFor === 'string') {
+            ip = forwardedFor.split(',')[0].trim()
+          } else if (Array.isArray(forwardedFor)) {
+            ip = forwardedFor[0]
+          } else {
+            ip = String(forwardedFor)
+          }
           const userAgent = req.headers['user-agent'] || ''
           
           await fetch(endpoint, { 
