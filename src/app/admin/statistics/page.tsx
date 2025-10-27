@@ -31,6 +31,8 @@ const StatisticsPage: React.FC = () => {
       setLoading(true)
       const token = localStorage.getItem('token')
       if (!token) {
+        // Set default nếu không có token
+        setStats({ total_visits: { unique_ips: 0, total_visits: 0 } })
         return
       }
 
@@ -50,6 +52,8 @@ const StatisticsPage: React.FC = () => {
       })
 
       if (!response.ok) {
+        // Set default nếu lỗi
+        setStats({ total_visits: { unique_ips: 0, total_visits: 0 } })
         return
       }
 
@@ -57,6 +61,8 @@ const StatisticsPage: React.FC = () => {
       setStats(data.data)
     } catch (err) {
       console.error('Error loading data:', err)
+      // Set default nếu catch error
+      setStats({ total_visits: { unique_ips: 0, total_visits: 0 } })
     } finally {
       setLoading(false)
     }
@@ -143,7 +149,7 @@ const StatisticsPage: React.FC = () => {
         </div>
 
         {/* Stats Display */}
-        {stats && (
+        {!loading && stats && (
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
               Số người đã ghé thăm trang web: {stats.total_visits.unique_ips}
