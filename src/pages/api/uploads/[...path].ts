@@ -12,17 +12,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     const filePath = filePathArray.join('/')
     
-    // Track view nếu có track_id và track_type
+    // Track view nếu có track_id và track_type (giống web)
     if (track_id && track_type && req.method === 'GET') {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-        await fetch(`${apiUrl}/api/v1/view-tracking/track`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            resource_id: parseInt(track_id as string),
-            resource_type: track_type
-          })
+        await fetch(`${apiUrl}/api/v1/view-tracking/${track_type}/${track_id}`, {
+          method: 'POST'
         })
       } catch (error) {
         console.error('Error tracking view:', error)
