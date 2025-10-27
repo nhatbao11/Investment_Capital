@@ -40,11 +40,11 @@ const getSimpleStats = async (req, res) => {
       }
     }
 
-    // Thống kê tổng lượt truy cập theo IP (tính cả khi không track specific resource)
+    // Thống kê tổng lượt truy cập theo IP - chỉ tính IP (1 người)
     const totalVisitsSql = `
       SELECT 
         COUNT(DISTINCT ip_address) as unique_ips,
-        COUNT(DISTINCT CONCAT(ip_address, '-', resource_id, '-', resource_type, '-', view_date)) as total_visits
+        COUNT(DISTINCT ip_address) as total_visits
       FROM view_tracking 
       WHERE ${dateCondition}
     `;
@@ -130,7 +130,7 @@ const getDashboardOverview = async (req, res) => {
     const todayStats = await executeQuery(`
       SELECT 
         COUNT(DISTINCT ip_address) as unique_ips,
-        COUNT(*) as total_visits
+        COUNT(DISTINCT ip_address) as total_visits
       FROM view_tracking 
       WHERE view_date = CURDATE()
     `);
@@ -139,7 +139,7 @@ const getDashboardOverview = async (req, res) => {
     const weekStats = await executeQuery(`
       SELECT 
         COUNT(DISTINCT ip_address) as unique_ips,
-        COUNT(*) as total_visits
+        COUNT(DISTINCT ip_address) as total_visits
       FROM view_tracking 
       WHERE view_date >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
     `);
@@ -148,7 +148,7 @@ const getDashboardOverview = async (req, res) => {
     const monthStats = await executeQuery(`
       SELECT 
         COUNT(DISTINCT ip_address) as unique_ips,
-        COUNT(*) as total_visits
+        COUNT(DISTINCT ip_address) as total_visits
       FROM view_tracking 
       WHERE YEAR(view_date) = YEAR(CURDATE()) AND MONTH(view_date) = MONTH(CURDATE())
     `);
@@ -157,7 +157,7 @@ const getDashboardOverview = async (req, res) => {
     const yearStats = await executeQuery(`
       SELECT 
         COUNT(DISTINCT ip_address) as unique_ips,
-        COUNT(*) as total_visits
+        COUNT(DISTINCT ip_address) as total_visits
       FROM view_tracking 
       WHERE YEAR(view_date) = YEAR(CURDATE())
     `);
