@@ -134,6 +134,9 @@ class BookJourneyController {
   // Tải PDF (tăng download count và track view)
   static async downloadPdf(req, res) {
     try {
+      const path = require('path');
+      const fs = require('fs');
+      
       const { id } = req.params;
       const book = await BookJourney.getById(id);
 
@@ -141,6 +144,14 @@ class BookJourneyController {
         return res.status(404).json({
           success: false,
           message: 'Không tìm thấy hành trình sách'
+        });
+      }
+
+      if (!book.pdf_url) {
+        return res.status(404).json({
+          success: false,
+          message: 'PDF not found',
+          code: 'PDF_NOT_FOUND'
         });
       }
 
@@ -161,8 +172,25 @@ class BookJourneyController {
       // Tăng download count
       await book.incrementDownloadCount();
 
-      // Redirect to PDF URL
-      res.redirect(book.pdf_url);
+      // Serve PDF file trực tiếp từ server
+      const pdfPath = path.join(__dirname, '../../', book.pdf_url);
+      const fileName = path.basename(book.pdf_url);
+      
+      // Check if file exists
+      if (!fs.existsSync(pdfPath)) {
+        return res.status(404).json({
+          success: false,
+          message: 'PDF file not found on server',
+          code: 'PDF_FILE_NOT_FOUND'
+        });
+      }
+
+      // Set headers and send file
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `inline; filename="${fileName}"`);
+      
+      const fileStream = fs.createReadStream(pdfPath);
+      fileStream.pipe(res);
     } catch (error) {
       console.error('Error downloading PDF:', error);
       res.status(500).json({

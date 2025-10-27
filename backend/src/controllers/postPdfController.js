@@ -1,4 +1,6 @@
 const Post = require('../models/Post');
+const path = require('path');
+const fs = require('fs');
 
 /**
  * Download PDF với track view (cho email links)
@@ -40,11 +42,25 @@ const downloadPdf = async (req, res) => {
       resource_type: 'post'
     });
 
-    // Redirect to PDF URL
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-    const pdfUrl = post.pdf_url.startsWith('http') ? post.pdf_url : `${frontendUrl}${post.pdf_url}`;
+    // Serve PDF file trực tiếp từ server
+    const pdfPath = path.join(__dirname, '../../', post.pdf_url);
+    const fileName = path.basename(post.pdf_url);
     
-    res.redirect(pdfUrl);
+    // Check if file exists
+    if (!fs.existsSync(pdfPath)) {
+      return res.status(404).json({
+        success: false,
+        message: 'PDF file not found on server',
+        code: 'PDF_FILE_NOT_FOUND'
+      });
+    }
+
+    // Set headers and send file
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename="${fileName}"`);
+    
+    const fileStream = fs.createReadStream(pdfPath);
+    fileStream.pipe(res);
   } catch (error) {
     console.error('Download PDF error:', error);
     res.status(500).json({
