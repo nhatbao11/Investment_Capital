@@ -16,9 +16,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (track_id && track_type && req.method === 'GET') {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-        await fetch(`${apiUrl}/api/v1/view-tracking/${track_type}/${track_id}`, {
-          method: 'POST'
-        })
+        
+        // Gọi đúng endpoint như web
+        let endpoint = ''
+        if (track_type === 'post') {
+          endpoint = `${apiUrl}/api/v1/posts/${track_id}/view`
+        } else if (track_type === 'investment_knowledge') {
+          endpoint = `${apiUrl}/api/v1/investment-knowledge/${track_id}/view`
+        } else if (track_type === 'bookjourney') {
+          endpoint = `${apiUrl}/api/v1/bookjourney/${track_id}/view`
+        }
+        
+        if (endpoint) {
+          await fetch(endpoint, { method: 'POST' })
+        }
       } catch (error) {
         console.error('Error tracking view:', error)
         // Không fail nếu track không được
