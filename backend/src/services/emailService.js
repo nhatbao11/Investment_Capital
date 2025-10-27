@@ -87,12 +87,11 @@ const sendNewPostNotification = async (recipients, post) => {
   // Lấy full URL của frontend
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
   
-  // URL PDF bài viết (dùng endpoint để track)
+  // URL PDF bài viết (dùng đường dẫn trực tiếp như web)
   let pdfUrl;
   if (post.pdf_url) {
-    // Dùng endpoint để track khi mở PDF
-    const apiUrl = process.env.API_URL || 'http://localhost:5000';
-    pdfUrl = `${apiUrl}/api/v1/post-pdf/${post.id}/pdf`;
+    // Dùng đường dẫn trực tiếp như trên web để mở PDF
+    pdfUrl = `${frontendUrl}${post.pdf_url}`;
   } else {
     // Fallback nếu không có PDF
     if (post.category === 'nganh') {
@@ -303,11 +302,11 @@ const sendInvestmentKnowledgeNotification = async (recipients, knowledge) => {
   // Lấy full URL của frontend
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
   
-  // URL PDF investment knowledge (dùng endpoint để track)
+  // URL PDF investment knowledge (dùng đường dẫn trực tiếp như web)
   let pdfUrl;
   if (knowledge.pdf_url) {
-    const apiUrl = process.env.API_URL || 'http://localhost:5000';
-    pdfUrl = `${apiUrl}/api/v1/investment-knowledge-pdf/${knowledge.id}/pdf`;
+    // Dùng đường dẫn trực tiếp như trên web để mở PDF
+    pdfUrl = `${frontendUrl}${knowledge.pdf_url}`;
   } else {
     pdfUrl = `${frontendUrl}/investment`;
   }
@@ -436,11 +435,11 @@ const sendBookJourneyNotification = async (recipients, book) => {
   // Lấy full URL của frontend
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
   
-  // URL PDF book journey (dùng endpoint để track)
+  // URL PDF book journey (dùng đường dẫn trực tiếp như web)
   let pdfUrl;
   if (book.pdf_url) {
-    const apiUrl = process.env.API_URL || 'http://localhost:5000';
-    pdfUrl = `${apiUrl}/api/v1/bookjourney/${book.id}/download`;
+    // Dùng đường dẫn trực tiếp như trên web để mở PDF
+    pdfUrl = `${frontendUrl}${book.pdf_url}`;
   } else {
     pdfUrl = `${frontendUrl}/investment`;
   }
