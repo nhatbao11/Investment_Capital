@@ -11,7 +11,7 @@ import { useInvestmentKnowledge } from '../../services/hooks/useInvestmentKnowle
 import { useCategories } from '../../services/hooks/useCategories'
 import { usePostCategories } from '../../services/hooks/usePostCategories'
 import { authApi } from '../../services/api/auth'
-import { FaPlus, FaEdit, FaTrash, FaEye, FaCheck, FaTimes, FaChartBar, FaUsers, FaFileAlt, FaComments, FaSignOutAlt, FaHome, FaLightbulb, FaBook, FaChartLine } from 'react-icons/fa'
+import { FaPlus, FaEdit, FaTrash, FaEye, FaCheck, FaTimes, FaChartBar, FaUsers, FaFileAlt, FaComments, FaSignOutAlt, FaHome, FaLightbulb, FaBook, FaChartLine, FaEnvelope } from 'react-icons/fa'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useNotification } from '../../components/ui/Notification'
 
@@ -19,6 +19,11 @@ import { useNotification } from '../../components/ui/Notification'
 const PostModal = lazy(() => import('../../components/admin/PostModal'))
 const InvestmentKnowledgeModal = lazy(() => import('../../components/admin/InvestmentKnowledgeModal'))
 const BookJourneyManagement = lazy(() => import('../../components/admin/BookJourneyManagement'))
+
+// Import trực tiếp để tránh lỗi
+import NewsletterModal from '../../components/admin/NewsletterModal'
+import InvestmentNewsletterModal from '../../components/admin/InvestmentNewsletterModal'
+import BookJourneyNewsletterModal from '../../components/admin/BookJourneyNewsletterModal'
 
 const AdminDashboard: React.FC = () => {
   const router = useRouter()
@@ -66,6 +71,12 @@ const AdminDashboard: React.FC = () => {
   const [showInvestmentCategoryModal, setShowInvestmentCategoryModal] = useState(false)
   const [editingInvestmentCategory, setEditingInvestmentCategory] = useState<any>(null)
   const [investmentCategoryForm, setInvestmentCategoryForm] = useState({ name: '', description: '', color: '#3B82F6' })
+  const [showNewsletterModal, setShowNewsletterModal] = useState(false)
+  const [selectedPostForNewsletter, setSelectedPostForNewsletter] = useState<any>(null)
+  const [showInvestmentNewsletterModal, setShowInvestmentNewsletterModal] = useState(false)
+  const [selectedKnowledgeForNewsletter, setSelectedKnowledgeForNewsletter] = useState<any>(null)
+  const [showBookJourneyNewsletterModal, setShowBookJourneyNewsletterModal] = useState(false)
+  const [selectedBookJourneyForNewsletter, setSelectedBookJourneyForNewsletter] = useState<any>(null)
   const [postsPage, setPostsPage] = useState(1)
   const [postsLimit, setPostsLimit] = useState(10)
   const [feedbacksPage, setFeedbacksPage] = useState(1)
@@ -967,6 +978,19 @@ const AdminDashboard: React.FC = () => {
                               >
                                 <FaEdit className="h-4 w-4" />
                               </button>
+                              {post.status === 'published' && (
+                                <button
+                                  onClick={() => {
+                                    console.log('Click send newsletter for post:', post.id)
+                                    setSelectedPostForNewsletter(post)
+                                    setShowNewsletterModal(true)
+                                  }}
+                                  className="text-green-600 hover:text-green-900"
+                                  title="Gửi newsletter"
+                                >
+                                  <FaEnvelope className="h-4 w-4" />
+                                </button>
+                              )}
                               <button
                                 onClick={() => handleDeletePost(post.id)}
                                 className="text-red-600 hover:text-red-900"
@@ -1174,6 +1198,18 @@ const AdminDashboard: React.FC = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[8%]">
                             <div className="flex space-x-2">
+                              {item.status === 'published' && (
+                                <button
+                                  onClick={() => {
+                                    setSelectedKnowledgeForNewsletter(item)
+                                    setShowInvestmentNewsletterModal(true)
+                                  }}
+                                  className="text-green-600 hover:text-green-900"
+                                  title="Gửi newsletter"
+                                >
+                                  <FaEnvelope className="h-4 w-4" />
+                                </button>
+                              )}
                               <button
                                 onClick={() => setEditingKnowledge(item)}
                                 className="text-blue-600 hover:text-blue-900"
@@ -1220,7 +1256,13 @@ const AdminDashboard: React.FC = () => {
           {activeTab === 'bookjourney' && (
             <div className="p-6">
               <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg" />}>
-                <BookJourneyManagement onClose={() => setActiveTab('posts')} />
+                <BookJourneyManagement 
+                  onClose={() => setActiveTab('posts')}
+                  onSelectForNewsletter={(book) => {
+                    setSelectedBookJourneyForNewsletter(book)
+                    setShowBookJourneyNewsletterModal(true)
+                  }}
+                />
               </Suspense>
             </div>
           )}
@@ -1613,6 +1655,9 @@ const AdminDashboard: React.FC = () => {
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">
                           Trạng thái
                         </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
+                          Nhận email
+                        </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">
                           Ngày tạo
                         </th>
@@ -1650,6 +1695,15 @@ const AdminDashboard: React.FC = () => {
                                 : 'bg-gray-100 text-gray-800'
                             }`}>
                               {user.is_active ? 'Hoạt động' : 'Không hoạt động'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap w-1/12">
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                              user.newsletter_opt_in 
+                                ? 'bg-blue-100 text-blue-800' 
+                                : 'bg-gray-100 text-gray-500'
+                            }`}>
+                              {user.newsletter_opt_in ? '✅ Có' : '❌ Không'}
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-1/6">
@@ -1855,6 +1909,45 @@ const AdminDashboard: React.FC = () => {
           loading={knowledgeLoading}
         />
       </Suspense>
+
+      {/* Posts Newsletter Modal */}
+      {selectedPostForNewsletter && showNewsletterModal && (
+        <NewsletterModal
+          isOpen={showNewsletterModal}
+          onClose={() => {
+            setShowNewsletterModal(false)
+            setSelectedPostForNewsletter(null)
+          }}
+          postId={selectedPostForNewsletter.id}
+          postTitle={selectedPostForNewsletter.title}
+        />
+      )}
+
+      {/* Investment Knowledge Newsletter Modal */}
+      {selectedKnowledgeForNewsletter && showInvestmentNewsletterModal && (
+        <InvestmentNewsletterModal
+          isOpen={showInvestmentNewsletterModal}
+          onClose={() => {
+            setShowInvestmentNewsletterModal(false)
+            setSelectedKnowledgeForNewsletter(null)
+          }}
+          knowledgeId={selectedKnowledgeForNewsletter.id}
+          knowledgeTitle={selectedKnowledgeForNewsletter.title}
+        />
+      )}
+
+      {/* Book Journey Newsletter Modal */}
+      {selectedBookJourneyForNewsletter && showBookJourneyNewsletterModal && (
+        <BookJourneyNewsletterModal
+          isOpen={showBookJourneyNewsletterModal}
+          onClose={() => {
+            setShowBookJourneyNewsletterModal(false)
+            setSelectedBookJourneyForNewsletter(null)
+          }}
+          bookId={selectedBookJourneyForNewsletter.id}
+          bookTitle={selectedBookJourneyForNewsletter.title}
+        />
+      )}
 
 
       {/* Post Category Modal */}

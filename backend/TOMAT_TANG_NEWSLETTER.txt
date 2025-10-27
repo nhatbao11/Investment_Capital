@@ -1,0 +1,97 @@
+===========================================
+✅ ĐÃ HOÀN TẤT - TỰ ĐỘNG GỬI EMAIL NEWSLETTER
+===========================================
+
+🎉 CHỨC NĂNG TỰ ĐỘNG ĐÃ ĐƯỢC BẬT!
+
+===========================================
+📧 KHI NÀO GỬI EMAIL TỰ ĐỘNG?
+===========================================
+
+✅ TỰ ĐỘNG GỬI KHI:
+1. Admin đăng bài MỚI với status = "published"
+2. Admin update bài từ "draft" → "published"
+
+❌ KHÔNG GỬI KHI:
+- Status = "draft" (bản nháp)
+- Admin set send_newsletter = false
+
+===========================================
+📝 CÁCH SỬ DỤNG
+===========================================
+
+1. Admin vào trang Admin Panel
+2. Đăng bài viết mới
+3. Chọn status = "Published" ← QUAN TRỌNG!
+4. Click "Đăng bài"
+
+→ Email tự động gửi cho TẤT CẢ subscribers!
+
+===========================================
+🔧 RESTART BACKEND
+===========================================
+
+Để áp dụng thay đổi, restart backend:
+
+Windows:
+  cd backend
+  npm restart
+
+Hoặc:
+  node src/server.js
+
+Sau đó thử đăng bài test!
+
+===========================================
+🧪 TEST
+===========================================
+
+1. Đăng nhập bằng tài khoản user
+2. Tick checkbox "Đồng ý nhận email"
+3. Đăng xuất
+4. Đăng nhập bằng admin
+5. Đăng bài mới với status = "published"
+6. Check email user vừa tick
+
+→ User sẽ NHẬN email tự động! 🎉
+
+===========================================
+💡 TẮT EMAIL KHI TEST (KHUYẾN NGHỊ)
+===========================================
+
+Mở file backend/.env:
+  EMAIL_ENABLED=false  ← Tắt email tạm thời
+
+Sau đó bật lại:
+  EMAIL_ENABLED=true
+
+Restart backend mỗi lần đổi.
+
+===========================================
+📚 Files đã chỉnh sửa:
+===========================================
+
+✅ backend/src/controllers/postController.js
+   - Thêm logic tự động gửi email khi tạo bài
+   - Thêm logic tự động gửi email khi update bài
+
+✅ backend/src/services/emailService.js
+   - Email service đã sẵn sàng
+
+✅ backend/src/routes/newsletter.js
+   - API endpoints đã sẵn sàng
+
+===========================================
+🎯 TÓM TẮT
+===========================================
+
+✅ Tự động gửi email = ĐÃ BẬT
+✅ User tick đồng ý = Nhận email
+✅ Admin đăng bài = Tự động gửi
+✅ Email đẹp với thumbnail + link
+✅ Có link unsubscribe
+
+→ HOÀN TOÀN TỰ ĐỘNG! 🚀
+
+===========================================
+

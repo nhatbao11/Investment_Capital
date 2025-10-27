@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
-import { FaEdit, FaTrash, FaEye, FaPlus, FaTimes, FaBook } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaEye, FaPlus, FaTimes, FaBook, FaEnvelope } from 'react-icons/fa';
 import { resolveFileUrl, resolvePdfUrl, getApiBaseUrl } from '../../utils/apiConfig';
 import { useNotification } from '../ui/Notification';
 
@@ -22,9 +22,10 @@ interface BookJourney {
 
 interface Props {
   onClose: () => void;
+  onSelectForNewsletter?: (book: BookJourney) => void;
 }
 
-const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
+const BookJourneyManagement: React.FC<Props> = ({ onClose, onSelectForNewsletter }) => {
   const { addNotification } = useNotification()
   const API_BASE = getApiBaseUrl();
   const [items, setItems] = useState<BookJourney[]>([]);
@@ -75,13 +76,34 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
     try {
       const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : '';
       const body = JSON.stringify({ status });
-      const resp = await fetch(`${API_BASE}/api/v1/bookjourney/${id}`, {
+      const resp = await fetch(`${API_BASE}/bookjourney/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body
       });
-      if (resp.ok) fetchAll();
-    } catch (e) { console.error(e); }
+      if (resp.ok) {
+        fetchAll();
+        addNotification({
+          type: 'success',
+          title: 'Thành công',
+          message: 'Đã cập nhật trạng thái thành công'
+        });
+      } else {
+        const error = await resp.json();
+        addNotification({
+          type: 'error',
+          title: 'Lỗi',
+          message: error.message || 'Không thể cập nhật trạng thái'
+        });
+      }
+    } catch (e) { 
+      console.error(e);
+      addNotification({
+        type: 'error',
+        title: 'Lỗi',
+        message: 'Không thể cập nhật trạng thái'
+      });
+    }
   };
 
 
@@ -197,19 +219,9 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
         if (result.data) {
           if (result.data.image_url) {
             setForm(prev => ({ ...prev, image_url: result.data.image_url }));
-            addNotification({
-              type: 'success',
-              title: 'URL ảnh',
-              message: `Ảnh đã upload: ${result.data.image_url}`
-            });
           }
           if (result.data.pdf_url) {
             setForm(prev => ({ ...prev, pdf_url: result.data.pdf_url }));
-            addNotification({
-              type: 'success',
-              title: 'URL PDF',
-              message: `PDF đã upload: ${result.data.pdf_url}`
-            });
           }
         }
         
@@ -344,11 +356,12 @@ const BookJourneyManagement: React.FC<Props> = ({ onClose }) => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[10%]">
                       <div className="flex items-center space-x-2">
+                        {onSelectForNewsletter && b.status === 'published' && (
+                          <button className="text-green-600 hover:text-green-900" title="Gửi newsletter" onClick={() => onSelectForNewsletter(b)}>
+                            <FaEnvelope />
+                          </button>
+                        )}
                         <button className="text-blue-600 hover:text-blue-900" title="Sửa" onClick={() => openEdit(b)}><FaEdit /></button>
-                <button className="text-green-600 hover:text-green-900" title="Xem PDF" onClick={() => {
-                  const pdfUrl = resolvePdfUrl(b.pdf_url);
-                  window.open(pdfUrl, '_blank', 'noopener,noreferrer');
-                }}><FaEye /></button>
                         <button className="text-red-600 hover:text-red-900" title="Xóa" onClick={() => remove(b.id)}><FaTrash /></button>
                       </div>
                     </td>

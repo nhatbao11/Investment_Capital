@@ -8,7 +8,9 @@ const {
   deleteInvestmentKnowledge,
   getPopularInvestmentKnowledge,
   getLatestInvestmentKnowledge,
-  incrementViewCount
+  incrementViewCount,
+  previewNewsletter,
+  sendNewsletter
 } = require('../controllers/investmentKnowledgeController');
 const { authenticate, requireAdmin, optionalAuth } = require('../middleware/auth');
 const { uploadInvestment } = require('../middleware/upload');
@@ -38,5 +40,7 @@ router.put('/:id', requireAdmin, uploadInvestment.fields([
   { name: 'pdf', maxCount: 1 }
 ]), updateInvestmentKnowledge);
 router.delete('/:id', requireAdmin, deleteInvestmentKnowledge);
+router.post('/:id/preview-newsletter', authenticate, requireAdmin, previewNewsletter);
+router.post('/:id/send-newsletter', requireAdmin, sendNewsletter);
 
 module.exports = router;

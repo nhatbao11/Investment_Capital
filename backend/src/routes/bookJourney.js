@@ -76,5 +76,7 @@ router.put('/:id', uploadBookJourney.fields([
   { name: 'pdf', maxCount: 1 }
 ]), updateValidation, BookJourneyController.update);
 router.delete('/:id', BookJourneyController.delete);
+router.post('/:id/preview-newsletter', authenticate, requireAdmin, BookJourneyController.previewNewsletter);
+router.post('/:id/send-newsletter', BookJourneyController.sendNewsletter);
 
 module.exports = router;

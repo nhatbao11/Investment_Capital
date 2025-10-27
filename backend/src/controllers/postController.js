@@ -110,7 +110,7 @@ const getPostById = async (req, res) => {
  */
 const createPost = async (req, res) => {
   try {
-    const { title, content, category, category_id, thumbnail_url, pdf_url, status = 'draft' } = req.body;
+    const { title, content, category, category_id, thumbnail_url, pdf_url, status = 'draft', send_newsletter } = req.body;
     const author_id = req.user.id;
     
     console.log('Create post request body:', req.body);
@@ -147,6 +147,9 @@ const createPost = async (req, res) => {
       author_id,
       status
     });
+
+    // CHỨC NĂNG TỰ ĐỘNG GỬI EMAIL ĐÃ BỊ TẮT
+    // Admin phải dùng nút "Gửi email" trong UI để gửi thủ công
 
     res.status(201).json({
       success: true,
@@ -224,6 +227,9 @@ const updatePost = async (req, res) => {
         code: 'UPDATE_POST_ERROR'
       });
     }
+
+    // CHỨC NĂNG TỰ ĐỘNG GỬI EMAIL ĐÃ BỊ TẮT
+    // Admin phải dùng nút "Gửi email" trong UI để gửi thủ công
 
     res.json({
       success: true,

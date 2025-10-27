@@ -17,6 +17,7 @@ const investmentKnowledgeRoutes = require('./routes/investmentKnowledge');
 const feedbackRoutes = require('./routes/feedbacks');
 const uploadRoutes = require('./routes/upload');
 const viewTrackingRoutes = require('./routes/viewTracking');
+const newsletterRoutes = require('./routes/newsletter');
 
 const app = express();
 
@@ -82,6 +83,7 @@ app.use('/api/v1/statistics', require('./routes/statistics'));
 app.use('/api/v1/investment-knowledge', investmentKnowledgeRoutes);
 app.use('/api/v1/feedbacks', feedbackRoutes);
 app.use('/api/v1/upload', uploadRoutes);
+app.use('/api/v1/newsletter', newsletterRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -100,6 +102,7 @@ app.get('/', (req, res) => {
       feedbacks: '/api/v1/feedbacks',
       upload: '/api/v1/upload',
       viewTracking: '/api/v1/view-tracking',
+      newsletter: '/api/v1/newsletter',
       health: '/health'
     }
   });
