@@ -87,10 +87,10 @@ const sendNewPostNotification = async (recipients, post) => {
   // Lấy full URL của frontend
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
   
-  // URL PDF bài viết (đường dẫn trực tiếp + track view)
+  // URL PDF bài viết (đường dẫn trực tiếp - không track)
   let pdfUrl;
   if (post.pdf_url) {
-    pdfUrl = `${frontendUrl}${post.pdf_url}?track_id=${post.id}&track_type=post`;
+    pdfUrl = `${frontendUrl}${post.pdf_url}`;
   } else {
     // Fallback nếu không có PDF
     if (post.category === 'nganh') {
@@ -301,10 +301,10 @@ const sendInvestmentKnowledgeNotification = async (recipients, knowledge) => {
   // Lấy full URL của frontend
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
   
-  // URL PDF investment knowledge (đường dẫn trực tiếp + track view)
+  // URL PDF investment knowledge (đường dẫn trực tiếp - không track)
   let pdfUrl;
   if (knowledge.pdf_url) {
-    pdfUrl = `${frontendUrl}${knowledge.pdf_url}?track_id=${knowledge.id}&track_type=investment_knowledge`;
+    pdfUrl = `${frontendUrl}${knowledge.pdf_url}`;
   } else {
     pdfUrl = `${frontendUrl}/investment`;
   }
@@ -433,10 +433,10 @@ const sendBookJourneyNotification = async (recipients, book) => {
   // Lấy full URL của frontend
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
   
-  // URL PDF book journey (đường dẫn trực tiếp + track view)
+  // URL PDF book journey (đường dẫn trực tiếp - không track)
   let pdfUrl;
   if (book.pdf_url) {
-    pdfUrl = `${frontendUrl}${book.pdf_url}?track_id=${book.id}&track_type=bookjourney`;
+    pdfUrl = `${frontendUrl}${book.pdf_url}`;
   } else {
     pdfUrl = `${frontendUrl}/investment`;
   }
