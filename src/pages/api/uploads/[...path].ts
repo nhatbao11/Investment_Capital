@@ -4,13 +4,31 @@ import path from 'path'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { path: filePathArray } = req.query
+    const { path: filePathArray, track_id, track_type } = req.query
     
     if (!filePathArray || !Array.isArray(filePathArray)) {
       return res.status(400).json({ error: 'Invalid file path' })
     }
     
     const filePath = filePathArray.join('/')
+    
+    // Track view nếu có track_id và track_type
+    if (track_id && track_type && req.method === 'GET') {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+        await fetch(`${apiUrl}/api/v1/view-tracking/track`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            resource_id: parseInt(track_id as string),
+            resource_type: track_type
+          })
+        })
+      } catch (error) {
+        console.error('Error tracking view:', error)
+        // Không fail nếu track không được
+      }
+    }
 
     // Construct the full file path - support both local and VPS paths
     const baseDir = process.env.NODE_ENV === 'production' ? '/root/investment_capital' : process.cwd()
