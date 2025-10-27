@@ -13,7 +13,7 @@ export const useSimpleStats = () => {
 
       const token = localStorage.getItem('token');
       if (!token) {
-        throw new Error('No token available');
+        return null;
       }
 
       const response = await fetch(`${API_BASE}/api/v1/simple-stats?period=${period}`, {
@@ -47,7 +47,7 @@ export const useSimpleStats = () => {
 
       const token = localStorage.getItem('token');
       if (!token) {
-        throw new Error('No token available');
+        return null;
       }
 
       const response = await fetch(`${API_BASE}/api/v1/simple-stats/overview`, {

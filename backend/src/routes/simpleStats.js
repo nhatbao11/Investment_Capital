@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate, requireAdmin } = require('../middleware/auth');
+const { authenticate, requireAdmin, optionalAuth } = require('../middleware/auth');
 const { getSimpleStats, getDashboardOverview } = require('../controllers/simpleStatsController');
 
 // Lấy thống kê đơn giản theo khoảng thời gian

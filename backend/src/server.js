@@ -19,6 +19,8 @@ const uploadRoutes = require('./routes/upload');
 const viewTrackingRoutes = require('./routes/viewTracking');
 const newsletterRoutes = require('./routes/newsletter');
 const simpleStatsRoutes = require('./routes/simpleStats');
+const postPdfRoutes = require('./routes/postPdf');
+const investmentKnowledgePdfRoutes = require('./routes/investmentKnowledgePdf');
 
 const app = express();
 
@@ -86,6 +88,8 @@ app.use('/api/v1/feedbacks', feedbackRoutes);
 app.use('/api/v1/upload', uploadRoutes);
 app.use('/api/v1/newsletter', newsletterRoutes);
 app.use('/api/v1/simple-stats', simpleStatsRoutes);
+app.use('/api/v1/posts', postPdfRoutes);
+app.use('/api/v1/investment-knowledge', investmentKnowledgePdfRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {

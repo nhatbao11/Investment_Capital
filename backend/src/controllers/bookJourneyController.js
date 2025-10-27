@@ -131,7 +131,7 @@ class BookJourneyController {
     }
   }
 
-  // Tải PDF (tăng download count)
+  // Tải PDF (tăng download count và track view)
   static async downloadPdf(req, res) {
     try {
       const { id } = req.params;
@@ -143,6 +143,20 @@ class BookJourneyController {
           message: 'Không tìm thấy hành trình sách'
         });
       }
+
+      // Track view khi mở PDF (theo IP)
+      const ViewTracking = require('../models/ViewTracking');
+      const user_id = req.user?.id || null;
+      const ip_address = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+      const user_agent = req.get('User-Agent') || '';
+
+      await ViewTracking.trackView({
+        user_id,
+        ip_address,
+        user_agent,
+        resource_id: parseInt(id),
+        resource_type: 'bookjourney'
+      });
 
       // Tăng download count
       await book.incrementDownloadCount();
