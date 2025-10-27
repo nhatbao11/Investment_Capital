@@ -217,7 +217,7 @@ const sendNewPostNotification = async (recipients, post) => {
                       
                       ${post.thumbnail_url ? `
                         <div style="margin: 25px 0;">
-                          <img src="${post.thumbnail_url}" alt="${post.title}" style="width: 100%; border-radius: 8px; display: block;">
+                          <img src="${post.thumbnail_url.startsWith('http') ? post.thumbnail_url : frontendUrl + post.thumbnail_url}" alt="${post.title}" style="width: 100%; border-radius: 8px; display: block;">
                         </div>
                       ` : ''}
                       
@@ -344,7 +344,7 @@ const sendInvestmentKnowledgeNotification = async (recipients, knowledge) => {
                       
                       ${knowledge.image_url ? `
                         <div style="margin: 25px 0;">
-                          <img src="${knowledge.image_url}" alt="${knowledge.title}" style="width: 100%; border-radius: 8px; display: block;">
+                          <img src="${knowledge.image_url.startsWith('http') ? knowledge.image_url : frontendUrl + knowledge.image_url}" alt="${knowledge.title}" style="width: 100%; border-radius: 8px; display: block;">
                         </div>
                       ` : ''}
                       
@@ -471,7 +471,7 @@ const sendBookJourneyNotification = async (recipients, book) => {
                       
                       ${book.image_url ? `
                         <div style="margin: 25px 0;">
-                          <img src="${book.image_url}" alt="${book.title}" style="width: 100%; border-radius: 8px; display: block;">
+                          <img src="${book.image_url.startsWith('http') ? book.image_url : frontendUrl + book.image_url}" alt="${book.title}" style="width: 100%; border-radius: 8px; display: block;">
                         </div>
                       ` : ''}
                       

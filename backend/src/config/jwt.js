@@ -9,7 +9,7 @@ require('dotenv').config();
 const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-here-make-it-very-long-and-random';
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'your-super-secret-refresh-key-here-make-it-very-long-and-random';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
-const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '7d';
+const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '24h';
 
 // if (!JWT_SECRET || !JWT_REFRESH_SECRET) {
 //   throw new Error('JWT secrets must be defined in environment variables');
