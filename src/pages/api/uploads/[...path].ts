@@ -28,7 +28,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
         
         if (endpoint) {
-          await fetch(endpoint, { method: 'POST' })
+          // Forward IP và User-Agent để track đúng
+          const forwardedFor = req.headers['x-forwarded-for'] || req.socket.remoteAddress || ''
+          const ip = typeof forwardedFor === 'string' ? forwardedFor.split(',')[0].trim() : forwardedFor
+          const userAgent = req.headers['user-agent'] || ''
+          
+          await fetch(endpoint, { 
+            method: 'POST',
+            headers: {
+              'X-Forwarded-For': ip,
+              'User-Agent': userAgent,
+              'Content-Type': 'application/json'
+            }
+          })
         }
       } catch (error) {
         console.error('Error tracking view:', error)
