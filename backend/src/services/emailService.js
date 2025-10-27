@@ -87,14 +87,23 @@ const sendNewPostNotification = async (recipients, post) => {
   // Lấy full URL của frontend
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
   
-  // URL bài viết (link đến trang chứa posts dựa vào category)
-  let postUrl;
-  if (post.category === 'nganh') {
-    postUrl = `${frontendUrl}/sector`;
-  } else if (post.category === 'doanh_nghiep') {
-    postUrl = `${frontendUrl}/analysis`;
+  // URL PDF bài viết (link trực tiếp đến file PDF)
+  let pdfUrl;
+  if (post.pdf_url) {
+    if (post.pdf_url.startsWith('http')) {
+      pdfUrl = post.pdf_url;
+    } else {
+      pdfUrl = `${frontendUrl}${post.pdf_url}`;
+    }
   } else {
-    postUrl = `${frontendUrl}/posts/${post.id}`;
+    // Fallback nếu không có PDF
+    if (post.category === 'nganh') {
+      pdfUrl = `${frontendUrl}/sector`;
+    } else if (post.category === 'doanh_nghiep') {
+      pdfUrl = `${frontendUrl}/analysis`;
+    } else {
+      pdfUrl = `${frontendUrl}/posts/${post.id}`;
+    }
   }
   
   // URL unsubscribe (link hủy nhận email)
@@ -147,7 +156,7 @@ const sendNewPostNotification = async (recipients, post) => {
                   
                   <!-- CTA Button -->
                   <div style="margin-top: 30px; text-align: center;">
-                    <a href="${postUrl}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; padding: 16px 36px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 16px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.3s ease;">
+                    <a href="${pdfUrl}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; padding: 16px 36px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 16px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.3s ease;">
                       🔗 Xem thêm tại đây
                     </a>
                   </div>
@@ -229,7 +238,7 @@ const sendNewPostNotification = async (recipients, post) => {
                       
                       <!-- CTA Button -->
                       <div style="margin-top: 30px; text-align: center;">
-                        <a href="${postUrl}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; padding: 16px 36px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 16px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.3s ease;">
+                        <a href="${pdfUrl}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; padding: 16px 36px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 16px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.3s ease;">
                           🔗 Xem thêm tại đây
                         </a>
                       </div>
@@ -296,8 +305,18 @@ const sendInvestmentKnowledgeNotification = async (recipients, knowledge) => {
   // Lấy full URL của frontend
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
   
-  // URL bài viết (link đến trang investment)
-  const knowledgeUrl = `${frontendUrl}/investment`;
+  // URL PDF investment knowledge (link trực tiếp đến file PDF)
+  let pdfUrl;
+  if (knowledge.pdf_url) {
+    if (knowledge.pdf_url.startsWith('http')) {
+      pdfUrl = knowledge.pdf_url;
+    } else {
+      pdfUrl = `${frontendUrl}${knowledge.pdf_url}`;
+    }
+  } else {
+    // Fallback nếu không có PDF
+    pdfUrl = `${frontendUrl}/investment`;
+  }
   
   // URL unsubscribe (link hủy nhận email)
   const unsubscribeLink = `${frontendUrl}/unsubscribe`;
@@ -356,7 +375,7 @@ const sendInvestmentKnowledgeNotification = async (recipients, knowledge) => {
                       
                       <!-- CTA Button -->
                       <div style="margin-top: 30px; text-align: center;">
-                        <a href="${knowledgeUrl}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; padding: 16px 36px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 16px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.3s ease;">
+                        <a href="${pdfUrl}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; padding: 16px 36px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 16px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.3s ease;">
                           🔗 Xem thêm tại đây
                         </a>
                       </div>
@@ -423,8 +442,18 @@ const sendBookJourneyNotification = async (recipients, book) => {
   // Lấy full URL của frontend
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
   
-  // URL book journey (link đến trang investment)
-  const bookUrl = `${frontendUrl}/investment`;
+  // URL PDF book journey (link trực tiếp đến file PDF)
+  let pdfUrl;
+  if (book.pdf_url) {
+    if (book.pdf_url.startsWith('http')) {
+      pdfUrl = book.pdf_url;
+    } else {
+      pdfUrl = `${frontendUrl}${book.pdf_url}`;
+    }
+  } else {
+    // Fallback nếu không có PDF
+    pdfUrl = `${frontendUrl}/investment`;
+  }
   
   // URL unsubscribe (link hủy nhận email)
   const unsubscribeLink = `${frontendUrl}/unsubscribe`;
@@ -483,7 +512,7 @@ const sendBookJourneyNotification = async (recipients, book) => {
                       
                       <!-- CTA Button -->
                       <div style="margin-top: 30px; text-align: center;">
-                        <a href="${bookUrl}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; padding: 16px 36px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 16px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.3s ease;">
+                        <a href="${pdfUrl}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; padding: 16px 36px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 16px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.3s ease;">
                           🔗 Xem thêm tại đây
                         </a>
                       </div>

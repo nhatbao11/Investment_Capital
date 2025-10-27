@@ -18,6 +18,7 @@ const feedbackRoutes = require('./routes/feedbacks');
 const uploadRoutes = require('./routes/upload');
 const viewTrackingRoutes = require('./routes/viewTracking');
 const newsletterRoutes = require('./routes/newsletter');
+const simpleStatsRoutes = require('./routes/simpleStats');
 
 const app = express();
 
@@ -84,6 +85,7 @@ app.use('/api/v1/investment-knowledge', investmentKnowledgeRoutes);
 app.use('/api/v1/feedbacks', feedbackRoutes);
 app.use('/api/v1/upload', uploadRoutes);
 app.use('/api/v1/newsletter', newsletterRoutes);
+app.use('/api/v1/simple-stats', simpleStatsRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
