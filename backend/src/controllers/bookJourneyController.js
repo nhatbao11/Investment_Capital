@@ -175,7 +175,7 @@ class BookJourneyController {
       // Serve PDF file trực tiếp từ server
       // Sử dụng process.cwd() để lấy root của backend project
       const normalizedPath = book.pdf_url.startsWith('/uploads/') ? book.pdf_url.substring(1) : book.pdf_url;
-      const pdfPath = path.join(process.cwd(), normalizedPath);
+      const pdfPath = path.join(process.cwd(), 'backend', normalizedPath);
       const fileName = path.basename(book.pdf_url);
       
       console.log('Attempting to serve PDF:', pdfPath);

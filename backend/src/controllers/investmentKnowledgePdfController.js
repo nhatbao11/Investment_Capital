@@ -44,7 +44,7 @@ const downloadPdf = async (req, res) => {
     // Serve PDF file trực tiếp từ server
     // Sử dụng process.cwd() để lấy root của backend project
     const normalizedPath = knowledge.pdf_url.startsWith('/uploads/') ? knowledge.pdf_url.substring(1) : knowledge.pdf_url;
-    const pdfPath = path.join(process.cwd(), normalizedPath);
+    const pdfPath = path.join(process.cwd(), 'backend', normalizedPath);
     const fileName = path.basename(knowledge.pdf_url);
     
     console.log('Attempting to serve PDF:', pdfPath);
