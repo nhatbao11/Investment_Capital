@@ -24,7 +24,7 @@ const getSimpleStats = async (req, res) => {
     } else {
       switch (period) {
         case 'today':
-          dateCondition = 'DATE(view_date) = CURDATE()';
+          dateCondition = 'view_date = CURDATE()';
           break;
         case 'week':
           dateCondition = 'view_date >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)';
@@ -40,11 +40,11 @@ const getSimpleStats = async (req, res) => {
       }
     }
 
-    // Thống kê tổng lượt truy cập theo IP
+    // Thống kê tổng lượt truy cập theo IP (tính cả khi không track specific resource)
     const totalVisitsSql = `
       SELECT 
         COUNT(DISTINCT ip_address) as unique_ips,
-        COUNT(*) as total_visits
+        COUNT(DISTINCT CONCAT(ip_address, '-', resource_id, '-', resource_type, '-', view_date)) as total_visits
       FROM view_tracking 
       WHERE ${dateCondition}
     `;
@@ -132,7 +132,7 @@ const getDashboardOverview = async (req, res) => {
         COUNT(DISTINCT ip_address) as unique_ips,
         COUNT(*) as total_visits
       FROM view_tracking 
-      WHERE DATE(view_date) = CURDATE()
+      WHERE view_date = CURDATE()
     `);
 
     // Thống kê tuần này
