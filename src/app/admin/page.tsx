@@ -87,7 +87,7 @@ const AdminDashboard: React.FC = () => {
   const [investmentLimit, setInvestmentLimit] = useState(10)
   const [showUserModal, setShowUserModal] = useState(false)
   const [editingUserData, setEditingUserData] = useState<any | null>(null)
-  const [userForm, setUserForm] = useState<{ email: string; full_name: string; password: string; role: 'client' | 'admin'; is_active: boolean }>({ email: '', full_name: '', password: '', role: 'client', is_active: true })
+  const [userForm, setUserForm] = useState<{ email: string; full_name: string; password: string; role: 'client' | 'admin'; is_active: boolean; newsletter_opt_in: boolean }>({ email: '', full_name: '', password: '', role: 'client', is_active: true, newsletter_opt_in: false })
 
   useEffect(() => {
     if (!authLoading) {
@@ -647,13 +647,13 @@ const AdminDashboard: React.FC = () => {
 
   const openCreateUser = () => {
     setEditingUserData(null)
-    setUserForm({ email: '', full_name: '', password: '', role: 'client', is_active: true })
+    setUserForm({ email: '', full_name: '', password: '', role: 'client', is_active: true, newsletter_opt_in: false })
     setShowUserModal(true)
   }
 
   const openEditUser = (u: any) => {
     setEditingUserData(u)
-    setUserForm({ email: u.email, full_name: u.full_name, password: '', role: u.role, is_active: u.is_active })
+    setUserForm({ email: u.email, full_name: u.full_name, password: '', role: u.role, is_active: u.is_active, newsletter_opt_in: u.newsletter_opt_in || false })
     setShowUserModal(true)
   }
 
@@ -1790,6 +1790,10 @@ const AdminDashboard: React.FC = () => {
                           <label htmlFor="active" className="text-sm text-gray-700">Hoạt động</label>
                         </div>
                       )}
+                      <div className="flex items-center gap-2">
+                        <input id="newsletter" type="checkbox" checked={userForm.newsletter_opt_in} onChange={(e) => setUserForm({ ...userForm, newsletter_opt_in: e.target.checked })} />
+                        <label htmlFor="newsletter" className="text-sm text-gray-700">Nhận email thông báo</label>
+                      </div>
                       <div className="flex justify-end gap-3 pt-4 border-t">
                         <button type="button" onClick={() => { setShowUserModal(false); setEditingUserData(null) }} className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200">Hủy</button>
                         <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Lưu</button>

@@ -45,3 +45,4 @@ console.log('mysql -u root -p ytcapital_db < scripts/add_pdf_to_investment_knowl
 
 
 
+

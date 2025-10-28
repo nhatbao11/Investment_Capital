@@ -39,3 +39,4 @@ ADD COLUMN pdf_url VARCHAR(500) AFTER image_url;
 
 
 
+

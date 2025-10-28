@@ -11,6 +11,7 @@ import { useLanguage } from "../../contexts/LanguageContext"
 import { useAuth } from "../../services/hooks/useAuth"
 import { authApi } from "../../services/api/auth"
 import { API_CONFIG } from "../../services/api/config"
+import { newsletterApi } from "../../services/api/newsletter"
 
 interface HeaderProps {
   className?: string
@@ -29,6 +30,8 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
   const [profileName, setProfileName] = useState('')
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string>('')
+  const [newsletterOptIn, setNewsletterOptIn] = useState(false)
+  const [newsletterBusy, setNewsletterBusy] = useState(false)
   const [toast, setToast] = useState<{type:'success'|'error', message:string}|null>(null)
   const [langOpen, setLangOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
@@ -111,7 +114,10 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
   }, [isScrolled])
 
   useEffect(() => {
-    if (user) setProfileName(user.full_name)
+    if (user) {
+      setProfileName(user.full_name)
+      setNewsletterOptIn(user.newsletter_opt_in || false)
+    }
   }, [user])
 
   useEffect(() => {
@@ -160,6 +166,20 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
       showToast('error', e?.response?.data?.message || 'Cập nhật hồ sơ thất bại')
     } finally {
       setProfileBusy(false)
+    }
+  }
+
+  const toggleNewsletter = async () => {
+    try {
+      setNewsletterBusy(true)
+      const newValue = !newsletterOptIn
+      const response = await newsletterApi.toggleSubscription({ newsletter_opt_in: newValue })
+      setNewsletterOptIn(response.data.newsletter_opt_in)
+      showToast('success', response.message)
+    } catch (e:any) {
+      showToast('error', e?.response?.data?.message || 'Cập nhật newsletter thất bại')
+    } finally {
+      setNewsletterBusy(false)
     }
   }
 
@@ -299,6 +319,18 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
                             value={profileName}
                             onChange={(e) => setProfileName(e.target.value)}
                           />
+                        </div>
+                        <div className="mt-3">
+                          <label className="flex items-center cursor-pointer" onClick={toggleNewsletter}>
+                            <input
+                              type="checkbox"
+                              checked={newsletterOptIn}
+                              onChange={toggleNewsletter}
+                              disabled={newsletterBusy}
+                              className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                            />
+                            <span className="ml-2 text-xs text-gray-700">Nhận email thông báo tin mới</span>
+                          </label>
                         </div>
                         <div className="mt-3 flex justify-between items-center">
                           <a href="/profile" className="text-blue-700 text-xs hover:underline">Đổi mật khẩu / Xóa tài khoản</a>
