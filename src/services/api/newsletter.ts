@@ -15,8 +15,8 @@ export interface ToggleNewsletterResponse {
 export const newsletterApi = {
   // Toggle newsletter subscription
   toggleSubscription: async (data: ToggleNewsletterRequest): Promise<ToggleNewsletterResponse> => {
-    const response = await apiClient.post<ToggleNewsletterResponse>('/newsletter/toggle', data);
-    return response.data as ToggleNewsletterResponse;
+    const response = await apiClient.post('/newsletter/toggle', data);
+    return response as any;
   }
 };
 

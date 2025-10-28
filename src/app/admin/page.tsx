@@ -661,18 +661,26 @@ const AdminDashboard: React.FC = () => {
     e.preventDefault()
     try {
       if (editingUserData) {
-        const updated = await updateUser(editingUserData.id, { full_name: userForm.full_name, role: userForm.role, is_active: userForm.is_active })
+        const updated = await updateUser(editingUserData.id, { 
+          full_name: userForm.full_name, 
+          role: userForm.role, 
+          is_active: userForm.is_active,
+          newsletter_opt_in: userForm.newsletter_opt_in 
+        })
         if (updated) {
+          addNotification({ type: 'success', title: 'Thành công', message: 'Cập nhật người dùng thành công' })
           await refreshUsers()
         }
       } else {
-        await authApi.register({ email: userForm.email, password: userForm.password, full_name: userForm.full_name, role: userForm.role })
+        await authApi.register({ email: userForm.email, password: userForm.password, full_name: userForm.full_name, role: userForm.role, newsletter_opt_in: userForm.newsletter_opt_in })
+        addNotification({ type: 'success', title: 'Thành công', message: 'Thêm người dùng thành công' })
         await refreshUsers()
       }
       setShowUserModal(false)
       setEditingUserData(null)
-    } catch (err) {
+    } catch (err: any) {
       console.error('Save user error:', err)
+      addNotification({ type: 'error', title: 'Lỗi', message: err?.response?.data?.message || 'Cập nhật người dùng thất bại' })
     }
   }
 

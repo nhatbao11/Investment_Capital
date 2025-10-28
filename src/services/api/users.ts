@@ -31,7 +31,7 @@ export const usersApi = {
 
   updateUser: async (
     id: number,
-    data: Partial<Pick<User, 'full_name' | 'role' | 'is_active' | 'email_verified'>>
+    data: Partial<Pick<User, 'full_name' | 'role' | 'is_active' | 'email_verified' | 'newsletter_opt_in'>>
   ): Promise<User> => {
     const response = await apiClient.put<{ user?: User }>(`/users/${id}`, data);
     const payload = (response as any)?.data as { user?: User } | undefined;

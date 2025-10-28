@@ -15,7 +15,7 @@ interface UseUsersReturn {
   fetchUsers: (params?: GetUsersParams) => Promise<void>;
   updateUser: (
     id: number,
-    data: Partial<Pick<User, 'full_name' | 'role' | 'is_active' | 'email_verified'>>
+    data: Partial<Pick<User, 'full_name' | 'role' | 'is_active' | 'email_verified' | 'newsletter_opt_in'>>
   ) => Promise<User | null>;
   deleteUser: (id: number) => Promise<boolean>;
 }
@@ -48,7 +48,7 @@ export const useUsers = (): UseUsersReturn => {
 
   const updateUser = useCallback(async (
     id: number,
-    data: Partial<Pick<User, 'full_name' | 'role' | 'is_active' | 'email_verified'>>
+    data: Partial<Pick<User, 'full_name' | 'role' | 'is_active' | 'email_verified' | 'newsletter_opt_in'>>
   ): Promise<User | null> => {
     try {
       setLoading(true);
