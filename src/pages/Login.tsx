@@ -44,7 +44,13 @@ const Login: React.FC = () => {
     }
     
     try {
-      await login({ email, password, newsletter_opt_in: newsletterOptIn })
+      // Only send newsletter_opt_in if user explicitly checked the box
+      const loginData: any = { email, password };
+      if (newsletterOptIn) {
+        loginData.newsletter_opt_in = true;
+      }
+      
+      await login(loginData)
       if (error) {
         setFormError(error)
       }

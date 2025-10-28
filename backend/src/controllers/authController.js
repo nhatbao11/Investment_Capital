@@ -101,9 +101,9 @@ const login = async (req, res) => {
       });
     }
 
-    // Cập nhật tùy chọn newsletter nếu có gửi lên (không bắt buộc)
-    if (typeof newsletter_opt_in === 'boolean') {
-      await User.update(user.id, { newsletter_opt_in });
+    // Cập nhật tùy chọn newsletter chỉ khi user explicitly gửi lên giá trị true
+    if (newsletter_opt_in === true) {
+      await User.update(user.id, { newsletter_opt_in: true });
     }
 
     // Tạo token pair
