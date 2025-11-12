@@ -40,19 +40,19 @@ const BookJourneyCard: React.FC<BookJourneyCardProps> = ({
 
   return (
     <Card className="p-4 sm:p-6 md:p-7" hover={false} variant="outlined">
-      <div className="flex flex-col gap-4 md:gap-6">
-        {/* Image */}
+      <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
+        {/* Image - Mobile: full width, Desktop: nhỏ bên trái */}
         {book.image_url && (
-          <div className="w-full md:w-full">
+          <div className="w-full md:w-48 md:flex-shrink-0">
             <img
               src={resolveFileUrl(book.image_url)}
               alt={book.title}
-              className="w-full h-40 sm:h-48 md:h-64 object-cover rounded-xl md:rounded-2xl border border-gray-200 shadow-sm"
+              className="w-full h-40 sm:h-48 md:h-48 md:w-48 object-cover rounded-xl md:rounded-2xl border border-gray-200 shadow-sm"
             />
           </div>
         )}
         
-        {/* Content */}
+        {/* Content - Desktop: bên phải */}
         <div className="flex-1 whitespace-normal">
           {/* Title - 1 hàng */}
           <Heading level={4} className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2 line-clamp-2">
