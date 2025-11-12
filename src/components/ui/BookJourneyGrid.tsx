@@ -46,6 +46,7 @@ const BookJourneyGrid: React.FC<BookJourneyGridProps> = ({
   const [desktopActiveIdx, setDesktopActiveIdx] = useState(0);
   const mobileAutoSlideIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const desktopAutoSlideIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const desktopScrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     fetchBooks();
@@ -93,12 +94,12 @@ const BookJourneyGrid: React.FC<BookJourneyGridProps> = ({
       clearInterval(desktopAutoSlideIntervalRef.current);
     }
 
-    // Set up auto-slide
+    // Set up auto-slide (chỉ chạy khi không có user interaction)
     desktopAutoSlideIntervalRef.current = setInterval(() => {
       setDesktopActiveIdx((prev) => {
         const next = (prev + 1) % totalSlides;
         const el = desktopTrackRef.current;
-        if (el && el.firstElementChild) {
+        if (el && el.firstElementChild && !desktopScrollTimeoutRef.current) {
           const firstChild = el.firstElementChild as HTMLElement;
           const cardWidth = firstChild.offsetWidth;
           const gap = 16; // gap-4 = 16px
@@ -112,6 +113,39 @@ const BookJourneyGrid: React.FC<BookJourneyGridProps> = ({
     return () => {
       if (desktopAutoSlideIntervalRef.current) {
         clearInterval(desktopAutoSlideIntervalRef.current);
+      }
+    };
+  }, [books.length]);
+
+  // Handle mouse wheel scroll for desktop
+  useEffect(() => {
+    const el = desktopTrackRef.current;
+    if (!el) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      // Chỉ xử lý khi scroll ngang (shift + wheel) hoặc scroll dọc trên element này
+      if (e.deltaY !== 0 || e.deltaX !== 0) {
+        e.preventDefault();
+        // Chuyển scroll dọc thành scroll ngang
+        const scrollAmount = e.deltaY !== 0 ? e.deltaY : e.deltaX;
+        el.scrollLeft += scrollAmount;
+        
+        // Tạm dừng auto-slide khi user scroll
+        if (desktopScrollTimeoutRef.current) {
+          clearTimeout(desktopScrollTimeoutRef.current);
+        }
+        desktopScrollTimeoutRef.current = setTimeout(() => {
+          desktopScrollTimeoutRef.current = null;
+        }, 3000); // Resume auto-slide sau 3 giây không scroll
+      }
+    };
+
+    el.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      el.removeEventListener('wheel', handleWheel);
+      if (desktopScrollTimeoutRef.current) {
+        clearTimeout(desktopScrollTimeoutRef.current);
       }
     };
   }, [books.length]);
@@ -269,8 +303,16 @@ const BookJourneyGrid: React.FC<BookJourneyGridProps> = ({
               if (idx !== desktopActiveIdx) {
                 setDesktopActiveIdx(Math.max(0, Math.min(idx, totalSlides - 1)));
               }
+              
+              // Tạm dừng auto-slide khi user scroll
+              if (desktopScrollTimeoutRef.current) {
+                clearTimeout(desktopScrollTimeoutRef.current);
+              }
+              desktopScrollTimeoutRef.current = setTimeout(() => {
+                desktopScrollTimeoutRef.current = null;
+              }, 3000); // Resume auto-slide sau 3 giây không scroll
             }}
-            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 [-ms-overflow-style:none] [scrollbar-width:none]"
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 [-ms-overflow-style:none] [scrollbar-width:none] cursor-grab active:cursor-grabbing"
             style={{ WebkitOverflowScrolling: 'touch' }}
           >
             {books.map((book) => (
