@@ -30,11 +30,11 @@ const BookJourneyCard: React.FC<BookJourneyCardProps> = ({
   onView
 }) => {
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('vi-VN', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
   };
 
 
@@ -65,12 +65,21 @@ const BookJourneyCard: React.FC<BookJourneyCardProps> = ({
           )}
 
           {/* Meta: author • date • views in one row */}
-          <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 gap-2">
-            <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-              <div className="flex items-center gap-1"><FaUser className="h-3 w-3 sm:h-4 sm:w-4" /><span className="truncate">{book.author_name || 'Y&T Group'}</span></div>
-              <div className="flex items-center gap-1"><FaCalendar className="h-3 w-3 sm:h-4 sm:w-4" /><span className="shrink-0">{formatDate(book.created_at)}</span></div>
+          <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 gap-2 flex-wrap">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-wrap">
+              <div className="flex items-center gap-1 min-w-0">
+                <FaUser className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                <span className="truncate">{book.author_name || 'Y&T Group'}</span>
+              </div>
+              <div className="flex items-center gap-1 shrink-0">
+                <FaCalendar className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                <span className="whitespace-nowrap">{formatDate(book.created_at)}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-1 shrink-0"><FaEye className="h-3 w-3 sm:h-4 sm:w-4" /><span>{book.view_count}</span></div>
+            <div className="flex items-center gap-1 shrink-0">
+              <FaEye className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="whitespace-nowrap">{book.view_count}</span>
+            </div>
           </div>
 
           {/* Actions */}

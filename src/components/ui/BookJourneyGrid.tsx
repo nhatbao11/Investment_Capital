@@ -41,11 +41,80 @@ const BookJourneyGrid: React.FC<BookJourneyGridProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const mobileTrackRef = useRef<HTMLDivElement | null>(null);
+  const desktopTrackRef = useRef<HTMLDivElement | null>(null);
   const [activeIdx, setActiveIdx] = useState(0);
+  const [desktopActiveIdx, setDesktopActiveIdx] = useState(0);
+  const mobileAutoSlideIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const desktopAutoSlideIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     fetchBooks();
   }, [showPopular, showLatest, limit]);
+
+  // Auto-slide for mobile
+  useEffect(() => {
+    if (books.length <= 1) return;
+    
+    // Clear existing interval
+    if (mobileAutoSlideIntervalRef.current) {
+      clearInterval(mobileAutoSlideIntervalRef.current);
+    }
+
+    // Set up auto-slide
+    mobileAutoSlideIntervalRef.current = setInterval(() => {
+      setActiveIdx((prev) => {
+        const next = (prev + 1) % books.length;
+        const el = mobileTrackRef.current;
+        if (el) {
+          const cardWidth = el.firstElementChild instanceof HTMLElement 
+            ? el.firstElementChild.offsetWidth + 16 
+            : 1;
+          el.scrollTo({ left: next * cardWidth, behavior: 'smooth' });
+        }
+        return next;
+      });
+    }, 5000);
+
+    return () => {
+      if (mobileAutoSlideIntervalRef.current) {
+        clearInterval(mobileAutoSlideIntervalRef.current);
+      }
+    };
+  }, [books.length]);
+
+  // Auto-slide for desktop
+  useEffect(() => {
+    const visibleCount = 2;
+    const totalSlides = Math.ceil(books.length / visibleCount);
+    if (totalSlides <= 1) return;
+    
+    // Clear existing interval
+    if (desktopAutoSlideIntervalRef.current) {
+      clearInterval(desktopAutoSlideIntervalRef.current);
+    }
+
+    // Set up auto-slide
+    desktopAutoSlideIntervalRef.current = setInterval(() => {
+      setDesktopActiveIdx((prev) => {
+        const next = (prev + 1) % totalSlides;
+        const el = desktopTrackRef.current;
+        if (el && el.firstElementChild) {
+          const firstChild = el.firstElementChild as HTMLElement;
+          const cardWidth = firstChild.offsetWidth;
+          const gap = 16; // gap-4 = 16px
+          const scrollPosition = next * (cardWidth + gap) * visibleCount;
+          el.scrollTo({ left: scrollPosition, behavior: 'smooth' });
+        }
+        return next;
+      });
+    }, 5000);
+
+    return () => {
+      if (desktopAutoSlideIntervalRef.current) {
+        clearInterval(desktopAutoSlideIntervalRef.current);
+      }
+    };
+  }, [books.length]);
 
   const fetchBooks = async () => {
     try {
@@ -182,17 +251,64 @@ const BookJourneyGrid: React.FC<BookJourneyGridProps> = ({
         )}
       </div>
 
-      {/* Desktop: grid 1 cột hoặc nhiều nếu cần */}
+      {/* Desktop: horizontal slide with max 2 items */}
       <div className="hidden md:block">
-        <Grid cols={1} gap="md">
-          {books.map((book) => (
-            <BookJourneyCard
-              key={book.id}
-              book={book}
-              onView={handleView}
-            />
-          ))}
-        </Grid>
+        <div className="relative overflow-hidden">
+          <div
+            ref={desktopTrackRef}
+            onScroll={() => {
+              const el = desktopTrackRef.current;
+              if (!el || !el.firstElementChild) return;
+              const firstChild = el.firstElementChild as HTMLElement;
+              const cardWidth = firstChild.offsetWidth;
+              const gap = 16; // gap-4 = 16px
+              const visibleCount = 2;
+              const slideWidth = (cardWidth + gap) * visibleCount;
+              const idx = Math.round(el.scrollLeft / slideWidth);
+              const totalSlides = Math.ceil(books.length / visibleCount);
+              if (idx !== desktopActiveIdx) {
+                setDesktopActiveIdx(Math.max(0, Math.min(idx, totalSlides - 1)));
+              }
+            }}
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 [-ms-overflow-style:none] [scrollbar-width:none]"
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
+            {books.map((book) => (
+              <div key={book.id} className="snap-center shrink-0 w-[calc(50%-0.5rem)]">
+                <BookJourneyCard book={book} onView={handleView} />
+              </div>
+            ))}
+          </div>
+          {/* Dots indicator for desktop */}
+          {Math.ceil(books.length / 2) > 1 && (
+            <div className="mt-4 flex justify-center gap-2">
+              {Array.from({ length: Math.ceil(books.length / 2) }).map((_, i) => (
+                <button
+                  key={i}
+                  aria-label={`Go to slide ${i + 1}`}
+                  onClick={() => {
+                    const el = desktopTrackRef.current;
+                    if (!el || !el.firstElementChild) return;
+                    const firstChild = el.firstElementChild as HTMLElement;
+                    const cardWidth = firstChild.offsetWidth;
+                    const gap = 16; // gap-4 = 16px
+                    const visibleCount = 2;
+                    const scrollPosition = i * (cardWidth + gap) * visibleCount;
+                    el.scrollTo({ 
+                      left: scrollPosition, 
+                      behavior: 'smooth' 
+                    });
+                  }}
+                  className={`${
+                    i === desktopActiveIdx 
+                      ? 'bg-blue-600 w-3' 
+                      : 'bg-gray-300 w-2'
+                  } h-2 rounded-full transition-all`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
     </div>
