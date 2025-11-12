@@ -84,7 +84,7 @@ const BookJourneyGrid: React.FC<BookJourneyGridProps> = ({
 
   // Auto-slide for desktop
   useEffect(() => {
-    const visibleCount = 2;
+    const visibleCount = 1; // Desktop hiển thị 1 bài
     const totalSlides = Math.ceil(books.length / visibleCount);
     if (totalSlides <= 1) return;
     
@@ -251,7 +251,7 @@ const BookJourneyGrid: React.FC<BookJourneyGridProps> = ({
         )}
       </div>
 
-      {/* Desktop: horizontal slide with max 2 items */}
+      {/* Desktop: horizontal slide with 1 item */}
       <div className="hidden md:block">
         <div className="relative overflow-hidden">
           <div
@@ -262,7 +262,7 @@ const BookJourneyGrid: React.FC<BookJourneyGridProps> = ({
               const firstChild = el.firstElementChild as HTMLElement;
               const cardWidth = firstChild.offsetWidth;
               const gap = 16; // gap-4 = 16px
-              const visibleCount = 2;
+              const visibleCount = 1; // Desktop hiển thị 1 bài
               const slideWidth = (cardWidth + gap) * visibleCount;
               const idx = Math.round(el.scrollLeft / slideWidth);
               const totalSlides = Math.ceil(books.length / visibleCount);
@@ -274,15 +274,15 @@ const BookJourneyGrid: React.FC<BookJourneyGridProps> = ({
             style={{ WebkitOverflowScrolling: 'touch' }}
           >
             {books.map((book) => (
-              <div key={book.id} className="snap-center shrink-0 w-[calc(50%-0.5rem)]">
+              <div key={book.id} className="snap-center shrink-0 w-full">
                 <BookJourneyCard book={book} onView={handleView} />
               </div>
             ))}
           </div>
           {/* Dots indicator for desktop */}
-          {Math.ceil(books.length / 2) > 1 && (
+          {books.length > 1 && (
             <div className="mt-4 flex justify-center gap-2">
-              {Array.from({ length: Math.ceil(books.length / 2) }).map((_, i) => (
+              {Array.from({ length: books.length }).map((_, i) => (
                 <button
                   key={i}
                   aria-label={`Go to slide ${i + 1}`}
@@ -292,7 +292,7 @@ const BookJourneyGrid: React.FC<BookJourneyGridProps> = ({
                     const firstChild = el.firstElementChild as HTMLElement;
                     const cardWidth = firstChild.offsetWidth;
                     const gap = 16; // gap-4 = 16px
-                    const visibleCount = 2;
+                    const visibleCount = 1; // Desktop hiển thị 1 bài
                     const scrollPosition = i * (cardWidth + gap) * visibleCount;
                     el.scrollTo({ 
                       left: scrollPosition, 

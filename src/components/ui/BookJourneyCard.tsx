@@ -40,43 +40,45 @@ const BookJourneyCard: React.FC<BookJourneyCardProps> = ({
 
   return (
     <Card className="p-4 sm:p-6 md:p-7" hover={false} variant="outlined">
-      <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
+      <div className="flex flex-col gap-4 md:gap-6">
         {/* Image */}
         {book.image_url && (
-          <div className="w-full md:w-72 md:flex-shrink-0">
+          <div className="w-full md:w-full">
             <img
               src={resolveFileUrl(book.image_url)}
               alt={book.title}
-              className="w-full h-40 sm:h-48 md:h-full md:w-72 object-cover rounded-xl md:rounded-2xl border border-gray-200 shadow-sm"
+              className="w-full h-40 sm:h-48 md:h-64 object-cover rounded-xl md:rounded-2xl border border-gray-200 shadow-sm"
             />
           </div>
         )}
         
         {/* Content */}
-        <div className="flex-1 md:ml-2 lg:ml-4 xl:ml-6 whitespace-normal">
-          <Heading level={4} className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2">
+        <div className="flex-1 whitespace-normal">
+          {/* Title - 1 hàng */}
+          <Heading level={4} className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2 line-clamp-2">
             {book.title}
           </Heading>
           
+          {/* Description */}
           {book.description && (
             <Text className="text-gray-700 leading-6 sm:leading-7 md:leading-8 mb-3 sm:mb-4 line-clamp-3">
               {book.description}
             </Text>
           )}
 
-          {/* Meta: author • date • views in one row */}
-          <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 gap-2 flex-wrap">
-            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-wrap">
-              <div className="flex items-center gap-1 min-w-0">
+          {/* Meta: author • date • views in one row - Mobile và Desktop cùng 1 hàng */}
+          <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 gap-1 sm:gap-2 overflow-hidden flex-nowrap">
+            <div className="flex items-center gap-1 sm:gap-2 min-w-0 flex-1 flex-nowrap">
+              <div className="flex items-center gap-0.5 sm:gap-1 min-w-0 flex-shrink">
                 <FaUser className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                <span className="truncate">{book.author_name || 'Y&T Group'}</span>
+                <span className="truncate max-w-[80px] sm:max-w-none">{book.author_name || 'Y&T Group'}</span>
               </div>
-              <div className="flex items-center gap-1 shrink-0">
+              <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
                 <FaCalendar className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                 <span className="whitespace-nowrap">{formatDate(book.created_at)}</span>
               </div>
             </div>
-            <div className="flex items-center gap-1 shrink-0">
+            <div className="flex items-center gap-0.5 sm:gap-1 shrink-0 flex-nowrap">
               <FaEye className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
               <span className="whitespace-nowrap">{book.view_count}</span>
             </div>
