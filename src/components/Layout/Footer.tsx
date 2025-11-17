@@ -71,7 +71,7 @@ const Footer: React.FC = () => {
                 <motion.div whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }} className="flex-shrink-0">
                   <MdLocationOn className="text-blue-900 mr-2 mt-1 text-base sm:text-lg lg:text-xl" />
                 </motion.div>
-                <span className="leading-relaxed">92, 19E, Phường An Lạc, TP. Hồ Chí Minh</span>
+                <span className="leading-relaxed">{t("footer.address2")}</span>
               </motion.div>
             </motion.div>
 

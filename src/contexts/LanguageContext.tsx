@@ -40,6 +40,7 @@ const translations = {
 
     // Footer
     "footer.address": "Địa chỉ",
+    "footer.address2": "Sớm cập nhật ...",
     "footer.contact": "Liên hệ",
     "footer.info": "Thông tin",
     "footer.terms": "Điều khoản sử dụng",
@@ -160,7 +161,7 @@ const translations = {
 
     // ContactNew page
     "contactnew.info.title": "Thông tin liên hệ",
-    "contactnew.info.address": "92, 19E, Phường An Lạc, TP. Hồ Chí Minh",
+    "contactnew.info.address": "Sớm cập nhật ...",
     "contactnew.info.email": "ytcapital.group@gmail.com",
     "contactnew.info.phone": "0822 082 407",
     "contactnew.info.hours": "Thứ 2 - Thứ 6: 8:00 - 17:00",
@@ -379,6 +380,7 @@ const translations = {
 
     // Footer
     "footer.address": "Address",
+    "footer.address2": "Will update soon ...",
     "footer.contact": "Contact",
     "footer.info": "Information",
     "footer.terms": "Terms of Use",
@@ -501,7 +503,7 @@ const translations = {
 
     // ContactNew page
     "contactnew.info.title": "Contact Information",
-    "contactnew.info.address": "92, 19E, An Lac Ward, Ho Chi Minh City",
+    "contactnew.info.address": "Will update soon ...",
     "contactnew.info.email": "ytcapital.group@gmail.com",
     "contactnew.info.phone": "0822 082 407",
     "contactnew.info.hours": "Mon - Fri: 8:00 - 17:00",

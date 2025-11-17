@@ -1,4 +1,4 @@
-# 📧 Hướng dẫn SỬ DỤNG Newsletter
+f# 📧 Hướng dẫn SỬ DỤNG Newsletter
 
 ## ✅ Đã hoàn thành setup!
 
@@ -228,4 +228,3 @@ Content-Type: application/json
 ---
 
 🎉 **Chúc bạn sử dụng vui vẻ!**
-

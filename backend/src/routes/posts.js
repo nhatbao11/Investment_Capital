@@ -61,7 +61,7 @@ router.post('/', authenticate, requireAdmin, uploadPostAsset.fields([
  * @access  Private (Admin)
  */
 router.post('/upload', authenticate, requireAdmin, uploadPostAsset.single('file'), (req, res) => {
-  //if (!req.file) return res.status(400).json({ success: false, message: 'No file uploaded' })
+  if (!req.file) return res.status(400).json({ success: false, message: 'No file uploaded' })
   return res.json({ success: true, message: 'Uploaded', data: { url: `/uploads/posts/${req.file.filename}` } })
 });
 
